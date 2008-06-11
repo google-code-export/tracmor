@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="yes" ?>
 <DBMODEL Version="4.0">
 <SETTINGS>
-<GLOBALSETTINGS ModelName="tracmor" IDModel="0" IDVersion="0" VersionStr="1.0.0.0" Comments="" UseVersionHistroy="1" AutoIncVersion="1" DatabaseType="MySQL" ZoomFac="75.00" XPos="27" YPos="1056" DefaultDataType="5" DefaultTablePrefix="0" DefSaveDBConn="" DefSyncDBConn="" DefQueryDBConn="" Printer="\\C-6\HP Officejet 7300 series" HPageCount="2.79399727148704" PageAspectRatio="1.441048034934498" PageOrientation="0" PageFormat="A4 (210x297 mm, 8.26x11.7 inches)" SelectedPages="0;1" UsePositionGrid="0" PositionGridX="20" PositionGridY="20" TableNameInRefs="1" DefaultTableType="1" ActivateRefDefForNewRelations="1" FKPrefix="" FKPostfix="" CreateFKRefDefIndex="1" DBQuoteCharacter="`" CreateSQLforLinkedObjects="0" DefModelFont="Verdana" CanvasWidth="4096" CanvasHeight="2842" />
+<GLOBALSETTINGS ModelName="tracmor" IDModel="0" IDVersion="0" VersionStr="1.0.0.0" Comments="" UseVersionHistroy="1" AutoIncVersion="1" DatabaseType="MySQL" ZoomFac="75.00" XPos="67" YPos="264" DefaultDataType="5" DefaultTablePrefix="0" DefSaveDBConn="" DefSyncDBConn="" DefQueryDBConn="" Printer="\\C-6\HP Officejet 7300 series" HPageCount="2.79399727148704" PageAspectRatio="1.441048034934498" PageOrientation="0" PageFormat="A4 (210x297 mm, 8.26x11.7 inches)" SelectedPages="0;1" UsePositionGrid="0" PositionGridX="20" PositionGridY="20" TableNameInRefs="1" DefaultTableType="1" ActivateRefDefForNewRelations="1" FKPrefix="" FKPostfix="" CreateFKRefDefIndex="1" DBQuoteCharacter="`" CreateSQLforLinkedObjects="0" DefModelFont="Verdana" CanvasWidth="4096" CanvasHeight="2842" />
 <DATATYPEGROUPS>
 <DATATYPEGROUP Name="Numeric Types" Icon="1" />
 <DATATYPEGROUP Name="Date and Time Types" Icon="2" />
@@ -3503,9 +3503,9 @@
 </INDEX>
 </INDICES>
 </TABLE>
-<TABLE ID="5469" Tablename="notification" PrevTableName="Table_44" XPos="1448" YPos="1616" TableType="1" TablePrefix="0" nmTable="0" Temporary="0" UseStandardInserts="0" StandardInserts="INSERT INTO notification (notification_id, short_description, long_description, criteria, frequency, enabled_flag) VALUES (1, \aOverdue Receipt\a, \aSend notification when a receipt is overdue\a, \a10\a, \aonce\a, false);\n" TableOptions="DelayKeyTblUpdates=0\nPackKeys=0\nRowChecksum=0\nRowFormat=0\nUseRaid=0\nRaidType=0\n" Comments="" Collapsed="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="154" >
+<TABLE ID="5469" Tablename="notification" PrevTableName="Table_44" XPos="1336" YPos="1585" TableType="1" TablePrefix="0" nmTable="0" Temporary="0" UseStandardInserts="0" StandardInserts="INSERT INTO notification (notification_id, short_description, long_description, criteria, frequency, enabled_flag) VALUES (1, \aOverdue Receipt\a, \aSend notification when a receipt is overdue\a, \a10\a, \aonce\a, false);\n" TableOptions="DelayKeyTblUpdates=0\nPackKeys=0\nRowChecksum=0\nRowFormat=0\nUseRaid=0\nRaidType=0\n" Comments="" Collapsed="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="154" >
 <COLUMNS>
-<COLUMN ID="5471" ColName="role_entity_qtype_custom_field_authorization_id" PrevColName="" Pos="0" idDatatype="4" DatatypeParams="(10)" Width="-1" Prec="-1" PrimaryKey="1" NotNull="1" AutoInc="1" IsForeignKey="0" DefaultValue="" Comments="">
+<COLUMN ID="5471" ColName="notification_id" PrevColName="role_entity_qtype_custom_field_authorization_id" Pos="0" idDatatype="4" DatatypeParams="(10)" Width="-1" Prec="-1" PrimaryKey="1" NotNull="1" AutoInc="1" IsForeignKey="0" DefaultValue="" Comments="">
 <OPTIONSELECTED>
 <OPTIONSELECT Value="0" />
 <OPTIONSELECT Value="0" />
@@ -3580,15 +3580,15 @@
 </INDEX>
 </INDICES>
 </TABLE>
-<TABLE ID="5491" Tablename="notification_user_account" PrevTableName="Table_45" XPos="1375" YPos="1304" TableType="1" TablePrefix="0" nmTable="0" Temporary="0" UseStandardInserts="0" StandardInserts="\n" TableOptions="DelayKeyTblUpdates=0\nPackKeys=0\nRowChecksum=0\nRowFormat=0\nUseRaid=0\nRaidType=0\n" Comments="" Collapsed="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="157" >
+<TABLE ID="5491" Tablename="notification_user_account" PrevTableName="Table_45" XPos="1339" YPos="1304" TableType="1" TablePrefix="0" nmTable="0" Temporary="0" UseStandardInserts="0" StandardInserts="\n" TableOptions="DelayKeyTblUpdates=0\nPackKeys=0\nRowChecksum=0\nRowFormat=0\nUseRaid=0\nRaidType=0\n" Comments="" Collapsed="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="157" >
 <COLUMNS>
-<COLUMN ID="5493" ColName="role_entity_qtype_custom_field_authorization_user_account_id" PrevColName="" Pos="0" idDatatype="4" DatatypeParams="(10)" Width="-1" Prec="-1" PrimaryKey="1" NotNull="1" AutoInc="1" IsForeignKey="0" DefaultValue="" Comments="">
+<COLUMN ID="5493" ColName="notification_user_account_id" PrevColName="role_entity_qtype_custom_field_authorization_user_account_id" Pos="0" idDatatype="4" DatatypeParams="(10)" Width="-1" Prec="-1" PrimaryKey="1" NotNull="1" AutoInc="1" IsForeignKey="0" DefaultValue="" Comments="">
 <OPTIONSELECTED>
 <OPTIONSELECT Value="0" />
 <OPTIONSELECT Value="0" />
 </OPTIONSELECTED>
 </COLUMN>
-<COLUMN ID="8863" ColName="notification_role_entity_qtype_custom_field_authorization_id" PrevColName="" Pos="1" idDatatype="4" DatatypeParams="(10)" Width="-1" Prec="-1" PrimaryKey="0" NotNull="1" AutoInc="0" IsForeignKey="1" DefaultValue="" Comments="">
+<COLUMN ID="8979" ColName="notification_id" PrevColName="" Pos="1" idDatatype="4" DatatypeParams="(10)" Width="-1" Prec="-1" PrimaryKey="0" NotNull="1" AutoInc="0" IsForeignKey="1" DefaultValue="" Comments="">
 <OPTIONSELECTED>
 <OPTIONSELECT Value="0" />
 <OPTIONSELECT Value="0" />
@@ -3617,7 +3617,7 @@
 </INDEX>
 <INDEX ID="5498" IndexName="notification_user_account_FKIndex1" IndexKind="1" FKRefDef_Obj_id="5496">
 <INDEXCOLUMNS>
-<INDEXCOLUMN idColumn="8863" LengthParam="0" />
+<INDEXCOLUMN idColumn="8979" LengthParam="0" />
 </INDEXCOLUMNS>
 </INDEX>
 <INDEX ID="5501" IndexName="notification_user_account_FKIndex2" IndexKind="1" FKRefDef_Obj_id="5499">
@@ -4003,7 +4003,7 @@
 <RELATION ID="4048" RelationName="Rel_110" Kind="2" SrcTable="1208" DestTable="4035" FKFields="user_account_id=user_account_id\n" FKFieldsComments="\n" relDirection="3" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="0" CaptionOffsetY="0" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="1" RefDef="Matching=0\nOnDelete=1\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="4049" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="154" />
 <RELATION ID="5481" RelationName="Rel_110" Kind="2" SrcTable="1208" DestTable="5469" FKFields="user_account_id=created_by\n" FKFieldsComments="\n" relDirection="3" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="0" CaptionOffsetY="0" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="1" RefDef="Matching=0\nOnDelete=2\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="5483" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="155" />
 <RELATION ID="5486" RelationName="Rel_111" Kind="2" SrcTable="1208" DestTable="5469" FKFields="user_account_id=modified_by\n" FKFieldsComments="\n" relDirection="3" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="0" CaptionOffsetY="0" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="1" RefDef="Matching=0\nOnDelete=2\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="5488" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="156" />
-<RELATION ID="5496" RelationName="Rel_112" Kind="2" SrcTable="5469" DestTable="5491" FKFields="role_entity_qtype_custom_field_authorization_id=notification_role_entity_qtype_custom_field_authorization_id\n" FKFieldsComments="\n" relDirection="1" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="0" CaptionOffsetY="0" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="5498" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="158" />
+<RELATION ID="5496" RelationName="Rel_112" Kind="2" SrcTable="5469" DestTable="5491" FKFields="notification_id=notification_id\n" FKFieldsComments="\n" relDirection="1" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="0" CaptionOffsetY="0" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="5498" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="158" />
 <RELATION ID="5499" RelationName="Rel_113" Kind="2" SrcTable="1208" DestTable="5491" FKFields="user_account_id=user_account_id\n" FKFieldsComments="\n" relDirection="3" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="0" CaptionOffsetY="0" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="5501" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="159" />
 <RELATION ID="7314" RelationName="Rel_115" Kind="2" SrcTable="1601" DestTable="7307" FKFields="entity_qtype_id=entity_qtype_id\n" FKFieldsComments="\n" relDirection="3" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="0" CaptionOffsetY="0" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="7322" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="161" />
 <RELATION ID="7324" RelationName="Rel_115" Kind="2" SrcTable="1208" DestTable="7307" FKFields="user_account_id=created_by\n" FKFieldsComments="\n" relDirection="3" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="0" CaptionOffsetY="0" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="1" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="7326" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="162" />
