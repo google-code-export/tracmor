@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="yes" ?>
 <DBMODEL Version="4.0">
 <SETTINGS>
-<GLOBALSETTINGS ModelName="tracmor" IDModel="0" IDVersion="0" VersionStr="1.0.0.0" Comments="" UseVersionHistroy="1" AutoIncVersion="1" DatabaseType="MySQL" ZoomFac="75.00" XPos="67" YPos="912" DefaultDataType="5" DefaultTablePrefix="0" DefSaveDBConn="" DefSyncDBConn="" DefQueryDBConn="" Printer="\\C-6\HP Officejet 7300 series" HPageCount="2.79399727148704" PageAspectRatio="1.441048034934498" PageOrientation="0" PageFormat="A4 (210x297 mm, 8.26x11.7 inches)" SelectedPages="0;1" UsePositionGrid="0" PositionGridX="20" PositionGridY="20" TableNameInRefs="1" DefaultTableType="1" ActivateRefDefForNewRelations="1" FKPrefix="" FKPostfix="" CreateFKRefDefIndex="1" DBQuoteCharacter="`" CreateSQLforLinkedObjects="0" DefModelFont="Verdana" CanvasWidth="4096" CanvasHeight="2842" />
+<GLOBALSETTINGS ModelName="tracmor" IDModel="0" IDVersion="0" VersionStr="1.0.0.0" Comments="" UseVersionHistroy="1" AutoIncVersion="1" DatabaseType="MySQL" ZoomFac="75.00" XPos="67" YPos="816" DefaultDataType="5" DefaultTablePrefix="0" DefSaveDBConn="" DefSyncDBConn="" DefQueryDBConn="" Printer="\\C-6\HP Officejet 7300 series" HPageCount="2.79399727148704" PageAspectRatio="1.441048034934498" PageOrientation="0" PageFormat="A4 (210x297 mm, 8.26x11.7 inches)" SelectedPages="0;1" UsePositionGrid="0" PositionGridX="20" PositionGridY="20" TableNameInRefs="1" DefaultTableType="1" ActivateRefDefForNewRelations="1" FKPrefix="" FKPostfix="" CreateFKRefDefIndex="1" DBQuoteCharacter="`" CreateSQLforLinkedObjects="0" DefModelFont="Verdana" CanvasWidth="4096" CanvasHeight="2842" />
 <DATATYPEGROUPS>
 <DATATYPEGROUP Name="Numeric Types" Icon="1" />
 <DATATYPEGROUP Name="Date and Time Types" Icon="2" />
@@ -3706,7 +3706,7 @@
 </INDEX>
 </INDICES>
 </TABLE>
-<TABLE ID="8776" Tablename="role_entity_qtype_built_in_authorization" PrevTableName="Table_44" XPos="753" YPos="1980" TableType="1" TablePrefix="0" nmTable="0" Temporary="0" UseStandardInserts="0" StandardInserts="INSERT INTO notification (notification_id, short_description, long_description, criteria, frequency, enabled_flag) VALUES (1, \aOverdue Receipt\a, \aSend notification when a receipt is overdue\a, \a10\a, \aonce\a, false);\n" TableOptions="DelayKeyTblUpdates=0\nPackKeys=0\nRowChecksum=0\nRowFormat=0\nUseRaid=0\nRaidType=0\n" Comments="" Collapsed="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="154" >
+<TABLE ID="8776" Tablename="role_entity_qtype_built_in_authorization" PrevTableName="Table_44" XPos="753" YPos="1980" TableType="1" TablePrefix="0" nmTable="0" Temporary="0" UseStandardInserts="0" StandardInserts="\n" TableOptions="DelayKeyTblUpdates=0\nPackKeys=0\nRowChecksum=0\nRowFormat=0\nUseRaid=0\nRaidType=0\n" Comments="" Collapsed="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="154" >
 <COLUMNS>
 <COLUMN ID="8777" ColName="role_entity_built_in_id" PrevColName="role_entity_qtype_built_in_authorization_id" Pos="0" idDatatype="5" DatatypeParams="" Width="-1" Prec="-1" PrimaryKey="1" NotNull="1" AutoInc="1" IsForeignKey="0" DefaultValue="" Comments="">
 <OPTIONSELECTED>
@@ -3798,7 +3798,7 @@
 </INDEX>
 </INDICES>
 </TABLE>
-<TABLE ID="8921" Tablename="role_entity_qtype_custom_field_authorization" PrevTableName="Table_44" XPos="304" YPos="1917" TableType="1" TablePrefix="0" nmTable="0" Temporary="0" UseStandardInserts="0" StandardInserts="INSERT INTO notification (notification_id, short_description, long_description, criteria, frequency, enabled_flag) VALUES (1, \aOverdue Receipt\a, \aSend notification when a receipt is overdue\a, \a10\a, \aonce\a, false);\n" TableOptions="DelayKeyTblUpdates=0\nPackKeys=0\nRowChecksum=0\nRowFormat=0\nUseRaid=0\nRaidType=0\n" Comments="" Collapsed="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="154" >
+<TABLE ID="8921" Tablename="role_entity_qtype_custom_field_authorization" PrevTableName="Table_44" XPos="304" YPos="1917" TableType="1" TablePrefix="0" nmTable="0" Temporary="0" UseStandardInserts="0" StandardInserts="\n" TableOptions="DelayKeyTblUpdates=0\nPackKeys=0\nRowChecksum=0\nRowFormat=0\nUseRaid=0\nRaidType=0\n" Comments="" Collapsed="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="154" >
 <COLUMNS>
 <COLUMN ID="8922" ColName="role_entity_qtype_custom_field_authorization_id" PrevColName="role_entity_qtype_built_in_authorization_id" Pos="0" idDatatype="5" DatatypeParams="" Width="-1" Prec="-1" PrimaryKey="1" NotNull="1" AutoInc="1" IsForeignKey="0" DefaultValue="" Comments="">
 <OPTIONSELECTED>
