@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="yes" ?>
 <DBMODEL Version="4.0">
 <SETTINGS>
-<GLOBALSETTINGS ModelName="tracmor" IDModel="0" IDVersion="0" VersionStr="1.0.0.0" Comments="" UseVersionHistroy="1" AutoIncVersion="1" DatabaseType="MySQL" ZoomFac="75.00" XPos="67" YPos="1008" DefaultDataType="5" DefaultTablePrefix="0" DefSaveDBConn="" DefSyncDBConn="" DefQueryDBConn="" Printer="\\C-6\HP Officejet 7300 series" HPageCount="2.79399727148704" PageAspectRatio="1.441048034934498" PageOrientation="0" PageFormat="A4 (210x297 mm, 8.26x11.7 inches)" SelectedPages="0;1" UsePositionGrid="0" PositionGridX="20" PositionGridY="20" TableNameInRefs="1" DefaultTableType="1" ActivateRefDefForNewRelations="1" FKPrefix="" FKPostfix="" CreateFKRefDefIndex="1" DBQuoteCharacter="`" CreateSQLforLinkedObjects="0" DefModelFont="Verdana" CanvasWidth="4096" CanvasHeight="2842" />
+<GLOBALSETTINGS ModelName="tracmor" IDModel="0" IDVersion="0" VersionStr="1.0.0.0" Comments="" UseVersionHistroy="1" AutoIncVersion="1" DatabaseType="MySQL" ZoomFac="75.00" XPos="67" YPos="1056" DefaultDataType="5" DefaultTablePrefix="0" DefSaveDBConn="" DefSyncDBConn="" DefQueryDBConn="" Printer="\\C-6\HP Officejet 7300 series" HPageCount="2.79399727148704" PageAspectRatio="1.441048034934498" PageOrientation="0" PageFormat="A4 (210x297 mm, 8.26x11.7 inches)" SelectedPages="0;1" UsePositionGrid="0" PositionGridX="20" PositionGridY="20" TableNameInRefs="1" DefaultTableType="1" ActivateRefDefForNewRelations="1" FKPrefix="" FKPostfix="" CreateFKRefDefIndex="1" DBQuoteCharacter="`" CreateSQLforLinkedObjects="0" DefModelFont="Verdana" CanvasWidth="4096" CanvasHeight="2842" />
 <DATATYPEGROUPS>
 <DATATYPEGROUP Name="Numeric Types" Icon="1" />
 <DATATYPEGROUP Name="Date and Time Types" Icon="2" />
@@ -1291,10 +1291,10 @@
 <RELATION_START ID="5486" />
 <RELATION_START ID="5499" />
 <RELATION_START ID="7324" />
-<RELATION_START ID="8911" />
-<RELATION_START ID="8916" />
 <RELATION_START ID="8959" />
 <RELATION_START ID="8965" />
+<RELATION_START ID="8999" />
+<RELATION_START ID="9004" />
 </RELATIONS_START>
 <RELATIONS_END>
 <RELATION_END ID="1239" />
@@ -2565,7 +2565,7 @@
 </INDEX>
 </INDICES>
 </TABLE>
-<TABLE ID="2204" Tablename="currency_unit" PrevTableName="Table_30" XPos="2556" YPos="1281" TableType="1" TablePrefix="0" nmTable="0" Temporary="0" UseStandardInserts="0" StandardInserts="INSERT INTO currency_unit (`currency_unit_id`, `short_description`, `symbol`) VALUES (1, \aUSD\a, \a\+#36;\a);\nINSERT INTO currency_unit (`currency_unit_id`, `short_description`, `symbol`) VALUES (2, \aGBP\a, \a\+#163;\a);\nINSERT INTO currency_unit (`currency_unit_id`, `short_description`, `symbol`) VALUES (3, \aEUR\a, \a\+#128;\a);\n" TableOptions="DelayKeyTblUpdates=0\nPackKeys=0\nRowChecksum=0\nRowFormat=0\nUseRaid=0\nRaidType=0\n" Comments="" Collapsed="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="96" >
+<TABLE ID="2204" Tablename="currency_unit" PrevTableName="Table_30" XPos="2556" YPos="1281" TableType="1" TablePrefix="0" nmTable="0" Temporary="0" UseStandardInserts="0" StandardInserts="INSERT INTO currency_unit (`currency_unit_id`, `short_description`, `symbol`) VALUES (1, \aUSD\a, \a\+#36;\a);\nINSERT INTO currency_unit (`currency_unit_id`, `short_description`, `symbol`) VALUES (2, \aGBP\a, \a\+#163;\a);\nINSERT INTO currency_unit (`currency_unit_id`, `short_description`, `symbol`) VALUES (3, \aEUR\a, \a\+#128;\a);\n" TableOptions="DelayKeyTblUpdates=0\nPackKeys=0\nRowChecksum=0\nRowFormat=0\nUseRaid=0\nRaidType=0\n" Comments="" Collapsed="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="177" >
 <COLUMNS>
 <COLUMN ID="2206" ColName="currency_unit_id" PrevColName="" Pos="0" idDatatype="5" DatatypeParams="" Width="-1" Prec="-1" PrimaryKey="1" NotNull="1" AutoInc="1" IsForeignKey="0" DefaultValue="" Comments="">
 <OPTIONSELECTED>
@@ -3736,7 +3736,7 @@
 <OPTIONSELECTED>
 </OPTIONSELECTED>
 </COLUMN>
-<COLUMN ID="8818" ColName="created_by" PrevColName="" Pos="8" idDatatype="5" DatatypeParams="" Width="-1" Prec="-1" PrimaryKey="0" NotNull="0" AutoInc="0" IsForeignKey="1" DefaultValue="" Comments="">
+<COLUMN ID="9002" ColName="created_by" PrevColName="" Pos="1" idDatatype="5" DatatypeParams="" Width="-1" Prec="-1" PrimaryKey="0" NotNull="1" AutoInc="0" IsForeignKey="1" DefaultValue="" Comments="">
 <OPTIONSELECTED>
 <OPTIONSELECT Value="1" />
 <OPTIONSELECT Value="0" />
@@ -3746,7 +3746,7 @@
 <OPTIONSELECTED>
 </OPTIONSELECTED>
 </COLUMN>
-<COLUMN ID="8820" ColName="modified_by" PrevColName="" Pos="9" idDatatype="5" DatatypeParams="" Width="-1" Prec="-1" PrimaryKey="0" NotNull="0" AutoInc="0" IsForeignKey="1" DefaultValue="" Comments="">
+<COLUMN ID="9009" ColName="modified_by" PrevColName="" Pos="1" idDatatype="5" DatatypeParams="" Width="-1" Prec="-1" PrimaryKey="0" NotNull="1" AutoInc="0" IsForeignKey="1" DefaultValue="" Comments="">
 <OPTIONSELECTED>
 <OPTIONSELECT Value="1" />
 <OPTIONSELECT Value="0" />
@@ -3762,23 +3762,13 @@
 <RELATION_END ID="8833" />
 <RELATION_END ID="8836" />
 <RELATION_END ID="8839" />
-<RELATION_END ID="8911" />
-<RELATION_END ID="8916" />
+<RELATION_END ID="8999" />
+<RELATION_END ID="9004" />
 </RELATIONS_END>
 <INDICES>
 <INDEX ID="8790" IndexName="PRIMARY" IndexKind="0" FKRefDef_Obj_id="-1">
 <INDEXCOLUMNS>
 <INDEXCOLUMN idColumn="8777" LengthParam="0" />
-</INDEXCOLUMNS>
-</INDEX>
-<INDEX ID="8822" IndexName="role_entity_qtype_built_in_authorization_FKIndex4" IndexKind="1" FKRefDef_Obj_id="-1">
-<INDEXCOLUMNS>
-<INDEXCOLUMN idColumn="8818" LengthParam="0" />
-</INDEXCOLUMNS>
-</INDEX>
-<INDEX ID="8824" IndexName="role_entity_qtype_built_in_authorization_FKIndex5" IndexKind="1" FKRefDef_Obj_id="-1">
-<INDEXCOLUMNS>
-<INDEXCOLUMN idColumn="8820" LengthParam="0" />
 </INDEXCOLUMNS>
 </INDEX>
 <INDEX ID="8834" IndexName="role_entity_qtype_built_in_authorization_FKIndex1" IndexKind="1" FKRefDef_Obj_id="8833">
@@ -3796,21 +3786,21 @@
 <INDEXCOLUMN idColumn="8780" LengthParam="0" />
 </INDEXCOLUMNS>
 </INDEX>
-<INDEX ID="8983" IndexName="role_entity_qtype_built_in_authorization_FKIndex4" IndexKind="1" FKRefDef_Obj_id="8911">
-<INDEXCOLUMNS>
-<INDEXCOLUMN idColumn="8818" LengthParam="0" />
-</INDEXCOLUMNS>
-</INDEX>
-<INDEX ID="8984" IndexName="role_entity_qtype_built_in_authorization_FKIndex5" IndexKind="1" FKRefDef_Obj_id="8916">
-<INDEXCOLUMNS>
-<INDEXCOLUMN idColumn="8820" LengthParam="0" />
-</INDEXCOLUMNS>
-</INDEX>
 <INDEX ID="8986" IndexName="role_entity_qtype_built_in_authorization_Unique" IndexKind="2" FKRefDef_Obj_id="-1">
 <INDEXCOLUMNS>
 <INDEXCOLUMN idColumn="8778" LengthParam="0" />
 <INDEXCOLUMN idColumn="8779" LengthParam="0" />
 <INDEXCOLUMN idColumn="8780" LengthParam="0" />
+</INDEXCOLUMNS>
+</INDEX>
+<INDEX ID="9001" IndexName="role_entity_qtype_built_in_authorization_FKIndex4" IndexKind="1" FKRefDef_Obj_id="8999">
+<INDEXCOLUMNS>
+<INDEXCOLUMN idColumn="9002" LengthParam="0" />
+</INDEXCOLUMNS>
+</INDEX>
+<INDEX ID="9006" IndexName="role_entity_qtype_built_in_authorization_FKIndex5" IndexKind="1" FKRefDef_Obj_id="9004">
+<INDEXCOLUMNS>
+<INDEXCOLUMN idColumn="9009" LengthParam="0" />
 </INDEXCOLUMNS>
 </INDEX>
 </INDICES>
@@ -4036,13 +4026,13 @@
 <RELATION ID="8833" RelationName="Rel_119" Kind="2" SrcTable="2304" DestTable="8776" FKFields="role_id=role_id\n" FKFieldsComments="\n" relDirection="3" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="0" CaptionOffsetY="0" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="8834" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="166" />
 <RELATION ID="8836" RelationName="Rel_120" Kind="2" SrcTable="1601" DestTable="8776" FKFields="entity_qtype_id=entity_qtype_id\n" FKFieldsComments="\n" relDirection="3" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="0" CaptionOffsetY="0" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="8837" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="167" />
 <RELATION ID="8839" RelationName="Rel_121" Kind="2" SrcTable="2325" DestTable="8776" FKFields="authorization_id=authorization_id\n" FKFieldsComments="\n" relDirection="3" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="0" CaptionOffsetY="0" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="8840" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="168" />
-<RELATION ID="8911" RelationName="Rel_122" Kind="2" SrcTable="1208" DestTable="8776" FKFields="user_account_id=created_by\n" FKFieldsComments="\n" relDirection="3" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="0" CaptionOffsetY="0" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="1" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="8983" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="170" />
-<RELATION ID="8916" RelationName="Rel_123" Kind="2" SrcTable="1208" DestTable="8776" FKFields="user_account_id=modified_by\n" FKFieldsComments="\n" relDirection="3" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="0" CaptionOffsetY="0" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="1" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="8984" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="171" />
 <RELATION ID="8948" RelationName="Rel_124" Kind="2" SrcTable="2304" DestTable="8921" FKFields="role_id=role_id\n" FKFieldsComments="\n" relDirection="3" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="0" CaptionOffsetY="0" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="8950" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="172" />
 <RELATION ID="8952" RelationName="Rel_125" Kind="2" SrcTable="1606" DestTable="8921" FKFields="entity_qtype_custom_field_id=entity_qtype_custom_field_id\n" FKFieldsComments="\n" relDirection="3" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="0" CaptionOffsetY="0" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="8954" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="173" />
 <RELATION ID="8955" RelationName="Rel_126" Kind="2" SrcTable="2325" DestTable="8921" FKFields="authorization_id=authorization_id\n" FKFieldsComments="\n" relDirection="3" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="0" CaptionOffsetY="0" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="8957" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="174" />
 <RELATION ID="8959" RelationName="Rel_127" Kind="2" SrcTable="1208" DestTable="8921" FKFields="user_account_id=created_by\n" FKFieldsComments="\n" relDirection="3" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="0" CaptionOffsetY="0" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="1" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="8961" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="175" />
 <RELATION ID="8965" RelationName="Rel_128" Kind="2" SrcTable="1208" DestTable="8921" FKFields="user_account_id=modified_by\n" FKFieldsComments="\n" relDirection="3" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="0" CaptionOffsetY="0" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="8967" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="176" />
+<RELATION ID="8999" RelationName="Rel_128" Kind="2" SrcTable="1208" DestTable="8776" FKFields="user_account_id=created_by\n" FKFieldsComments="\n" relDirection="3" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="0" CaptionOffsetY="0" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="9001" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="175" />
+<RELATION ID="9004" RelationName="Rel_129" Kind="2" SrcTable="1208" DestTable="8776" FKFields="user_account_id=modified_by\n" FKFieldsComments="\n" relDirection="3" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="0" CaptionOffsetY="0" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="9006" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="176" />
 </RELATIONS>
 <NOTES>
 </NOTES>
