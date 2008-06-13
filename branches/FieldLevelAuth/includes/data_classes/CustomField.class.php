@@ -38,7 +38,9 @@
 	class CustomField extends CustomFieldGen {
 		
 		public $CustomFieldSelection;
-		
+		//
+		public $ViewAuth;
+		public $EditAuth;
 		/**
 		 * Default "to string" handler
 		 * Allows pages to _p()/echo()/print() this object, and to define the default
