@@ -78,6 +78,10 @@ class QAssetEditComposite extends QControl {
 	// protected $objCustomFieldArray;
 	public $arrCustomFields;
 	
+	// Set true if the Built-in Fields have to be rendered
+	public $blnViewBuiltInFields;
+	public $blnEditBuiltInFields;
+	
 	// Dialog Box
 	protected $dlgNewAssetModel;
 	
@@ -115,6 +119,9 @@ class QAssetEditComposite extends QControl {
 		$this->dlgNewAssetModel_Create();
 		$this->UpdateAssetControls();
 
+		// Set a variable which define whether the built-in fields must be rendered or not.
+		$this->updateBuiltInFields();
+		
 		// Create all custom asset fields
 		$this->customFields_Create();
 		
@@ -207,11 +214,28 @@ class QAssetEditComposite extends QControl {
 		$this->arrCustomFields = CustomField::CustomFieldControlsCreate($this->objAsset->objCustomFieldArray, $this->blnEditMode, $this, true, true);
 		
 		foreach ($this->arrCustomFields as $objCustomField) {
-			$objCustomField['input']->TabIndex=$this->GetNextTabIndex();
+			if($objCustomField['ViewAuth'] && $objCustomField['ViewAuth']->AuthorizedFlag)
+				$objCustomField['input']->TabIndex=$this->GetNextTabIndex();
 		}
 			
 		
 	}
+	// Set $blnViewBuiltInFields
+	protected function updateBuiltInFields() {
+		$objRoleEntityQtypeBuiltInAuthorization= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,1,1);
+		if($objRoleEntityQtypeBuiltInAuthorization && $objRoleEntityQtypeBuiltInAuthorization->AuthorizedFlag)
+			$this->blnViewBuiltInFields=true;
+		else
+			$this->blnViewBuiltInFields=false;
+			
+		$objRoleEntityQtypeBuiltInAuthorization2= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,1,2);
+		if($objRoleEntityQtypeBuiltInAuthorization2 && $objRoleEntityQtypeBuiltInAuthorization2->AuthorizedFlag)
+			$this->blnEditBuiltInFields=true;
+		else
+			$this->blnEditBuiltInFields=false;
+		
+	}
+	
 	
 	// Create the Asset Code text input
 	protected function txtAssetCode_Create() {
@@ -971,8 +995,11 @@ class QAssetEditComposite extends QControl {
 		$this->atcAttach->btnUpload->Display = false;
     
     // Display Asset Code and Asset Model input for edit mode
-		$this->txtAssetCode->Display = true;
-		$this->lstAssetModel->Display = true;
+    // new: if the user is authorized to edit the built-in fields.
+		//if($this->blnEditBuiltInFields){	
+			$this->txtAssetCode->Display = true;
+			$this->lstAssetModel->Display = true;
+	//	}
 		
     // Display Cancel and Save butons    
     $this->btnCancel->Display = true;

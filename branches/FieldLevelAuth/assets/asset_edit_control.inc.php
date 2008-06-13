@@ -21,13 +21,20 @@
 	
 	// Build array of all fields to display
 	$arrAssetViewFields = array();
-	if (!$this->blnEditMode) {
-		$arrAssetFields[] = array('name' => 'Asset Model:',  'value' => $this->lstAssetModel->RenderWithError(false) . '&nbsp;' . $this->lblNewAssetModel->Render(false));
+	
+	//Only display the built-in fields if the user is authorized according to FLA(Field-Level-Authorization)
+	// Built-in fields for Assets are:
+	// Asset Code 
+	// Asset Model
+	if($this->blnViewBuiltInFields){
+		if (!$this->blnEditMode) {
+			$arrAssetFields[] = array('name' => 'Asset Model:',  'value' => $this->lstAssetModel->RenderWithError(false) . '&nbsp;' . $this->lblNewAssetModel->Render(false));
+		}
+		else {
+			$arrAssetFields[] = array('name' => 'Asset Model:',  'value' => $this->lstAssetModel->Render(false) . '&nbsp;' . $this->lblNewAssetModel->Render(false) . $this->lblAssetModel->Render(false));
+		}
+		$arrAssetFields[] = array('name' => 'Asset Code:',   'value' => $this->txtAssetCode->RenderWithError(false) . $this->chkAutoGenerateAssetCode->Render(false) . $this->lblAssetCode->Render(false));
 	}
-	else {
-		$arrAssetFields[] = array('name' => 'Asset Model:',  'value' => $this->lstAssetModel->Render(false) . '&nbsp;' . $this->lblNewAssetModel->Render(false) . $this->lblAssetModel->Render(false));
-	}
-	$arrAssetFields[] = array('name' => 'Asset Code:',   'value' => $this->txtAssetCode->RenderWithError(false) . $this->chkAutoGenerateAssetCode->Render(false) . $this->lblAssetCode->Render(false));
 	$arrAssetFields[] = array('name' => 'Category:',     'value' => $this->lblCategory->Render(false) . '&nbsp;');
 	$arrAssetFields[] = array('name' => 'Manufacturer:', 'value' => $this->lblManufacturer->Render(false) . '&nbsp;');
 	$arrAssetFields[] = array('name' => 'Asset Model Code:',  'value' => $this->lblAssetModelCode->Render(false) . '&nbsp;');
@@ -46,7 +53,8 @@
 	// Custom Fields
 	if ($this->arrCustomFields) {
 		foreach ($this->arrCustomFields as $field) {
-			$arrAssetFields[] = array('name' => $field['lbl']->Name.':', 'value' => $field['lbl']->Render(false).$field['input']->RenderWithError(false));
+			if($field['ViewAuth'] && $field['ViewAuth']->AuthorizedFlag)
+				$arrAssetFields[] = array('name' => $field['lbl']->Name.':', 'value' => $field['lbl']->Render(false).$field['input']->RenderWithError(false));
 		}
 	}
 	

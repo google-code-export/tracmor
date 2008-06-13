@@ -113,7 +113,8 @@
       $objCustomFieldArray = CustomField::LoadObjCustomFieldArray(2, false);
       if ($objCustomFieldArray) {
       	foreach ($objCustomFieldArray as $objCustomField) {
-      		$this->dtgInventoryModel->AddColumn(new QDataGridColumnExt($objCustomField->ShortDescription, '<?= $_ITEM->GetVirtualAttribute(\''.$objCustomField->CustomFieldId.'\') ?>', 'SortByCommand="__'.$objCustomField->CustomFieldId.' ASC"', 'ReverseSortByCommand="__'.$objCustomField->CustomFieldId.' DESC"','HtmlEntities="false"', 'CssClass="dtg_column"', 'Display="false"'));
+      		if($objCustomField->ViewAuth && $objCustomField->ViewAuth->AuthorizedFlag)
+      			$this->dtgInventoryModel->AddColumn(new QDataGridColumnExt($objCustomField->ShortDescription, '<?= $_ITEM->GetVirtualAttribute(\''.$objCustomField->CustomFieldId.'\') ?>', 'SortByCommand="__'.$objCustomField->CustomFieldId.' ASC"', 'ReverseSortByCommand="__'.$objCustomField->CustomFieldId.' DESC"','HtmlEntities="false"', 'CssClass="dtg_column"', 'Display="false"'));
       	}
       }
 
