@@ -25,7 +25,7 @@
 	QApplication::Authenticate();
 	// Include the classfile for RoleEditFormBase
 	require(__FORMBASE_CLASSES__ . '/RoleEditFormBase.class.php');
-
+	require(__DOCROOT__ . __SUBDIRECTORY__ . '/admin/FieldLevelAuthPanel.class.php');
 	/**
 	 * This is a quick-and-dirty draft form object to do Create, Edit, and Delete functionality
 	 * of the Role class.  It extends from the code-generated
@@ -50,6 +50,12 @@
 		protected $objRoleModuleAuthorizationArray;
 		protected $arrControls;
 		protected $lblHeaderRole;
+		
+		protected $pnlAssets;
+		protected $pnlAssetModel;
+		// Boolean that toggles FieldLevelAuth display
+		public $blnAssetsAdvanced;
+		public $lblAssetsAdvanced;
 		
 		protected function Form_Create() {
 			
@@ -78,6 +84,15 @@
 			$this->btnSave_Create();
 			$this->btnCancel_Create();
 			$this->btnDelete_Create();
+			
+			
+			
+			$this->pnlAssets = new FieldLevelAuthPanel($this,EntityQtype::Asset);
+			
+			$this->pnlAssetModel = new FieldLevelAuthPanel($this,EntityQtype::AssetModel);
+			
+			$this->lblAssetsAdvanced_Create();
+			
 		}
 		
 		// Create and Setup the Header Composite Control
@@ -245,6 +260,33 @@
 			$this->lblHeaderRole = new QLabel($this);
 			$this->lblHeaderRole->Text = ($this->objRole->ShortDescription != '') ? $this->objRole->ShortDescription : 'New Role';
 		}
+		
+		
+	 protected function lblAssetsAdvanced_Create() {
+	  	$this->lblAssetsAdvanced = new QLabel($this);
+	  	$this->lblAssetsAdvanced->Name = 'Advanced';
+	  	$this->lblAssetsAdvanced->Text = 'Advanced';
+	  //	$this->lblAssetsAdvanced->AddAction(new QClickEvent(), new QToggleDisplayAction($this->pnlAssets));
+	  //	$this->lblAssetsAdvanced->AddAction(new QClickEvent(), new QToggleDisplayAction($this->pnlAssetModel));
+	  	$this->lblAssetsAdvanced->AddAction(new QClickEvent(), new QServerAction('lblAssetsAdvanced_Click'));
+	  	$this->lblAssetsAdvanced->SetCustomStyle('text-decoration', 'underline');
+	  	$this->lblAssetsAdvanced->SetCustomStyle('cursor', 'pointer');
+	  }
+  protected function lblAssetsAdvanced_Click() {
+	  	 	
+	 	if ($this->blnAssetsAdvanced) {
+	  		$this->pnlAssets->Visible=false;
+	  		$this->blnAssetsAdvanced = false;
+	  		$this->lblAssetsAdvanced->Text = 'Advanced';
+	  	}
+	  	else {
+	  		$this->pnlAssets->Visible=true;
+	  		$this->blnAssetsAdvanced = true;
+	  		$this->lblAssetsAdvanced->Text = 'Hide Advanced';
+	  	}
+	  	
+	  }
+		
 		
 		// Setup btnSave
 		protected function btnSave_Create() {

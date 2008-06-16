@@ -53,8 +53,19 @@
 	// Custom Fields
 	if ($this->arrCustomFields) {
 		foreach ($this->arrCustomFields as $field) {
-			if($field['ViewAuth'] && $field['ViewAuth']->AuthorizedFlag)
+			if ($this->blnEditMode) {
+				if(($field['ViewAuth'] && $field['ViewAuth']->AuthorizedFlag))
+					$arrAssetFields[] = array('name' => $field['lbl']->Name.':', 'value' => $field['lbl']->Render(false).$field['input']->RenderWithError(false));				
+			}
+			elseif($field['EditAuth'] && $field['EditAuth']->AuthorizedFlag)
 				$arrAssetFields[] = array('name' => $field['lbl']->Name.':', 'value' => $field['lbl']->Render(false).$field['input']->RenderWithError(false));
+			elseif($field['EditAuth'] && $field['EditAuth']->EntityQtypeCustomField->CustomField->RequiredFlag){
+				$field['lbl']->Text=$field['EditAuth']->EntityQtypeCustomField->CustomField->DefaultCustomFieldValue->__toString();
+				$field['lbl']->Visible=true;
+				$field['input']->Visible=false;
+				$arrAssetFields[] = array('name' => $field['lbl']->Name.':', 'value' => $field['lbl']->Render(false).$field['input']->RenderWithError(false));
+			}
+
 		}
 	}
 	

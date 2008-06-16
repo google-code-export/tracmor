@@ -91,7 +91,10 @@
 							<td class="role_table_cell"><?php $this->arrControls['assets']['view']->RenderWithName(); ?></td>
 							<td class="role_table_cell"><?php $this->arrControls['assets']['edit']->RenderWithName(); ?></td>
 							<td class="role_table_cell"><?php $this->arrControls['assets']['delete']->RenderWithName(); ?></td>
-						</tr>						
+							<td class="role_table_cell"><?php $this->lblAssetsAdvanced->Render(); ?>
+						</tr>
+						<?php $this->pnlAssets->Render();?>	
+						<?php $this->pnlAssetModel->Render();?>				
 						<tr>
 							<td class="role_table_left">Inventory</td>
 							<td class="role_table_cell"><?php $this->arrControls['inventory']['access']->RenderWithName(); ?></td>

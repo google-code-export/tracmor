@@ -996,10 +996,13 @@ class QAssetEditComposite extends QControl {
     
     // Display Asset Code and Asset Model input for edit mode
     // new: if the user is authorized to edit the built-in fields.
-		//if($this->blnEditBuiltInFields){	
+		if($this->blnEditBuiltInFields){	
 			$this->txtAssetCode->Display = true;
 			$this->lstAssetModel->Display = true;
-	//	}
+		}else{ //in edit mode, if the user is not authorized to edit built-in fields, the fields are render as labels.
+			$this->lblAssetCode->Display = true;
+			$this->lblAssetModel->Display = true;
+		}
 		
     // Display Cancel and Save butons    
     $this->btnCancel->Display = true;
