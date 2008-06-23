@@ -434,8 +434,30 @@
  					$arrCustomFields[$i]['CustomFieldSelectionId'] = $objCustomFieldArray[$i]->CustomFieldSelection->CustomFieldSelectionId;
  				}
 			
+ 				
+ 				//Set an RoleEntityQtypeCustomFieldAuthorization object of View Authorization and for Edit Authorization for each custom field
  				$arrCustomFields[$i]['ViewAuth']=$objCustomFieldArray[$i]->objRoleAuthView;
  				$arrCustomFields[$i]['EditAuth']=$objCustomFieldArray[$i]->objRoleAuthEdit;
+ 				
+ 				// Set all reference booleans for display logic
+ 				
+ 				//set if the custom field must show or not
+ 				if($objCustomFieldArray[$i]->objRoleAuthView->AuthorizedFlag)
+ 					$arrCustomFields[$i]['blnView']=true;
+ 				else
+ 					$arrCustomFields[$i]['blnView']=false;
+ 				
+ 				// set if the custom field is editable or not 
+ 				if($objCustomFieldArray[$i]->objRoleAuthEdit->AuthorizedFlag)
+ 					$arrCustomFields[$i]['blnEdit']=true;
+ 				else
+ 					$arrCustomFields[$i]['blnEdit']=false;
+ 					
+ 				//set if the custom field is requiered or not
+ 				if($objCustomFieldArray[$i]->objRoleAuthEdit->EntityQtypeCustomField->CustomField->RequiredFlag)
+					$arrCustomFields[$i]['blnRequired']=true;	 					
+ 				else
+ 					$arrCustomFields[$i]['blnRequired']=false;
  			
 			}
 			

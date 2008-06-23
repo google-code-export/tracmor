@@ -28,10 +28,18 @@
 	// Asset Model
 	if($this->blnViewBuiltInFields){
 		if (!$this->blnEditMode) {
-			$arrAssetFields[] = array('name' => 'Asset Model:',  'value' => $this->lstAssetModel->RenderWithError(false) . '&nbsp;' . $this->lblNewAssetModel->Render(false));
+			//if the role is not authorized to edit the built-in fields of AssetModel, then, the GreenPlusButton is not rendered
+			if($this->blnEditAssetModel)
+				$arrAssetFields[] = array('name' => 'Asset Model:',  'value' => $this->lstAssetModel->RenderWithError(false) . '&nbsp;' . $this->lblNewAssetModel->Render(false));
+			else
+				$arrAssetFields[] = array('name' => 'Asset Model:',  'value' => $this->lstAssetModel->RenderWithError(false));
 		}
 		else {
-			$arrAssetFields[] = array('name' => 'Asset Model:',  'value' => $this->lstAssetModel->Render(false) . '&nbsp;' . $this->lblNewAssetModel->Render(false) . $this->lblAssetModel->Render(false));
+			//if the role is not authorized to edit the built-in fields of AssetModel, then, the GreenPlusButton is not rendered
+			if ($this->blnEditAssetModel)
+				$arrAssetFields[] = array('name' => 'Asset Model:',  'value' => $this->lstAssetModel->Render(false) . '&nbsp;' . $this->lblNewAssetModel->Render(false) . $this->lblAssetModel->Render(false));
+			else
+				$arrAssetFields[] = array('name' => 'Asset Model:',  'value' => $this->lstAssetModel->Render(false) . '&nbsp;'. $this->lblAssetModel->Render(false));
 		}
 		$arrAssetFields[] = array('name' => 'Asset Code:',   'value' => $this->txtAssetCode->RenderWithError(false) . $this->chkAutoGenerateAssetCode->Render(false) . $this->lblAssetCode->Render(false));
 	}
@@ -54,18 +62,12 @@
 	if ($this->arrCustomFields) {
 		foreach ($this->arrCustomFields as $field) {
 			if ($this->blnEditMode) {
-				if(($field['ViewAuth'] && $field['ViewAuth']->AuthorizedFlag))
+				//Display Custom Field in Edit Mode if the role has "View" access 
+				if(($field['blnView']))
 					$arrAssetFields[] = array('name' => $field['lbl']->Name.':', 'value' => $field['lbl']->Render(false).$field['input']->RenderWithError(false));				
-			}
-			elseif($field['EditAuth'] && $field['EditAuth']->AuthorizedFlag)
+			}// Display Custom Field in Create Mode if the role has "Edit" access or is it required
+			elseif($field['blnEdit'] || $field['blnRequired'])
 				$arrAssetFields[] = array('name' => $field['lbl']->Name.':', 'value' => $field['lbl']->Render(false).$field['input']->RenderWithError(false));
-			elseif($field['EditAuth'] && $field['EditAuth']->EntityQtypeCustomField->CustomField->RequiredFlag){
-				$field['lbl']->Text=$field['EditAuth']->EntityQtypeCustomField->CustomField->DefaultCustomFieldValue->__toString();
-				$field['lbl']->Visible=true;
-				$field['input']->Visible=false;
-				$arrAssetFields[] = array('name' => $field['lbl']->Name.':', 'value' => $field['lbl']->Render(false).$field['input']->RenderWithError(false));
-			}
-
 		}
 	}
 	

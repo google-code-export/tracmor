@@ -82,6 +82,8 @@ class QAssetEditComposite extends QControl {
 	public $blnViewBuiltInFields;
 	public $blnEditBuiltInFields;
 	
+	public $blnEditAssetModel;
+	
 	// Dialog Box
 	protected $dlgNewAssetModel;
 	
@@ -119,8 +121,11 @@ class QAssetEditComposite extends QControl {
 		$this->dlgNewAssetModel_Create();
 		$this->UpdateAssetControls();
 
-		// Set a variable which define whether the built-in fields must be rendered or not.
-		$this->updateBuiltInFields();
+		// Set a variable which defines whether the built-in fields must be rendered or not.
+		$this->UpdateBuiltInFields();
+		
+		// Set a variable which defines whether the GreenPlusButton of the AssetModel must be rendered or not
+		$this->UpdateAssetModelAccess();
 		
 		// Create all custom asset fields
 		$this->customFields_Create();
@@ -216,27 +221,20 @@ class QAssetEditComposite extends QControl {
 		foreach ($this->arrCustomFields as $objCustomField) {
 			if($objCustomField['ViewAuth'] && $objCustomField['ViewAuth']->AuthorizedFlag)
 				$objCustomField['input']->TabIndex=$this->GetNextTabIndex();
+			
+			//In Create Mode, if the role doesn't have edit access for the custom field and the custom field is required, the field shows as a label with the default value
+			if (!$this->blnEditMode && !$objCustomField['blnEdit'] && $objCustomField['blnRequired']){
+				$objCustomField['lbl']->Text=$objCustomField['EditAuth']->EntityQtypeCustomField->CustomField->DefaultCustomFieldValue->__toString();
+				$objCustomField['lbl']->Visible=true;
+				$objCustomField['input']->Visible=false;			
+				
+			}
+	
+			
 		}
 			
 		
 	}
-	// Set $blnViewBuiltInFields
-	protected function updateBuiltInFields() {
-		$objRoleEntityQtypeBuiltInAuthorization= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,1,1);
-		if($objRoleEntityQtypeBuiltInAuthorization && $objRoleEntityQtypeBuiltInAuthorization->AuthorizedFlag)
-			$this->blnViewBuiltInFields=true;
-		else
-			$this->blnViewBuiltInFields=false;
-			
-		$objRoleEntityQtypeBuiltInAuthorization2= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,1,2);
-		if($objRoleEntityQtypeBuiltInAuthorization2 && $objRoleEntityQtypeBuiltInAuthorization2->AuthorizedFlag)
-			$this->blnEditBuiltInFields=true;
-		else
-			$this->blnEditBuiltInFields=false;
-		
-	}
-	
-	
 	// Create the Asset Code text input
 	protected function txtAssetCode_Create() {
 		$this->txtAssetCode = new QTextBox($this);
@@ -1129,6 +1127,31 @@ class QAssetEditComposite extends QControl {
 		$this->txtAssetCode->Text = $this->objAsset->AssetCode;
 		$this->arrCustomFields = CustomField::UpdateControls($this->objAsset->objCustomFieldArray, $this->arrCustomFields);
 	}
+	//Set display logic of the BuiltInFields in View Access and Edit Access 
+	protected function UpdateBuiltInFields() {
+		$objRoleEntityQtypeBuiltInAuthorization= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,1,1);
+		if($objRoleEntityQtypeBuiltInAuthorization && $objRoleEntityQtypeBuiltInAuthorization->AuthorizedFlag)
+			$this->blnViewBuiltInFields=true;
+		else
+			$this->blnViewBuiltInFields=false;
+			
+		$objRoleEntityQtypeBuiltInAuthorization2= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,1,2);
+		if($objRoleEntityQtypeBuiltInAuthorization2 && $objRoleEntityQtypeBuiltInAuthorization2->AuthorizedFlag)
+			$this->blnEditBuiltInFields=true;
+		else
+			$this->blnEditBuiltInFields=false;
+		
+	}
+	//Set display logic of the GreenPlusButton of AssetModel
+	protected function UpdateAssetModelAccess() {
+		//checks if the entity 4 (AssetModel) has edit authorization
+		$objRoleEntityQtypeBuiltInAuthorization= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,4,2);
+		if($objRoleEntityQtypeBuiltInAuthorization && $objRoleEntityQtypeBuiltInAuthorization->AuthorizedFlag)
+			$this->blnEditAssetModel=true;
+		else
+			$this->blnEditAssetModel=false;
+	}
+	
 
   // And our public getter/setters
   public function __get($strName) {
