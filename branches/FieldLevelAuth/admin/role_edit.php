@@ -183,8 +183,8 @@ class RoleEditForm extends RoleEditFormBase {
 				}else{
 					switch ($objModule->ModuleId) {
 						case 2:
-							//$this->pnlAssets->disabledAll();
-							//$this->pnlAssets->uncheckAll();
+							//$this->pnlAssets->DisabledAll();
+							//$this->pnlAssets->UnCheckAll();
 
 							break;
 					}
@@ -337,14 +337,14 @@ protected function pnlAssets_Create($intModule){
 		
 		
 		if(!$this->blnEditMode){				
-				$this->pnlAssets->enableAll();
-				$this->pnlAssets->checkAll();
+				$this->pnlAssets->EnableAll();
+				$this->pnlAssets->CheckAll();
 		}elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
-				$this->pnlAssets->uncheckAll();
-				$this->pnlAssets->disabledAll();
+				$this->pnlAssets->UnCheckAll();
+				$this->pnlAssets->DisabledAll();
 		}elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
-				$this->pnlAssets->disableEditColumn();
-				$this->pnlAssets->uncheckEditColumn();
+				$this->pnlAssets->DisableEditColumn();
+				$this->pnlAssets->UnCheckEditColumn();
 			}
 	}
 	
@@ -355,14 +355,14 @@ protected function pnlAssets_Create($intModule){
 		$objModule= Module::Load($intModule);
 		
 		if(!$this->blnEditMode){				
-				$this->pnlAssetModel->enableAll();
-				$this->pnlAssetModel->checkAll();
+				$this->pnlAssetModel->EnableAll();
+				$this->pnlAssetModel->CheckAll();
 		}elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
-				$this->pnlAssetModel->uncheckAll();
-				$this->pnlAssetModel->disabledAll();
+				$this->pnlAssetModel->UnCheckAll();
+				$this->pnlAssetModel->DisabledAll();
 			}elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
-				$this->pnlAssetModel->disableEditColumn();
-				$this->pnlAssetModel->uncheckEditColumn();
+				$this->pnlAssetModel->DisableEditColumn();
+				$this->pnlAssetModel->UnCheckEditColumn();
 			}	
 	}
 	protected function pnlInventory_Create($intModule){
@@ -371,14 +371,14 @@ protected function pnlAssets_Create($intModule){
 		$objModule= Module::Load($intModule);
 		
 		if(!$this->blnEditMode){				
-				$this->pnlInventory->enableAll();
-				$this->pnlInventory->checkAll();
+				$this->pnlInventory->EnableAll();
+				$this->pnlInventory->CheckAll();
 		}elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
-				$this->pnlInventory->uncheckAll();
-				$this->pnlInventory->disabledAll();
+				$this->pnlInventory->UnCheckAll();
+				$this->pnlInventory->DisabledAll();
 			}elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
-				$this->pnlInventory->disableEditColumn();
-				$this->pnlInventory->uncheckEditColumn();
+				$this->pnlInventory->DisableEditColumn();
+				$this->pnlInventory->UnCheckEditColumn();
 			}
 
 	}
@@ -388,14 +388,14 @@ protected function pnlAssets_Create($intModule){
 		$objModule= Module::Load($intModule);
 		
 		if(!$this->blnEditMode){				
-				$this->pnlContact->enableAll();
-				$this->pnlContact->checkAll();
+				$this->pnlContact->EnableAll();
+				$this->pnlContact->CheckAll();
 		}elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
-				$this->pnlContact->uncheckAll();
-				$this->pnlContact->disabledAll();
+				$this->pnlContact->UnCheckAll();
+				$this->pnlContact->DisabledAll();
 			}elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
-				$this->pnlContact->disableEditColumn();
-				$this->pnlContact->uncheckEditColumn();
+				$this->pnlContact->DisableEditColumn();
+				$this->pnlContact->UnCheckEditColumn();
 			}
 
 	}
@@ -405,14 +405,14 @@ protected function pnlAssets_Create($intModule){
 		$objModule= Module::Load($intModule);
 		
 		if(!$this->blnEditMode){				
-				$this->pnlShipping->enableAll();
-				$this->pnlShipping->checkAll();
+				$this->pnlShipping->EnableAll();
+				$this->pnlShipping->CheckAll();
 		}elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
-				$this->pnlShipping->uncheckAll();
-				$this->pnlShipping->disabledAll();
+				$this->pnlShipping->UnCheckAll();
+				$this->pnlShipping->DisabledAll();
 			}elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
-				$this->pnlShipping->disableEditColumn();
-				$this->pnlShipping->uncheckEditColumn();
+				$this->pnlShipping->DisableEditColumn();
+				$this->pnlShipping->UnCheckEditColumn();
 			}
 
 	}
@@ -422,14 +422,14 @@ protected function pnlAssets_Create($intModule){
 		$objModule= Module::Load($intModule);
 		
 		if(!$this->blnEditMode){				
-				$this->pnlReceiving->enableAll();
-				$this->pnlReceiving->checkAll();
+				$this->pnlReceiving->EnableAll();
+				$this->pnlReceiving->CheckAll();
 		}elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
-				$this->pnlReceiving->uncheckAll();
-				$this->pnlReceiving->disabledAll();
+				$this->pnlReceiving->UnCheckAll();
+				$this->pnlReceiving->DisabledAll();
 			}elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
-				$this->pnlReceiving->disableEditColumn();
-				$this->pnlReceiving->uncheckEditColumn();
+				$this->pnlReceiving->DisableEditColumn();
+				$this->pnlReceiving->UnCheckEditColumn();
 			}
 
 	}
@@ -439,14 +439,14 @@ protected function pnlAssets_Create($intModule){
 		$objModule= Module::Load($intModule);
 		
 		if(!$this->blnEditMode){				
-				$this->pnlCompany->enableAll();
-				$this->pnlCompany->checkAll();
+				$this->pnlCompany->EnableAll();
+				$this->pnlCompany->CheckAll();
 		}elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
-				$this->pnlCompany->uncheckAll();
-				$this->pnlCompany->disabledAll();
+				$this->pnlCompany->UnCheckAll();
+				$this->pnlCompany->DisabledAll();
 			}elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
-				$this->pnlCompany->disableEditColumn();
-				$this->pnlCompany->uncheckEditColumn();
+				$this->pnlCompany->DisableEditColumn();
+				$this->pnlCompany->UnCheckEditColumn();
 			}
 
 	}
@@ -455,14 +455,14 @@ protected function pnlAssets_Create($intModule){
 		$this->pnlAddress->Display=false;
 		$objModule= Module::Load($intModule);
 		if(!$this->blnEditMode){				
-				$this->pnlAddress->enableAll();
-				$this->pnlAddress->checkAll();
+				$this->pnlAddress->EnableAll();
+				$this->pnlAddress->CheckAll();
 		}elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
-				$this->pnlAddress->uncheckAll();
-				$this->pnlAddress->disabledAll();
+				$this->pnlAddress->UnCheckAll();
+				$this->pnlAddress->DisabledAll();
 			}elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
-				$this->pnlAddress->disableEditColumn();
-				$this->pnlAddress->uncheckEditColumn();
+				$this->pnlAddress->DisableEditColumn();
+				$this->pnlAddress->UnCheckEditColumn();
 			}
 	}
 	
@@ -595,51 +595,51 @@ protected function pnlAssets_Create($intModule){
 		if($objAccessControl->SelectedValue){
 			switch ($objModule->ModuleId) {
 				case 2:
-					$this->pnlAssets->enableAll();
-					$this->pnlAssetModel->enableAll();
+					$this->pnlAssets->EnableAll();
+					$this->pnlAssetModel->EnableAll();
 					break;
 				case 3:
-					$this->pnlInventory->enableAll();
+					$this->pnlInventory->EnableAll();
 					break;
 				case 4:
-					$this->pnlCompany->enableAll();
-					$this->pnlContact->enableAll();
-					$this->pnlAddress->enableAll();
+					$this->pnlCompany->EnableAll();
+					$this->pnlContact->EnableAll();
+					$this->pnlAddress->EnableAll();
 					break;
 				case 5:
-					$this->pnlShipping->enableAll();
+					$this->pnlShipping->EnableAll();
 					break;
 				case 6:
-					$this->pnlReceiving->enableAll();
+					$this->pnlReceiving->EnableAll();
 					break;
 			}
 		}else{
 			switch ($objModule->ModuleId) {
 				case 2:
-					$this->pnlAssets->disabledAll();
-					$this->pnlAssets->uncheckAll();
-					$this->pnlAssetModel->disabledAll();
-					$this->pnlAssetModel->uncheckAll();
+					$this->pnlAssets->DisabledAll();
+					$this->pnlAssets->UnCheckAll();
+					$this->pnlAssetModel->DisabledAll();
+					$this->pnlAssetModel->UnCheckAll();
 					break;
 				case 3:
-					$this->pnlInventory->disabledAll();
-					$this->pnlInventory->uncheckAll();
+					$this->pnlInventory->DisabledAll();
+					$this->pnlInventory->UnCheckAll();
 					break;
 				case 4:
-					$this->pnlCompany->disabledAll();
-					$this->pnlCompany->uncheckAll();
-					$this->pnlContact->disabledAll();
-					$this->pnlContact->uncheckAll();
-					$this->pnlAddress->disabledAll();
-					$this->pnlAddress->uncheckAll();
+					$this->pnlCompany->DisabledAll();
+					$this->pnlCompany->UnCheckAll();
+					$this->pnlContact->DisabledAll();
+					$this->pnlContact->UnCheckAll();
+					$this->pnlAddress->DisabledAll();
+					$this->pnlAddress->UnCheckAll();
 					break;
 				case 5:
-					$this->pnlShipping->disabledAll();
-					$this->pnlShipping->uncheckAll();
+					$this->pnlShipping->DisabledAll();
+					$this->pnlShipping->UnCheckAll();
 					break;
 				case 6:
-					$this->pnlReceiving->disabledAll();
-					$this->pnlReceiving->uncheckAll();
+					$this->pnlReceiving->DisabledAll();
+					$this->pnlReceiving->UnCheckAll();
 					break;
 			}
 		}
@@ -665,44 +665,44 @@ protected function pnlAssets_Create($intModule){
 			switch ($objModule->ModuleId) {
 				case 2:
 					if(isset($this->pnlAssets)){
-						$this->pnlAssets->disableEditColumn();
-						$this->pnlAssets->uncheckEditColumn();
+						$this->pnlAssets->DisableEditColumn();
+						$this->pnlAssets->UnCheckEditColumn();
 					}
 					if(isset($this->pnlAssetModel)){
-						$this->pnlAssetModel->disableEditColumn();
-						$this->pnlAssetModel->uncheckEditColumn();
+						$this->pnlAssetModel->DisableEditColumn();
+						$this->pnlAssetModel->UnCheckEditColumn();
 					}
 					break;
 				case 3:
 					if(isset($this->pnlInventory)){
-						$this->pnlInventory->disableEditColumn();
-						$this->pnlInventory->uncheckEditColumn();
+						$this->pnlInventory->DisableEditColumn();
+						$this->pnlInventory->UnCheckEditColumn();
 					}
 					break;
 				case 4:
 					if(isset($this->pnlCompany)){
-						$this->pnlCompany->disableEditColumn();
-						$this->pnlCompany->uncheckEditColumn();
+						$this->pnlCompany->DisableEditColumn();
+						$this->pnlCompany->UnCheckEditColumn();
 					}
 					if(isset($this->pnlContact)){
-						$this->pnlContact->disableEditColumn();
-						$this->pnlContact->uncheckEditColumn();
+						$this->pnlContact->DisableEditColumn();
+						$this->pnlContact->UnCheckEditColumn();
 					}
 					if(isset($this->pnlAddress)){
-						$this->pnlAddress->disableEditColumn();
-						$this->pnlAddress->uncheckEditColumn();
+						$this->pnlAddress->DisableEditColumn();
+						$this->pnlAddress->UnCheckEditColumn();
 					}
 					break;
 				case 5:
 					if(isset($this->pnlShipping)){
-						$this->pnlShipping->disableEditColumn();
-						$this->pnlShipping->uncheckEditColumn();
+						$this->pnlShipping->DisableEditColumn();
+						$this->pnlShipping->UnCheckEditColumn();
 					}
 					break;
 				case 6:
 					if(isset($this->pnlReceiving)){
-						$this->pnlReceiving->disableEditColumn();
-						$this->pnlReceiving->uncheckEditColumn();
+						$this->pnlReceiving->DisableEditColumn();
+						$this->pnlReceiving->UnCheckEditColumn();
 					}
 					break;
 			}
@@ -716,29 +716,29 @@ protected function pnlAssets_Create($intModule){
 			switch ($objModule->ModuleId) {
 				case 2:
 					if(isset($this->pnlAssets))
-					$this->pnlAssets->enableEdit();
+					$this->pnlAssets->EnableEdit();
 					if(isset($this->pnlAssetModel))
-					$this->pnlAssetModel->enableEdit();
+					$this->pnlAssetModel->EnableEdit();
 					break;
 				case 3:
 					if(isset($this->pnlInventory))
-					$this->pnlInventory->enableEdit();
+					$this->pnlInventory->EnableEdit();
 					break;
 				case 4:
 					if(isset($this->pnlCompany))
-					$this->pnlCompany->enableEdit();
+					$this->pnlCompany->EnableEdit();
 					if(isset($this->pnlContact))
-					$this->pnlContact->enableEdit();
+					$this->pnlContact->EnableEdit();
 					if(isset($this->pnlAddress))
-					$this->pnlAddress->enableEdit();
+					$this->pnlAddress->EnableEdit();
 					break;
 				case 5:
 					if(isset($this->pnlShipping))
-					$this->pnlShipping->enableEdit();
+					$this->pnlShipping->EnableEdit();
 					break;
 				case 6:
 					if(isset($this->pnlReceiving))
-					$this->pnlReceiving->enableEdit();
+					$this->pnlReceiving->EnableEdit();
 					break;
 			}
 		}
@@ -751,29 +751,29 @@ protected function pnlAssets_Create($intModule){
 			switch ($objModule->ModuleId) {
 				case 2:
 					if(isset($this->pnlAssets))
-					$this->pnlAssets->enableEdit();
+					$this->pnlAssets->EnableEdit();
 					if(isset($this->pnlAssetModel))
-					$this->pnlAssetModel->enableEdit();
+					$this->pnlAssetModel->EnableEdit();
 					break;
 				case 3:
 					if(isset($this->pnlInventory))
-					$this->pnlInventory->enableEdit();
+					$this->pnlInventory->EnableEdit();
 					break;
 				case 4:
 					if(isset($this->pnlCompany))
-					$this->pnlCompany->enableEdit();
+					$this->pnlCompany->EnableEdit();
 					if(isset($this->pnlContact))
-					$this->pnlContact->enableEdit();
+					$this->pnlContact->EnableEdit();
 					if(isset($this->pnlAddress))
-					$this->pnlAddress->enableEdit();
+					$this->pnlAddress->EnableEdit();
 					break;
 				case 5:
 					if(isset($this->pnlShipping))
-					$this->pnlShipping->enableEdit();
+					$this->pnlShipping->EnableEdit();
 					break;
 				case 6:
 					if(isset($this->pnlReceiving))
-					$this->pnlReceiving->enableEdit();
+					$this->pnlReceiving->EnableEdit();
 					break;
 			}
 		}
@@ -974,19 +974,22 @@ protected function pnlAssets_Create($intModule){
 		 
 		$chkEntityView = $this->GetControl($strControlId);
 		 
-		if(!$chkEntityView->Checked)
-		$this->$strParameter->uncheckViewColumn();
+		if(!$chkEntityView->Checked){
+		$this->$strParameter->UnCheckViewColumn();
+		//but we have to leave the chkBuiltInView checked
+		$this->$strParameter->chkBuiltInView->Checked=true;
+		}
 		else
-		$this->$strParameter->checkViewColumn();
+		$this->$strParameter->CheckViewColumn();
 	}
 	protected function chkEntityEdit_Click($strFormId, $strControlId, $strParameter) {
 		 
 		$chkEntityEdit = $this->GetControl($strControlId);
 
 		if(!$chkEntityEdit->Checked)
-		$this->$strParameter->uncheckEditColumn();
+		$this->$strParameter->UnCheckEditColumn();
 		else
-		$this->$strParameter->checkEditColumn();
+		$this->$strParameter->CheckEditColumn();
 
 
 	}

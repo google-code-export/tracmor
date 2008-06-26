@@ -60,6 +60,10 @@
 		// Custom Field Objects
 		public $arrCustomFields;
 		
+		// Set true if the Built-in Fields have to be rendered
+		public $blnViewBuiltInFields;
+		public $blnEditBuiltInFields;
+		
 		// Generate tab indexes
 		protected $intNextTabIndex = 1;
 
@@ -90,6 +94,9 @@
 			$this->lblImage_Create();
 			$this->pnlLongDescription_Create();
 			
+			// Set a variable which defines whether the built-in fields must be rendered or not.
+			$this->UpdateBuiltInFields();
+				
 			// Create all custom asset fields
 			$this->customFields_Create();
 
@@ -288,9 +295,7 @@
 			// Create the Custom Field Controls - labels and inputs (text or list) for each
 			$this->arrCustomFields = CustomField::CustomFieldControlsCreate($this->objAssetModel->objCustomFieldArray, $this->blnEditMode, $this, true, true);
 			
-			foreach ($this->arrCustomFields as $objCustomField) {
-				$objCustomField['input']->TabIndex=$this->GetNextTabIndex();
-			}
+			$this->UpdateCustomFields();
 		}
 		
 	  // Setup Save Button
@@ -353,6 +358,9 @@
 		protected function btnEdit_Click($strFormId, $strControlId, $strParameter) {
 
 			$this->displayInputs();
+			
+			$this->UpdateBuiltInFields();
+			$this->UpdateCustomFields();
 		}
 		
 		// Save Button Click Actions
@@ -508,6 +516,16 @@
 			$this->lstManufacturer->Display = true;
 			$this->txtLongDescription->Display = true;
 			$this->ifcImage->Display = true;
+			
+			
+			
+		// Display Asset Code and Asset Model input for edit mode
+    // new: if the user is authorized to edit the built-in fields.
+    //If the user is not authorized to edit built-in fields, the fields are render as labels.
+		if(!$this->blnEditBuiltInFields)
+			$this->displayLabels();
+			
+
 			      
       // Do not display Edit and Delete buttons
       $this->btnEdit->Display = false;
@@ -545,6 +563,39 @@
 		
 		protected function getNextTabIndex() {
 			return ++$this->intNextTabIndex;
+		}
+		
+		//Set display logic of the BuiltInFields in View Access and Edit Access 
+		protected function UpdateBuiltInFields() {
+		//Set View Display Logic of Built-In Fields  
+		$objRoleEntityQtypeBuiltInAuthorization= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,EntityQtype::AssetModel,1);
+		if($objRoleEntityQtypeBuiltInAuthorization && $objRoleEntityQtypeBuiltInAuthorization->AuthorizedFlag)
+			$this->blnViewBuiltInFields=true;
+		else
+			$this->blnViewBuiltInFields=false;
+
+		//Set Edit Display Logic of Built-In Fields	
+		$objRoleEntityQtypeBuiltInAuthorization2= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,EntityQtype::AssetModel,2);
+		if($objRoleEntityQtypeBuiltInAuthorization2 && $objRoleEntityQtypeBuiltInAuthorization2->AuthorizedFlag)
+			$this->blnEditBuiltInFields=true;
+		else
+			$this->blnEditBuiltInFields=false;
+		
+		}
+		//Set display logic for the CustomFields
+		protected function UpdateCustomFields(){
+			if($this->arrCustomFields)foreach ($this->arrCustomFields as $objCustomField) {
+			//Set NextTabIndex only if the custom field is show
+				if($objCustomField['ViewAuth'] && $objCustomField['ViewAuth']->AuthorizedFlag)
+					$objCustomField['input']->TabIndex=$this->GetNextTabIndex();
+				
+				//In Create Mode, if the role doesn't have edit access for the custom field and the custom field is required, the field shows as a label with the default value
+				if (!$this->blnEditMode && !$objCustomField['blnEdit'] && $objCustomField['blnRequired']){
+					$objCustomField['lbl']->Text=$objCustomField['EditAuth']->EntityQtypeCustomField->CustomField->DefaultCustomFieldValue->__toString();
+					$objCustomField['lbl']->Display=true;
+					$objCustomField['input']->Display=false;			
+				}			
+			}
 		}
 		
 	}

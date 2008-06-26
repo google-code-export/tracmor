@@ -86,6 +86,14 @@
 		// Tab Index
 		protected $intTabIndex;
 		
+		// Set true if the Built-in Fields has to be rendered
+		public $blnViewBuiltInFields;
+		public $blnEditBuiltInFields;
+		
+		// Set true if the Built-in Fields of Address has to be rendered
+		public $blnAddressViewBuiltInFields;
+		public $blnAddressEditBuiltInFields;
+		
 		protected function Form_Create() {
 			
 			// Tab Index
@@ -123,6 +131,10 @@
 			// Create all custom asset fields
 			$this->customFields_Create();
 			
+			$this->UpdateBuiltInFields();
+			
+			
+			
 			$this->lstAddress_Create();
 			$this->UpdateCompanyControls();
 			
@@ -159,6 +171,10 @@
 			else {
 				$this->displayInputs();
 			}
+			
+			//Set display logic of the Create New Address and Create New Contact
+			$this->UpdateAddressAccess();
+			$this->UpdateContactAccess();
 		}
 		
 		protected function SetupCompany() {
@@ -442,12 +458,8 @@
 			// Create the Custom Field Controls - labels and inputs (text or list) for each
 			if ($this->objCompany->objCustomFieldArray) {
 				$this->arrCustomFields = CustomField::CustomFieldControlsCreate($this->objCompany->objCustomFieldArray, $this->blnEditMode, $this, true, true);
-				if ($this->arrCustomFields) {
-					foreach ($this->arrCustomFields as $field) {
-						$field['input']->TabIndex = $this->intTabIndex++;
-					}
-				}
 			}
+			$this->UpdateCustomFields();
 			
 			
 		}
@@ -467,6 +479,7 @@
 					}
 				}
 			}
+			$this->UpdateAddressCustomFields();
 		}
 		
 		// Setup Edit Button
@@ -658,6 +671,10 @@
 
 			// Hide labels and display inputs where appropriate
 			$this->displayInputs();
+			
+			$this->UpdateBuiltInFields();
+			$this->UpdateCustomFields();
+			$this->UpdateAddressCustomFields();
 		}
 		
 		// Control ServerActions
@@ -919,6 +936,13 @@
 			$this->txtTelephone->Display = true;
 			$this->txtFax->Display = true;
 			
+			//If the user is not authorized to edit built-in fields, the fields are render as labels.
+		if(!$this->blnEditBuiltInFields)	
+			$this->DisplayLabels();
+			
+			
+			
+			
 			// Display the Save and Cancel buttons
 			$this->btnSave->Display = true;
 			$this->btnCancel->Display = true;
@@ -927,6 +951,91 @@
 	    if ($this->arrCustomFields) {
 	    	CustomField::DisplayInputs($this->arrCustomFields);
 	    } 			
+		}
+	//Set display logic of the BuiltInFields in View Access and Edit Access 
+		protected function UpdateBuiltInFields() {
+		//Set View Display Logic of Built-In Fields  
+		$objRoleEntityQtypeBuiltInAuthorization= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,EntityQtype::Company,1);
+		if($objRoleEntityQtypeBuiltInAuthorization && $objRoleEntityQtypeBuiltInAuthorization->AuthorizedFlag)
+			$this->blnViewBuiltInFields=true;
+		else
+			$this->blnViewBuiltInFields=false;
+
+		//Set Edit Display Logic of Built-In Fields	
+		$objRoleEntityQtypeBuiltInAuthorization2= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,EntityQtype::Company,2);
+		if($objRoleEntityQtypeBuiltInAuthorization2 && $objRoleEntityQtypeBuiltInAuthorization2->AuthorizedFlag)
+			$this->blnEditBuiltInFields=true;
+		else
+			$this->blnEditBuiltInFields=false;
+		
+		//Set View Display Logic of Built-In Fields of Address
+		$objRoleEntityQtypeBuiltInAuthorizationAddress= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,EntityQtype::Address,1);
+		if($objRoleEntityQtypeBuiltInAuthorizationAddress && $objRoleEntityQtypeBuiltInAuthorizationAddress->AuthorizedFlag)
+			$this->blnAddressViewBuiltInFields=true;
+		else
+			$this->blnAddressViewBuiltInFields=false;
+			
+		//Set Edit Display Logic of Built-In Fields	of Address
+		$objRoleEntityQtypeBuiltInAuthorizationAddress2= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,EntityQtype::Address,2);
+		if($objRoleEntityQtypeBuiltInAuthorizationAddress2 && $objRoleEntityQtypeBuiltInAuthorizationAddress2->AuthorizedFlag)
+			$this->blnAddressEditBuiltInFields=true;
+		else
+			$this->blnAddressEditBuiltInFields=false;
+		
+		}
+		//Set display logic for the CustomFields
+		protected function UpdateCustomFields(){
+			if($this->arrCustomFields)foreach ($this->arrCustomFields as $objCustomField) {
+			//Set NextTabIndex only if the custom field is show
+				if($objCustomField['ViewAuth'] && $objCustomField['ViewAuth']->AuthorizedFlag)
+					$objCustomField['input']->TabIndex=$this->GetNextTabIndex();
+				
+				//In Create Mode, if the role doesn't have edit access for the custom field and the custom field is required, the field shows as a label with the default value
+				if (!$this->blnEditMode && !$objCustomField['blnEdit'] && $objCustomField['blnRequired']){
+					$objCustomField['lbl']->Text=$objCustomField['EditAuth']->EntityQtypeCustomField->CustomField->DefaultCustomFieldValue->__toString();
+					$objCustomField['lbl']->Display=true;
+					$objCustomField['input']->Display=false;			
+				}			
+			}
+			
+		}
+		//Set display logic for the CustomFields of Address
+		protected function UpdateAddressCustomFields(){
+		if($this->arrAddressCustomFields)foreach ($this->arrAddressCustomFields as $objCustomField) {
+			//Set NextTabIndex only if the custom field is show
+				if($objCustomField['ViewAuth'] && $objCustomField['ViewAuth']->AuthorizedFlag)
+					$objCustomField['input']->TabIndex=$this->GetNextTabIndex();
+				
+				//In Create Mode, if the role doesn't have edit access for the custom field and the custom field is required, the field shows as a label with the default value
+				if (!$this->blnEditMode && !$objCustomField['blnEdit'] && $objCustomField['blnRequired']){
+					$objCustomField['lbl']->Text=$objCustomField['EditAuth']->EntityQtypeCustomField->CustomField->DefaultCustomFieldValue->__toString();
+					$objCustomField['lbl']->Display=true;
+					$objCustomField['input']->Display=false;			
+				}			
+			}
+		}
+		//Set display logic of the Create New Contact
+		protected function UpdateContactAccess() {
+		//checks if the entity  has edit authorization
+		$objRoleEntityQtypeBuiltInAuthorization= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,EntityQtype::Contact,2);
+		if($objRoleEntityQtypeBuiltInAuthorization && $objRoleEntityQtypeBuiltInAuthorization->AuthorizedFlag){
+			$this->btnCreateContact->Visible=true;
+		}
+		else{
+			$this->btnCreateContact->Visible=false;
+		}
+		}
+		//Set display logic of the Create New Contact
+		protected function UpdateAddressAccess() {
+		//checks if the entity  has edit authorization
+		$objRoleEntityQtypeBuiltInAuthorization= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,EntityQtype::Address,2);
+		if($objRoleEntityQtypeBuiltInAuthorization && $objRoleEntityQtypeBuiltInAuthorization->AuthorizedFlag){
+			$this->btnCreateAddress->Visible=true;
+		}
+		else{
+			$this->btnCreateAddress->Visible=false;
+		}
+			
 		}
 		
 	}

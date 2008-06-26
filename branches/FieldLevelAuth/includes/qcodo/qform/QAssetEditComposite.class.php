@@ -81,9 +81,7 @@ class QAssetEditComposite extends QControl {
 	// Set true if the Built-in Fields have to be rendered
 	public $blnViewBuiltInFields;
 	public $blnEditBuiltInFields;
-	
-	public $blnEditAssetModel;
-	
+		
 	// Dialog Box
 	protected $dlgNewAssetModel;
 	
@@ -218,20 +216,8 @@ class QAssetEditComposite extends QControl {
 		// Create the Custom Field Controls - labels and inputs (text or list) for each
 		$this->arrCustomFields = CustomField::CustomFieldControlsCreate($this->objAsset->objCustomFieldArray, $this->blnEditMode, $this, true, true);
 		
-		foreach ($this->arrCustomFields as $objCustomField) {
-			if($objCustomField['ViewAuth'] && $objCustomField['ViewAuth']->AuthorizedFlag)
-				$objCustomField['input']->TabIndex=$this->GetNextTabIndex();
-			
-			//In Create Mode, if the role doesn't have edit access for the custom field and the custom field is required, the field shows as a label with the default value
-			if (!$this->blnEditMode && !$objCustomField['blnEdit'] && $objCustomField['blnRequired']){
-				$objCustomField['lbl']->Text=$objCustomField['EditAuth']->EntityQtypeCustomField->CustomField->DefaultCustomFieldValue->__toString();
-				$objCustomField['lbl']->Visible=true;
-				$objCustomField['input']->Visible=false;			
-				
-			}
-	
-			
-		}
+		//Setup Custom Fields
+		$this->UpdateCustomFields();
 			
 		
 	}
@@ -703,6 +689,10 @@ class QAssetEditComposite extends QControl {
 		// Hide labels and display inputs where appropriate
 		$this->displayInputs();
 		
+		// Set display logic in Edit Mode
+		$this->UpdateBuiltInFields();
+		$this->UpdateCustomFields();
+		
 		// Deactivate the transaction buttons
 		$this->disableTransactionButtons();
 	}
@@ -1129,12 +1119,14 @@ class QAssetEditComposite extends QControl {
 	}
 	//Set display logic of the BuiltInFields in View Access and Edit Access 
 	protected function UpdateBuiltInFields() {
+		//Set View Display Logic of Built-In Fields  
 		$objRoleEntityQtypeBuiltInAuthorization= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,1,1);
 		if($objRoleEntityQtypeBuiltInAuthorization && $objRoleEntityQtypeBuiltInAuthorization->AuthorizedFlag)
 			$this->blnViewBuiltInFields=true;
 		else
 			$this->blnViewBuiltInFields=false;
-			
+
+		//Set Edit Display Logic of Built-In Fields	
 		$objRoleEntityQtypeBuiltInAuthorization2= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,1,2);
 		if($objRoleEntityQtypeBuiltInAuthorization2 && $objRoleEntityQtypeBuiltInAuthorization2->AuthorizedFlag)
 			$this->blnEditBuiltInFields=true;
@@ -1142,14 +1134,30 @@ class QAssetEditComposite extends QControl {
 			$this->blnEditBuiltInFields=false;
 		
 	}
+	
+//Set display logic for the CustomFields
+		protected function UpdateCustomFields(){
+			if($this->arrCustomFields)foreach ($this->arrCustomFields as $objCustomField) {
+			//Set NextTabIndex only if the custom field is show
+				if($objCustomField['ViewAuth'] && $objCustomField['ViewAuth']->AuthorizedFlag)
+					$objCustomField['input']->TabIndex=$this->GetNextTabIndex();
+				
+				//In Create Mode, if the role doesn't have edit access for the custom field and the custom field is required, the field shows as a label with the default value
+				if (!$this->blnEditMode && !$objCustomField['blnEdit'] && $objCustomField['blnRequired']){
+					$objCustomField['lbl']->Text=$objCustomField['EditAuth']->EntityQtypeCustomField->CustomField->DefaultCustomFieldValue->__toString();
+					$objCustomField['lbl']->Display=true;
+					$objCustomField['input']->Display=false;			
+				}			
+			}
+		}
 	//Set display logic of the GreenPlusButton of AssetModel
 	protected function UpdateAssetModelAccess() {
 		//checks if the entity 4 (AssetModel) has edit authorization
-		$objRoleEntityQtypeBuiltInAuthorization= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,4,2);
+		$objRoleEntityQtypeBuiltInAuthorization= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,EntityQtype::AssetModel,2);
 		if($objRoleEntityQtypeBuiltInAuthorization && $objRoleEntityQtypeBuiltInAuthorization->AuthorizedFlag)
-			$this->blnEditAssetModel=true;
+			$this->lblNewAssetModel->Visible=true;
 		else
-			$this->blnEditAssetModel=false;
+			$this->lblNewAssetModel->Visible=false;
 	}
 	
 

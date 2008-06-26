@@ -74,6 +74,11 @@ class QInventoryEditComposite extends QControl {
 	// Array of Custom Field inputs and labels
 	protected $arrCustomFields;
 	
+			
+	// Set true if the Built-in Fields have to be rendered
+	public $blnViewBuiltInFields;
+	public $blnEditBuiltInFields;
+	
 	// We want to override the constructor in order to setup the subcontrols
 	public function __construct($objParentObject, $strControlId = null) {
 		
@@ -109,8 +114,14 @@ class QInventoryEditComposite extends QControl {
 		$this->txtLongDescription_Create();
 		$this->UpdateInventoryControls();
 
+		
+		
+		
 		// Create all custom inventory fields
 		$this->customFields_Create();
+		// Set a variable which defines whether the built-in fields must be rendered or not.
+		$this->UpdateBuiltInFields();
+		
 				
 		// Create Buttons
 		$this->btnSave_Create();
@@ -196,10 +207,7 @@ class QInventoryEditComposite extends QControl {
 		
 		// Create the Custom Field Controls - labels and inputs (text or list) for each
 		$this->arrCustomFields = CustomField::CustomFieldControlsCreate($this->objInventoryModel->objCustomFieldArray, $this->blnEditMode, $this, true, true);
-	
-		foreach ($this->arrCustomFields as $objCustomField) {
-			$objCustomField['input']->TabIndex=$this->GetNextTabIndex();
-		}
+		$this->UpdateCustomFields();
 	}
 	
 	// Create Short Description Label
@@ -564,13 +572,16 @@ class QInventoryEditComposite extends QControl {
 		// Hide labels and display inputs where appropriate
 		$this->displayInputs();
 		
+		// Display logic: checks if the user should see the fields
+		$this->UpdateBuiltInFields();
+		$this->UpdateCustomFields();
+		
 		// Deactivate the transaction buttons
 		$this->disableTransactionButtons();
 	}
 
 	// Save Button Click Actions
 	public function btnSave_Click($strFormId, $strControlId, $strParameter) {
-		
 		try {
 			// Get an instance of the database
 			$objDatabase = QApplication::$Database[1];
@@ -610,6 +621,7 @@ class QInventoryEditComposite extends QControl {
 			}
 			
 			if ($this->blnEditMode) {
+				
 				
 				// Check to see if the InventoryModelCode already exists and it is not the code for the inventory model that you are currently working with
 				$InventoryModelDuplicate = InventoryModel::LoadbyInventoryModelCode($this->objInventoryModel->InventoryModelCode);
@@ -787,6 +799,12 @@ class QInventoryEditComposite extends QControl {
     	// Display Cancel and Save butons    
     	$this->btnCancel->Display = true;
     	$this->btnSave->Display = true;
+    	
+    	
+    // new: if the user is authorized to edit the built-in fields.
+    		//if the user is not authorized to edit built-in fields, the fields are render as labels.
+		if(!$this->blnEditBuiltInFields)	
+			$this->displayLabels();
     
     	// Display custom field inputs
     	if ($this->arrCustomFields) {
@@ -860,6 +878,40 @@ class QInventoryEditComposite extends QControl {
 		$this->txtInventoryModelCode->Text = $this->objInventoryModel->InventoryModelCode;
 		$this->arrCustomFields = CustomField::UpdateControls($this->objInventoryModel->objCustomFieldArray, $this->arrCustomFields);
 	}	
+	
+	//Set display logic of the BuiltInFields in View Access and Edit Access 
+		protected function UpdateBuiltInFields() {
+		//Set View Display Logic of Built-In Fields  
+		$objRoleEntityQtypeBuiltInAuthorization= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,EntityQtype::Inventory,1);
+		if($objRoleEntityQtypeBuiltInAuthorization && $objRoleEntityQtypeBuiltInAuthorization->AuthorizedFlag)
+			$this->blnViewBuiltInFields=true;
+		else
+			$this->blnViewBuiltInFields=false;
+
+		//Set Edit Display Logic of Built-In Fields	
+		$objRoleEntityQtypeBuiltInAuthorization2= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,EntityQtype::Inventory,2);
+		if($objRoleEntityQtypeBuiltInAuthorization2 && $objRoleEntityQtypeBuiltInAuthorization2->AuthorizedFlag)
+			$this->blnEditBuiltInFields=true;
+		else
+			$this->blnEditBuiltInFields=false;
+		
+		}
+		//Set display logic for the CustomFields
+		protected function UpdateCustomFields(){
+			if($this->arrCustomFields)foreach ($this->arrCustomFields as $objCustomField) {
+			//Set NextTabIndex only if the custom field is show
+				if($objCustomField['ViewAuth'] && $objCustomField['ViewAuth']->AuthorizedFlag)
+					$objCustomField['input']->TabIndex=$this->GetNextTabIndex();
+				
+				//In Create Mode, if the role doesn't have edit access for the custom field and the custom field is required, the field shows as a label with the default value
+				if (!$this->blnEditMode && !$objCustomField['blnEdit'] && $objCustomField['blnRequired']){
+					$objCustomField['lbl']->Text=$objCustomField['EditAuth']->EntityQtypeCustomField->CustomField->DefaultCustomFieldValue->__toString();
+					$objCustomField['lbl']->Display=true;
+					$objCustomField['input']->Display=false;			
+				}			
+			}
+		}
+		
 	
   // And our public getter/setters
   public function __get($strName) {

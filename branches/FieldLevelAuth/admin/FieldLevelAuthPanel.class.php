@@ -113,19 +113,19 @@ class FieldLevelAuthPanel extends QLabel{
 
 		}
 	}
-	public function uncheckAll(){
-		$this->uncheckEditColumn();
-		$this->uncheckViewColumn();
+	public function UnCheckAll(){
+		$this->UnCheckEditColumn();
+		$this->UnCheckViewColumn();
 	}
-	public function checkAll(){
-		$this->checkEditColumn();
-		$this->checkViewColumn();
+	public function CheckAll(){
+		$this->CheckEditColumn();
+		$this->CheckViewColumn();
 	}
-	public function disabledAll(){
-		$this->disableEditColumn();
-		$this->disableViewColumn();
+	public function DisabledAll(){
+		$this->DisableEditColumn();
+		$this->DisableViewColumn();
 	}
-	public function enableAll(){
+	public function EnableAll(){
 		$this->chkEntityView->Enabled=true;
 		$this->chkBuiltInView->Checked=true;
 		if($this->arrCustomChecks)foreach($this->arrCustomChecks as $chkCustom){
@@ -133,6 +133,7 @@ class FieldLevelAuthPanel extends QLabel{
 		}
 		if($this->arrControls[$this->objModule->ShortDescription]['edit']->SelectedValue==1 || $this->arrControls[$this->objModule->ShortDescription]['edit']->SelectedValue==2){
 			$this->chkEntityEdit->Enabled=true;
+			$this->chkBuiltInEdit->Enabled=true;
 			$this->chkBuiltInEdit->Checked=true;
 			if($this->arrCustomChecks)foreach($this->arrCustomChecks as $chkCustom){
 				$chkCustom['edit']->Enabled=true;
@@ -140,7 +141,7 @@ class FieldLevelAuthPanel extends QLabel{
 		}
 
 	}
-	public function enableEdit(){
+	public function EnableEdit(){
 		$this->chkEntityEdit->Enabled=true;
 		$this->chkBuiltInEdit->Enabled=true;
 		if($this->arrCustomChecks)foreach($this->arrCustomChecks as $chkCustom){
@@ -148,14 +149,14 @@ class FieldLevelAuthPanel extends QLabel{
 			$chkCustom['edit']->Enabled=true;
 		}
 	}
-	public function uncheckEditColumn(){
+	public function UnCheckEditColumn(){
 		$this->chkEntityEdit->Checked=false;
 		$this->chkBuiltInEdit->Checked=false;
 		if($this->arrCustomChecks)foreach($this->arrCustomChecks as $chkCustom){
 			$chkCustom['edit']->Checked=false;
 		}
 	}
-	public function checkEditColumn(){
+	public function CheckEditColumn(){
 		$this->chkEntityEdit->Checked=true;
 		$this->chkBuiltInEdit->Checked=true;
 		if($this->arrCustomChecks)foreach($this->arrCustomChecks as $chkCustom){
@@ -163,7 +164,8 @@ class FieldLevelAuthPanel extends QLabel{
 			$chkCustom['edit']->Checked=true;
 		}
 	}
-	public function uncheckViewColumn(){
+	public function UnCheckViewColumn(){
+		$this->chkBuiltInView->Checked=false;
 		$this->chkEntityView->Checked=false;
 		if($this->arrCustomChecks)foreach($this->arrCustomChecks as $chkCustom){
 			$chkCustom['view']->Checked=false;
@@ -171,7 +173,7 @@ class FieldLevelAuthPanel extends QLabel{
 			$chkCustom['edit']->Enabled=false;
 		}
 	}
-	public function checkViewColumn(){
+	public function CheckViewColumn(){
 		$this->chkEntityView->Checked=true;
 		if($this->arrCustomChecks)foreach($this->arrCustomChecks as $chkCustom){
 			$chkCustom['view']->Checked=true;
@@ -179,13 +181,13 @@ class FieldLevelAuthPanel extends QLabel{
 		}
 	}
 
-	public function disableEditColumn(){
+	public function DisableEditColumn(){
 		$this->chkBuiltInEdit->Enabled=false;
 		if($this->arrCustomChecks)foreach($this->arrCustomChecks as $chkCustom){
 			$chkCustom['edit']->Enabled=false;
 		}
 	}
-	public function disableViewColumn(){
+	public function DisableViewColumn(){
 		$this->chkBuiltInView->Enabled=false;
 		if($this->arrCustomChecks)foreach($this->arrCustomChecks as $chkCustom){
 			$chkCustom['view']->Enabled=false;
