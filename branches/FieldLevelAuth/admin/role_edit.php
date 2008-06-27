@@ -575,7 +575,19 @@ protected function pnlAssets_Create($intModule){
 			$this->btnCancel->Warning = sprintf('This role has been updated by another user. You must <a href="role_edit.php?intRoleId=%s">Refresh</a> to edit this role.', $this->objRole->RoleId);
 		}
 	}
-// Update module authorization fields when enabling/disabling module access
+	protected function btnDelete_Click($strFormId, $strControlId, $strParameter) {		
+			//Delete All Authorization Records in RoleEntytyQtype... this also could be done by creating a DeleteByRoleId() method
+			foreach (RoleEntityQtypeBuiltInAuthorization::LoadArrayByRoleId($this->objRole->RoleId) as $objRoleBuiltInAuth){
+				$objRoleBuiltInAuth->Delete();			
+			}
+			foreach(RoleEntityQtypeCustomFieldAuthorization::LoadArrayByRoleId($this->objRole->RoleId) as $objRoleCustomAuth){
+				$objRoleCustomAuth->Delete();
+			}
+			$this->objRole->Delete();
+			
+			$this->RedirectToListPage();
+		}
+	// Update module authorization fields when enabling/disabling module access
 	protected function lstAccessControl_Select($strFormId, $strControlId, $strParameter) {
 		// Properly colorize the Enabled/Disabled selection
 		$objAccessControl = $this->GetControl($strControlId);
