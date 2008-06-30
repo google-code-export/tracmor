@@ -46,6 +46,9 @@
 			// Create all custom asset model fields
 			$this->customFields_Create();
 			
+			// Set Display logic of the Custom Fields
+			$this->UpdateCustomFields();
+			
 			// Add Enter Key Events to each control except the Cancel Button
 			$arrControls = array($this->txtFirstName, $this->txtLastName, $this->txtTitle, $this->txtEmail, $this->txtDescription, $this->txtPhoneOffice, $this->txtPhoneHome, $this->txtPhoneMobile, $this->txtFax);
 			foreach ($arrControls as $ctlControl) {
@@ -131,6 +134,20 @@
 				$objListItem = new QListItem($objAddress->__toString(), $objAddress->AddressId);
 				$this->lstAddress->AddItem($objListItem);
 			}
+		}
+		
+		//Set display logic for the CustomFields
+		protected function UpdateCustomFields(){
+			if($this->arrCustomFields)foreach ($this->arrCustomFields as $objCustomField) {	
+				// If the role doesn't have edit access for the custom field and the custom field is required, the field shows as a label with the default value
+				if (!$objCustomField['blnEdit']){				
+					$objCustomField['lbl']->Display=true;
+					$objCustomField['input']->Display=false;
+					if(($objCustomField['blnRequired']))
+						$objCustomField['lbl']->Text=$objCustomField['EditAuth']->EntityQtypeCustomField->CustomField->DefaultCustomFieldValue->__toString();			
+				}		
+			}
+			
 		}
 		
 		// Save Button Click Actions

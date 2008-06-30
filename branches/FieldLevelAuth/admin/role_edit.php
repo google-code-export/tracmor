@@ -169,27 +169,7 @@ class RoleEditForm extends RoleEditFormBase {
 				// Add Items to Access Control
 				$objAccessControl->AddItem($objEnabledItem);
 				$objAccessControl->AddItem($objDisabledItem);
-				$objAccessControl->AddAction(new QChangeEvent(), new QAjaxAction('lstAccessControl_Select'));
-					
-					
-					
-					
-				if($objEnabledItem->Selected){
-					switch ($objModule->ModuleId) {
-						case 2:
-							//$this->pnlAssets->enableView();
-							break;
-					}
-				}else{
-					switch ($objModule->ModuleId) {
-						case 2:
-							//$this->pnlAssets->DisabledAll();
-							//$this->pnlAssets->UnCheckAll();
-
-							break;
-					}
-				}
-					
+				$objAccessControl->AddAction(new QChangeEvent(), new QAjaxAction('lstAccessControl_Select'));			
 					
 				// Set the List Item objects to null because QCodo will maintain them in the formstate otherwise
 				$objEnabledItem = null;

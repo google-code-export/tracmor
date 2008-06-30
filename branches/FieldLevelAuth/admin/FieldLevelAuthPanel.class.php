@@ -108,6 +108,14 @@ class FieldLevelAuthPanel extends QLabel{
 					$chkCustomEdit->Checked=1;
 				elseif(isset($objCustomAuthEdit))
 					$chkCustomEdit->Checked=$objCustomAuthEdit->AuthorizedFlag;
+				//if view access is not authorized, edit access won't be authorized
+				if(!$chkCustomView->Checked){
+					$chkCustomEdit->Enabled=false;
+					$chkCustomEdit->Checked=false;
+				}
+					
+					
+				
 			}
 			$this->arrCustomChecks[] = array('name' => $objCustomField->ShortDescription.':', 'view' => $chkCustomView,'edit' => $chkCustomEdit,'id' => $objCustomField->CustomFieldId);
 
@@ -182,6 +190,7 @@ class FieldLevelAuthPanel extends QLabel{
 	}
 
 	public function DisableEditColumn(){
+		$this->chkEntityEdit->Enabled=false;
 		$this->chkBuiltInEdit->Enabled=false;
 		if($this->arrCustomChecks)foreach($this->arrCustomChecks as $chkCustom){
 			$chkCustom['edit']->Enabled=false;

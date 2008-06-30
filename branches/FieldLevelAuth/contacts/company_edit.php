@@ -991,10 +991,11 @@
 					$objCustomField['input']->TabIndex=$this->GetNextTabIndex();
 				
 				//In Create Mode, if the role doesn't have edit access for the custom field and the custom field is required, the field shows as a label with the default value
-				if (!$this->blnEditMode && !$objCustomField['blnEdit'] && $objCustomField['blnRequired']){
-					$objCustomField['lbl']->Text=$objCustomField['EditAuth']->EntityQtypeCustomField->CustomField->DefaultCustomFieldValue->__toString();
+				if (!$this->blnEditMode && !$objCustomField['blnEdit']){				
 					$objCustomField['lbl']->Display=true;
-					$objCustomField['input']->Display=false;			
+					$objCustomField['input']->Display=false;
+					if(($objCustomField['blnRequired']))
+						$objCustomField['lbl']->Text=$objCustomField['EditAuth']->EntityQtypeCustomField->CustomField->DefaultCustomFieldValue->__toString();			
 				}			
 			}
 			

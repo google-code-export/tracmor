@@ -8,7 +8,7 @@
 </tr>
 <tr>
 	<td class="role_table_left"></td>
-	<td class="record_field_name" style="text-align: right;">BuiltInFields</td>
+	<td class="record_field_name" style="text-align: right;">Built-in Fields</td>
 	<td style="text-align: center; font-weight: bold;"><?php $_CONTROL->chkBuiltInView->Render();?></td>
 	<td style="text-align: center;"><?php $_CONTROL->chkBuiltInEdit->Render();?></td>
 	<td style="text-align: center;"></td>
