@@ -592,8 +592,9 @@
 			$this->txtPostalCode->Display = true;
 			
 			//If the user is not authorized to edit built-in fields, the fields are render as labels.
-			if(!$this->blnEditBuiltInFields)	
+			if(!$this->blnEditBuiltInFields){
 				$this->DisplayLabels();
+			}
 	
 			
 			// Display custom field inputs
@@ -609,34 +610,40 @@
 		protected function UpdateBuiltInFields() {
 		//Set View Display Logic of Built-In Fields  
 		$objRoleEntityQtypeBuiltInAuthorization= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,EntityQtype::Address,1);
-		if($objRoleEntityQtypeBuiltInAuthorization && $objRoleEntityQtypeBuiltInAuthorization->AuthorizedFlag)
+		if($objRoleEntityQtypeBuiltInAuthorization && $objRoleEntityQtypeBuiltInAuthorization->AuthorizedFlag){
 			$this->blnViewBuiltInFields=true;
-		else
+		}
+		else{
 			$this->blnViewBuiltInFields=false;
+		}
 
 		//Set Edit Display Logic of Built-In Fields	
 		$objRoleEntityQtypeBuiltInAuthorization2= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,EntityQtype::Address,2);
-		if($objRoleEntityQtypeBuiltInAuthorization2 && $objRoleEntityQtypeBuiltInAuthorization2->AuthorizedFlag)
+		if($objRoleEntityQtypeBuiltInAuthorization2 && $objRoleEntityQtypeBuiltInAuthorization2->AuthorizedFlag){
 			$this->blnEditBuiltInFields=true;
-		else
+		}
+		else{
 			$this->blnEditBuiltInFields=false;
+		}
 		}
 		//Set display logic for the CustomFields
 		protected function UpdateCustomFields(){
-			if($this->arrCustomFields)foreach ($this->arrCustomFields as $objCustomField) {
-			//Set NextTabIndex only if the custom field is show
-				if($objCustomField['ViewAuth'] && $objCustomField['ViewAuth']->AuthorizedFlag)
-					$objCustomField['input']->TabIndex=$this->GetNextTabIndex();
-				
-				//In Create Mode, if the role doesn't have edit access for the custom field and the custom field is required, the field shows as a label with the default value
-				if (!$this->blnEditMode && !$objCustomField['blnEdit']){				
-					$objCustomField['lbl']->Display=true;
-					$objCustomField['input']->Display=false;
-					if(($objCustomField['blnRequired']))
-						$objCustomField['lbl']->Text=$objCustomField['EditAuth']->EntityQtypeCustomField->CustomField->DefaultCustomFieldValue->__toString();			
-				}			
+			if($this->arrCustomFields){
+				foreach ($this->arrCustomFields as $objCustomField) {
+				//Set NextTabIndex only if the custom field is show
+					if($objCustomField['ViewAuth'] && $objCustomField['ViewAuth']->AuthorizedFlag){
+						$objCustomField['input']->TabIndex=$this->GetNextTabIndex();
+					}
+					//In Create Mode, if the role doesn't have edit access for the custom field and the custom field is required, the field shows as a label with the default value
+					if (!$this->blnEditMode && !$objCustomField['blnEdit']){				
+						$objCustomField['lbl']->Display=true;
+						$objCustomField['input']->Display=false;
+						if(($objCustomField['blnRequired'])){
+							$objCustomField['lbl']->Text=$objCustomField['EditAuth']->EntityQtypeCustomField->CustomField->DefaultCustomFieldValue->__toString();
+						}			
+					}			
+				}
 			}
-			
 		}					
 	}
 	AddressEditForm::Run('AddressEditForm', __DOCROOT__ . __SUBDIRECTORY__ . '/contacts/address_edit.tpl.php');

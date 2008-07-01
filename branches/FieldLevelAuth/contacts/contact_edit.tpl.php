@@ -55,8 +55,9 @@
 		 
 		if ($this->arrCustomFields) {
 			foreach ($this->arrCustomFields as $field) {
-				if(!$this->blnEditMode || $field['blnView'])
+				if(!$this->blnEditMode || $field['blnView']){
 					$arrContactFields[] = array('name' => $field['lbl']->Name . ":", 'value' => $field['lbl']->RenderWithError(false) . $field['input']->RenderWithError(false));
+				}
 			}
 		}		
 	
@@ -88,11 +89,13 @@
 							<td style="vertical-align:top;">
 								<table cellpadding="0" cellspacing="0">
 								<?php
-									if(isset($arrContactFields))for ($i=0;$i<ceil(count($arrContactFields)/2);$i++) {
-										echo('<tr>');
-										echo('<td class="record_field_name">'. $arrContactFields[$i]['name'] .'</td>');
-										echo('<td class="record_field_value">'. $arrContactFields[$i]['value'] .'</td>');
-										echo('</tr>');
+									if(isset($arrContactFields)){
+										for ($i=0;$i<ceil(count($arrContactFields)/2);$i++) {
+											echo('<tr>');
+											echo('<td class="record_field_name">'. $arrContactFields[$i]['name'] .'</td>');
+											echo('<td class="record_field_value">'. $arrContactFields[$i]['value'] .'</td>');
+											echo('</tr>');
+										}
 									}
 								?>
 								</table>
@@ -100,11 +103,13 @@
 							<td style="vertical-align:top;">
 								<table cellpadding="0" cellspacing="0">
 								<?php
-									if(isset($arrContactFields))for ($i=ceil(count($arrContactFields)/2);$i<count($arrContactFields);$i++) {
-										echo('<tr>');
-										echo('<td class="record_field_name">'. $arrContactFields[$i]['name'] .'</td>');
-										echo('<td class="record_field_value">'. $arrContactFields[$i]['value'] .'</td>');
-										echo('</tr>');
+									if(isset($arrContactFields)){
+										for ($i=ceil(count($arrContactFields)/2);$i<count($arrContactFields);$i++) {
+											echo('<tr>');
+											echo('<td class="record_field_name">'. $arrContactFields[$i]['name'] .'</td>');
+											echo('<td class="record_field_value">'. $arrContactFields[$i]['value'] .'</td>');
+											echo('</tr>');
+										}
 									}
 								?>				
 								</table>

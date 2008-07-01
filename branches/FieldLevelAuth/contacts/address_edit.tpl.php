@@ -88,11 +88,13 @@
 							<td style="vertical-align:top;">
 								<table cellpadding="0" cellspacing="0">
 								<?php
-									if($arrAddressFields)for ($i=0;$i<ceil(count($arrAddressFields)/2);$i++) {
-										echo('<tr>');
-										echo('<td class="record_field_name">'. $arrAddressFields[$i]['name'] .'&nbsp;</td>');
-										echo('<td class="record_field_value">'. $arrAddressFields[$i]['value'] .'&nbsp;</td>');
-										echo('</tr>');
+									if($arrAddressFields){
+										for ($i=0;$i<ceil(count($arrAddressFields)/2);$i++) {
+											echo('<tr>');
+											echo('<td class="record_field_name">'. $arrAddressFields[$i]['name'] .'&nbsp;</td>');
+											echo('<td class="record_field_value">'. $arrAddressFields[$i]['value'] .'&nbsp;</td>');
+											echo('</tr>');
+										}
 									}
 								?>
 								</table>
@@ -100,11 +102,13 @@
 							<td style="vertical-align:top;">
 								<table cellpadding="0" cellspacing="0">
 								<?php
-									if($arrAddressFields)for ($i=ceil(count($arrAddressFields)/2);$i<count($arrAddressFields);$i++) {
-										echo('<tr>');
-										echo('<td class="record_field_name">'. $arrAddressFields[$i]['name'] .'&nbsp;</td>');
-										echo('<td class="record_field_value">'. $arrAddressFields[$i]['value'] .'&nbsp;</td>');
-										echo('</tr>');
+									if($arrAddressFields){
+										for ($i=ceil(count($arrAddressFields)/2);$i<count($arrAddressFields);$i++) {
+											echo('<tr>');
+											echo('<td class="record_field_name">'. $arrAddressFields[$i]['name'] .'&nbsp;</td>');
+											echo('<td class="record_field_value">'. $arrAddressFields[$i]['value'] .'&nbsp;</td>');
+											echo('</tr>');
+										}
 									}
 								?>				
 								</table>

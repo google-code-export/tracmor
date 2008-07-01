@@ -290,8 +290,9 @@
       if ($objCustomFieldArray) {
       	foreach ($objCustomFieldArray as $objCustomField) {
       		//Only add the custom field column if the role has authorization to view it.
-      		if($objCustomField->objRoleAuthView && $objCustomField->objRoleAuthView->AuthorizedFlag)
+      		if($objCustomField->objRoleAuthView && $objCustomField->objRoleAuthView->AuthorizedFlag){
       			$this->dtgReceipt->AddColumn(new QDataGridColumnExt($objCustomField->ShortDescription, '<?= $_ITEM->GetVirtualAttribute(\''.$objCustomField->CustomFieldId.'\') ?>', 'SortByCommand="__'.$objCustomField->CustomFieldId.' ASC"', 'ReverseSortByCommand="__'.$objCustomField->CustomFieldId.' DESC"','HtmlEntities="false"', 'CssClass="dtg_column"', 'Display="false"'));
+      		}
       	}
       }
            

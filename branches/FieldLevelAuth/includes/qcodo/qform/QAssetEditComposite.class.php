@@ -1121,17 +1121,21 @@ class QAssetEditComposite extends QControl {
 	protected function UpdateBuiltInFields() {
 		//Set View Display Logic of Built-In Fields  
 		$objRoleEntityQtypeBuiltInAuthorization= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,1,1);
-		if($objRoleEntityQtypeBuiltInAuthorization && $objRoleEntityQtypeBuiltInAuthorization->AuthorizedFlag)
+		if($objRoleEntityQtypeBuiltInAuthorization && $objRoleEntityQtypeBuiltInAuthorization->AuthorizedFlag){
 			$this->blnViewBuiltInFields=true;
-		else
+		}
+		else{
 			$this->blnViewBuiltInFields=false;
+		}
 
 		//Set Edit Display Logic of Built-In Fields	
 		$objRoleEntityQtypeBuiltInAuthorization2= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,1,2);
-		if($objRoleEntityQtypeBuiltInAuthorization2 && $objRoleEntityQtypeBuiltInAuthorization2->AuthorizedFlag)
+		if($objRoleEntityQtypeBuiltInAuthorization2 && $objRoleEntityQtypeBuiltInAuthorization2->AuthorizedFlag){
 			$this->blnEditBuiltInFields=true;
-		else
+		}
+		else{
 			$this->blnEditBuiltInFields=false;
+		}
 		
 	}
 	
@@ -1139,15 +1143,17 @@ class QAssetEditComposite extends QControl {
 		protected function UpdateCustomFields(){
 			if($this->arrCustomFields)foreach ($this->arrCustomFields as $objCustomField) {
 			//Set NextTabIndex only if the custom field is show
-				if($objCustomField['ViewAuth'] && $objCustomField['ViewAuth']->AuthorizedFlag)
+				if($objCustomField['ViewAuth'] && $objCustomField['ViewAuth']->AuthorizedFlag){
 					$objCustomField['input']->TabIndex=$this->GetNextTabIndex();
+				}
 				
 				//In Create Mode, if the role doesn't have edit access for the custom field and the custom field is required, the field shows as a label with the default value
 				if (!$this->blnEditMode && !$objCustomField['blnEdit']){				
 					$objCustomField['lbl']->Display=true;
 					$objCustomField['input']->Display=false;
-					if(($objCustomField['blnRequired']))
-						$objCustomField['lbl']->Text=$objCustomField['EditAuth']->EntityQtypeCustomField->CustomField->DefaultCustomFieldValue->__toString();			
+					if(($objCustomField['blnRequired'])){
+						$objCustomField['lbl']->Text=$objCustomField['EditAuth']->EntityQtypeCustomField->CustomField->DefaultCustomFieldValue->__toString();
+					}			
 				}
 			}
 		}
@@ -1155,10 +1161,12 @@ class QAssetEditComposite extends QControl {
 	protected function UpdateAssetModelAccess() {
 		//checks if the entity 4 (AssetModel) has edit authorization
 		$objRoleEntityQtypeBuiltInAuthorization= RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId(QApplication::$objRoleModule->RoleId,EntityQtype::AssetModel,2);
-		if($objRoleEntityQtypeBuiltInAuthorization && $objRoleEntityQtypeBuiltInAuthorization->AuthorizedFlag)
+		if($objRoleEntityQtypeBuiltInAuthorization && $objRoleEntityQtypeBuiltInAuthorization->AuthorizedFlag){
 			$this->lblNewAssetModel->Visible=true;
-		else
+		}
+		else{
 			$this->lblNewAssetModel->Visible=false;
+		}
 	}
 	
 

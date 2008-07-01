@@ -27,10 +27,12 @@
 	// Asset Code 
 	// Asset Model
 		
-		if (!$this->blnEditMode) 
+		if (!$this->blnEditMode){ 
 			$arrAssetFields[] = array('name' => 'Asset Model:',  'value' => $this->lstAssetModel->RenderWithError(false) . '&nbsp;' . $this->lblNewAssetModel->Render(false));
-		else 
-			$arrAssetFields[] = array('name' => 'Asset Model:',  'value' => $this->lstAssetModel->Render(false) . '&nbsp;' . $this->lblNewAssetModel->Render(false) . $this->lblAssetModel->Render(false));			
+		}
+		else{ 
+			$arrAssetFields[] = array('name' => 'Asset Model:',  'value' => $this->lstAssetModel->Render(false) . '&nbsp;' . $this->lblNewAssetModel->Render(false) . $this->lblAssetModel->Render(false));
+		}			
 		
 		$arrAssetFields[] = array('name' => 'Asset Code:',   'value' => $this->txtAssetCode->RenderWithError(false) . $this->chkAutoGenerateAssetCode->Render(false) . $this->lblAssetCode->Render(false));
 	
@@ -89,11 +91,13 @@
 					<td style="vertical-align:top;">
 						<table cellpadding="0" cellspacing="0">
 						<?php
-							if(isset($arrAssetFields))for ($i=0;$i<ceil(count($arrAssetFields)/2);$i++) {
-								echo('<tr>');
-								echo('<td class="record_field_name">'. $arrAssetFields[$i]['name'] .'&nbsp;</td>');
-								echo('<td class="record_field_value">'. $arrAssetFields[$i]['value'] .'</td>');
-								echo('</tr>');
+							if(isset($arrAssetFields)){
+								for ($i=0;$i<ceil(count($arrAssetFields)/2);$i++) {
+									echo('<tr>');
+									echo('<td class="record_field_name">'. $arrAssetFields[$i]['name'] .'&nbsp;</td>');
+									echo('<td class="record_field_value">'. $arrAssetFields[$i]['value'] .'</td>');
+									echo('</tr>');
+								}
 							}
 						?>
 						</table>
@@ -101,11 +105,13 @@
 					<td style="vertical-align:top;">
 						<table cellpadding="0" cellspacing="0">
 						<?php
-							if($arrAssetFields)for ($i=ceil(count($arrAssetFields)/2);$i<count($arrAssetFields);$i++) {
-								echo('<tr>');
-								echo('<td class="record_field_name">'. $arrAssetFields[$i]['name'] .'&nbsp;</td>');
-								echo('<td class="record_field_value">'. $arrAssetFields[$i]['value'] .'&nbsp;</td>');
-								echo('</tr>');
+							if($arrAssetFields){
+								for ($i=ceil(count($arrAssetFields)/2);$i<count($arrAssetFields);$i++) {
+									echo('<tr>');
+									echo('<td class="record_field_name">'. $arrAssetFields[$i]['name'] .'&nbsp;</td>');
+									echo('<td class="record_field_value">'. $arrAssetFields[$i]['value'] .'&nbsp;</td>');
+									echo('</tr>');
+								}
 							}
 						?>
 						</table>

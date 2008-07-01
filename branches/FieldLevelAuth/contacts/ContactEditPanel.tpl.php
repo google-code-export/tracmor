@@ -38,8 +38,9 @@
 	// Custom Fields
 	if ($_CONTROL->arrCustomFields) {
 		foreach ($_CONTROL->arrCustomFields as $field) {
-			if(!$this->blnEditMode || $field['blnView'])
+			if(!$this->blnEditMode || $field['blnView']){
 				$arrContactFields[] = array('name' => $field['input']->Name.':', 'value' => $field['input']->RenderWithError(false));
+			}
 		}
 	}
 	
@@ -56,11 +57,13 @@
 		</td>
 	</tr>
 	<?php 
-		if($arrContactFields)foreach ($arrContactFields as $arrContactField) {
-			echo '<tr>';
-			echo('<td class="record_field_name">'. $arrContactField['name'] .'&nbsp;</td>');
-			echo('<td class="record_field_value">'. $arrContactField['value'] .'&nbsp;</td>');
-			echo('</tr>');
+		if($arrContactFields){
+			foreach ($arrContactFields as $arrContactField) {
+				echo '<tr>';
+				echo('<td class="record_field_name">'. $arrContactField['name'] .'&nbsp;</td>');
+				echo('<td class="record_field_value">'. $arrContactField['value'] .'&nbsp;</td>');
+				echo('</tr>');
+			}
 		}
 	?>
 </table>

@@ -35,8 +35,9 @@
 	// Custom Fields
 	if ($_CONTROL->arrCustomFields) {
 		foreach ($_CONTROL->arrCustomFields as $field) {
-			if(!$this->blnEditMode || $field['blnView'])
+			if(!$this->blnEditMode || $field['blnView']){
 				$arrAddressFields[] = array('name' => $field['input']->Name.':', 'value' => $field['input']->RenderWithError(false));
+			}
 		}
 	}
 ?>
@@ -52,11 +53,13 @@
 		</td>
 	</tr>
 	<?php 
-		if($arrAddressFields)foreach ($arrAddressFields as $arrAddressField) {
-			echo '<tr>';
-			echo('<td class="record_field_name">'. $arrAddressField['name'] .'&nbsp;</td>');
-			echo('<td class="record_field_value">'. $arrAddressField['value'] .'&nbsp;</td>');
-			echo('</tr>');
+		if($arrAddressFields){
+			foreach ($arrAddressFields as $arrAddressField) {
+				echo '<tr>';
+				echo('<td class="record_field_name">'. $arrAddressField['name'] .'&nbsp;</td>');
+				echo('<td class="record_field_value">'. $arrAddressField['value'] .'&nbsp;</td>');
+				echo('</tr>');
+			}
 		}
 	?>
 </table>

@@ -106,7 +106,10 @@ class RoleEditForm extends RoleEditFormBase {
 		$this->btnCancel_Create();
 		$this->btnDelete_Create();
 			
-		// Create/Setup Panel controls	
+		// Create/Setup Panel controls
+		//Each Entity will have it's own Feld Level Authorization Grid.
+		// The Field Level Authorization Grid will be a composite control instantiated 8 times.
+		// The param is ModuleId	
 		$this->pnlAssets_Create(2);
 		$this->pnlAssetModel_Create(2);
 		$this->pnlInventory_Create(3);
@@ -252,19 +255,13 @@ class RoleEditForm extends RoleEditFormBase {
 		$this->lblAssetsAdvanced = new QLabel($this);
 		$this->lblAssetsAdvanced->Name = 'Advanced';
 		$this->lblAssetsAdvanced->Text = 'Advanced';
-		//   $objSubmitListItemActions = array(new QJavaScriptAction('FirmaryEnviar()'),new QServerAction('lblAssetsAdvanced_Click'));
-	 // 	$this->lblAssetsAdvanced->AddActionArray(new QClickEvent(), $objSubmitListItemActions);
+		//The Assets Module consist of Asset and AssetModel, so we toggle pnlAsset and pnlAssetModel
 		$this->lblAssetsAdvanced->AddAction(new QClickEvent(), new QToggleDisplayAction($this->pnlAssets));
 		$this->lblAssetsAdvanced->AddAction(new QClickEvent(), new QToggleDisplayAction($this->pnlAssetModel));
-		//  	$this->lblAssetsAdvanced->AddAction(new QClickEvent(), new QJavaScriptAction("qc.getW('c8').toggleDisplay('show')"));
-		//	$this->lblAssetsAdvanced->AddAction(new QClickEvent(), new QToggleDisplayAction($this->pnlAssetModel));
 		$this->lblAssetsAdvanced->AddAction(new QClickEvent(), new QAjaxAction('lblAssetsAdvanced_Click'));
 		$this->lblAssetsAdvanced->SetCustomStyle('text-decoration', 'underline');
 		$this->lblAssetsAdvanced->SetCustomStyle('cursor', 'pointer');
 	}
-	
-	
-	
 	protected function lblInventoryAdvanced_Create() {
 		$this->lblInventoryAdvanced = new QLabel($this);
 		$this->lblInventoryAdvanced->Name = 'InventoryAdvanced';
@@ -280,6 +277,7 @@ class RoleEditForm extends RoleEditFormBase {
 		$this->lblContactsAdvanced = new QLabel($this);
 		$this->lblContactsAdvanced->Name = 'AdvancedContacts';
 		$this->lblContactsAdvanced->Text = 'Advanced';
+		//The Contact Module consist of Contact, Company, Address so we toggle pnlContact, pnlCompany and pnlAddress
 		$this->lblContactsAdvanced->AddAction(new QClickEvent(), new QToggleDisplayAction($this->pnlContact));
 		$this->lblContactsAdvanced->AddAction(new QClickEvent(), new QToggleDisplayAction($this->pnlCompany));
 		$this->lblContactsAdvanced->AddAction(new QClickEvent(), new QToggleDisplayAction($this->pnlAddress));
@@ -308,145 +306,158 @@ class RoleEditForm extends RoleEditFormBase {
 		$this->lblReceivingAdvanced->SetCustomStyle('text-decoration', 'underline');
 		$this->lblReceivingAdvanced->SetCustomStyle('cursor', 'pointer');
 	}
-
+//Setup the Asset Entity Grid
 protected function pnlAssets_Create($intModule){
 		
 		$this->pnlAssets = new FieldLevelAuthPanel($this,EntityQtype::Asset,$this->arrControls,$intModule,"pnlAssets",$this->blnEditMode);
 		$this->pnlAssets->Display=false;
 		$objModule= Module::Load($intModule);
-		
-		
+		//If Creation Mode, all checkbox are checked by default
 		if(!$this->blnEditMode){				
 				$this->pnlAssets->EnableAll();
 				$this->pnlAssets->CheckAll();
-		}elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
+		}//If Edition Mode and module access is disabled, we must uncheck and disable all checkboxs 
+		elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
 				$this->pnlAssets->UnCheckAll();
 				$this->pnlAssets->DisabledAll();
-		}elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
+		}//If Edition Mode and module access is Enabled and Edit access is "None", we must uncheck and disable all the Edit Checkboxs.
+		elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
 				$this->pnlAssets->DisableEditColumn();
 				$this->pnlAssets->UnCheckEditColumn();
-			}
+		}
 	}
-	
-	
 	protected function pnlAssetModel_Create($intModule){
 		$this->pnlAssetModel = new FieldLevelAuthPanel($this,EntityQtype::AssetModel,$this->arrControls,$intModule,"pnlAssetModel",$this->blnEditMode);
 		$this->pnlAssetModel->Display=false;
 		$objModule= Module::Load($intModule);
-		
+		//If Creation Mode, all checkbox are checked by default
 		if(!$this->blnEditMode){				
-				$this->pnlAssetModel->EnableAll();
-				$this->pnlAssetModel->CheckAll();
-		}elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
+			$this->pnlAssetModel->EnableAll();
+			$this->pnlAssetModel->CheckAll();
+		}//If Edition Mode and module access is disabled, we must uncheck and disable all checkboxs
+		elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
 				$this->pnlAssetModel->UnCheckAll();
 				$this->pnlAssetModel->DisabledAll();
-			}elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
+		}//If Edition Mode and module access is Enabled and Edit access is "None", we must uncheck and disable all the Edit Checkboxs.
+		elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
 				$this->pnlAssetModel->DisableEditColumn();
 				$this->pnlAssetModel->UnCheckEditColumn();
-			}	
+		}	
 	}
 	protected function pnlInventory_Create($intModule){
 		$this->pnlInventory = new FieldLevelAuthPanel($this,EntityQtype::Inventory,$this->arrControls,$intModule,"pnlInventory",$this->blnEditMode);
 		$this->pnlInventory->Display=false;
 		$objModule= Module::Load($intModule);
-		
+		//If Creation Mode, all checkbox are checked by default
 		if(!$this->blnEditMode){				
-				$this->pnlInventory->EnableAll();
-				$this->pnlInventory->CheckAll();
-		}elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
-				$this->pnlInventory->UnCheckAll();
-				$this->pnlInventory->DisabledAll();
-			}elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
-				$this->pnlInventory->DisableEditColumn();
-				$this->pnlInventory->UnCheckEditColumn();
-			}
+			$this->pnlInventory->EnableAll();
+			$this->pnlInventory->CheckAll();
+		}//If Edition Mode and module access is disabled, we must uncheck and disable all checkboxs
+		elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
+			$this->pnlInventory->UnCheckAll();
+			$this->pnlInventory->DisabledAll();
+		}//If Edition Mode and module access is Enabled and Edit access is "None", we must uncheck and disable all the Edit Checkboxs.
+		elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
+			$this->pnlInventory->DisableEditColumn();
+			$this->pnlInventory->UnCheckEditColumn();
+		}
 
 	}
 	protected function pnlContact_Create($intModule){
 		$this->pnlContact = new FieldLevelAuthPanel($this,EntityQtype::Contact,$this->arrControls,$intModule,"pnlContact",$this->blnEditMode);
 		$this->pnlContact->Display=false;
 		$objModule= Module::Load($intModule);
-		
+		//If Creation Mode, all checkbox are checked by default
 		if(!$this->blnEditMode){				
 				$this->pnlContact->EnableAll();
 				$this->pnlContact->CheckAll();
-		}elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
-				$this->pnlContact->UnCheckAll();
-				$this->pnlContact->DisabledAll();
-			}elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
-				$this->pnlContact->DisableEditColumn();
-				$this->pnlContact->UnCheckEditColumn();
-			}
+		}//If Edition Mode and module access is disabled, we must uncheck and disable all checkboxs
+		elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
+			$this->pnlContact->UnCheckAll();
+			$this->pnlContact->DisabledAll();
+		}//If Edition Mode and module access is Enabled and Edit access is "None", we must uncheck and disable all the Edit Checkboxs.
+		elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
+			$this->pnlContact->DisableEditColumn();
+			$this->pnlContact->UnCheckEditColumn();
+		}
 
 	}
 	protected function pnlShipping_Create($intModule){
 		$this->pnlShipping = new FieldLevelAuthPanel($this,EntityQtype::Shipment,$this->arrControls,$intModule,"pnlShipping",$this->blnEditMode);
 		$this->pnlShipping->Display=false;
 		$objModule= Module::Load($intModule);
-		
+		//If Creation Mode, all checkbox are checked by default
 		if(!$this->blnEditMode){				
 				$this->pnlShipping->EnableAll();
 				$this->pnlShipping->CheckAll();
-		}elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
-				$this->pnlShipping->UnCheckAll();
-				$this->pnlShipping->DisabledAll();
-			}elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
-				$this->pnlShipping->DisableEditColumn();
-				$this->pnlShipping->UnCheckEditColumn();
-			}
+		}//If Edition Mode and module access is disabled, we must uncheck and disable all checkboxs
+		elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
+			$this->pnlShipping->UnCheckAll();
+			$this->pnlShipping->DisabledAll();
+		}//If Edition Mode and module access is Enabled and Edit access is "None", we must uncheck and disable all the Edit Checkboxs.
+		elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
+			$this->pnlShipping->DisableEditColumn();
+			$this->pnlShipping->UnCheckEditColumn();
+		}
 
 	}
 	protected function pnlReceiving_Create($intModule){
 		$this->pnlReceiving = new FieldLevelAuthPanel($this,EntityQtype::Receipt,$this->arrControls,$intModule,"pnlReceiving",$this->blnEditMode);
 		$this->pnlReceiving->Display=false;
 		$objModule= Module::Load($intModule);
-		
+		//If Creation Mode, all checkbox are checked by default
 		if(!$this->blnEditMode){				
 				$this->pnlReceiving->EnableAll();
 				$this->pnlReceiving->CheckAll();
-		}elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
-				$this->pnlReceiving->UnCheckAll();
-				$this->pnlReceiving->DisabledAll();
-			}elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
-				$this->pnlReceiving->DisableEditColumn();
-				$this->pnlReceiving->UnCheckEditColumn();
-			}
+		}//If Edition Mode and module access is disabled, we must uncheck and disable all checkboxs
+		elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
+			$this->pnlReceiving->UnCheckAll();
+			$this->pnlReceiving->DisabledAll();
+		}//If Edition Mode and module access is Enabled and Edit access is "None", we must uncheck and disable all the Edit Checkboxs.
+		elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
+			$this->pnlReceiving->DisableEditColumn();
+			$this->pnlReceiving->UnCheckEditColumn();
+		}
 
 	}
 	protected function pnlCompany_Create($intModule){
 		$this->pnlCompany = new FieldLevelAuthPanel($this,EntityQtype::Company,$this->arrControls,$intModule,"pnlCompany",$this->blnEditMode);
 		$this->pnlCompany->Display=false;
 		$objModule= Module::Load($intModule);
-		
+		//If Creation Mode, all checkbox are checked by default
 		if(!$this->blnEditMode){				
 				$this->pnlCompany->EnableAll();
 				$this->pnlCompany->CheckAll();
-		}elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
-				$this->pnlCompany->UnCheckAll();
-				$this->pnlCompany->DisabledAll();
-			}elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
-				$this->pnlCompany->DisableEditColumn();
-				$this->pnlCompany->UnCheckEditColumn();
-			}
+		}//If Edition Mode and module access is disabled, we must uncheck and disable all checkboxs
+		elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
+			$this->pnlCompany->UnCheckAll();
+			$this->pnlCompany->DisabledAll();
+		}//If Edition Mode and module access is Enabled and Edit access is "None", we must uncheck and disable all the Edit Checkboxs.
+		elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
+			$this->pnlCompany->DisableEditColumn();
+			$this->pnlCompany->UnCheckEditColumn();
+		}
 
 	}
 	protected function pnlAddress_Create($intModule){
 		$this->pnlAddress = new FieldLevelAuthPanel($this,EntityQtype::Address,$this->arrControls,$intModule,"pnlAddress",$this->blnEditMode);
 		$this->pnlAddress->Display=false;
 		$objModule= Module::Load($intModule);
+		//If Creation Mode, all checkbox are checked by default
 		if(!$this->blnEditMode){				
 				$this->pnlAddress->EnableAll();
 				$this->pnlAddress->CheckAll();
-		}elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
-				$this->pnlAddress->UnCheckAll();
-				$this->pnlAddress->DisabledAll();
-			}elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
-				$this->pnlAddress->DisableEditColumn();
-				$this->pnlAddress->UnCheckEditColumn();
-			}
+		}//If Edition Mode and module access is disabled, we must uncheck and disable all checkboxs
+		elseif(!$this->arrControls[$objModule->ShortDescription]['access']->SelectedValue){
+			$this->pnlAddress->UnCheckAll();
+			$this->pnlAddress->DisabledAll();
+		}//If Edition Mode and module access is Enabled and Edit access is "None", we must uncheck and disable all the Edit Checkboxs.
+		elseif($this->arrControls[$objModule->ShortDescription]['edit']->SelectedValue==3){
+			$this->pnlAddress->DisableEditColumn();
+			$this->pnlAddress->UnCheckEditColumn();
+		}
 	}
-	
-	
+	//Assets Advanced label event capture
 	protected function lblAssetsAdvanced_Click() {
 		if ($this->blnAssetsAdvanced) {
 			$this->blnAssetsAdvanced = false;
@@ -470,7 +481,6 @@ protected function pnlAssets_Create($intModule){
 	}
 	//Contacts Advanced event capture
 	protected function lblContactsAdvanced_Click() {
-
 		if ($this->blnContactsAdvanced) {
 			$this->blnContactsAdvanced = false;
 			$this->lblContactsAdvanced->Text = 'Advanced';
@@ -506,10 +516,7 @@ protected function pnlAssets_Create($intModule){
 		}
 
 	}
-	
 
-
-	 
 	// Setup btnSave
 	protected function btnSave_Create() {
 		$this->btnSave = new QButton($this);
@@ -520,8 +527,7 @@ protected function pnlAssets_Create($intModule){
 	}
 
 	// Control ServerActions
-	protected function btnSave_Click($strFormId, $strControlId, $strParameter) {
-			
+	protected function btnSave_Click($strFormId, $strControlId, $strParameter) {	
 		try {
 
 			// Get an instance of the database
@@ -556,7 +562,7 @@ protected function pnlAssets_Create($intModule){
 		}
 	}
 	protected function btnDelete_Click($strFormId, $strControlId, $strParameter) {		
-			//Delete All Authorization Records in RoleEntytyQtype... this also could be done by creating a DeleteByRoleId() method
+			//Before deleting the role, we delete All Authorization Records in RoleEntytyQtype BuiltIn and Custom.
 			foreach (RoleEntityQtypeBuiltInAuthorization::LoadArrayByRoleId($this->objRole->RoleId) as $objRoleBuiltInAuth){
 				$objRoleBuiltInAuth->Delete();			
 			}
@@ -581,9 +587,9 @@ protected function pnlAssets_Create($intModule){
 		$objModule = Module::Load($strParameter);
 		foreach ($this->objAuthorizationArray as $objAuthorization) {
 			$this->arrControls[$objModule->ShortDescription][$objAuthorization->ShortDescription]->Enabled = ($objAccessControl->SelectedValue) ? true : false;
-
 		}
-			
+		
+		//If Module Access is Enabled, we enable all the checkbox of the panels of the module
 		if($objAccessControl->SelectedValue){
 			switch ($objModule->ModuleId) {
 				case 2:
@@ -606,6 +612,7 @@ protected function pnlAssets_Create($intModule){
 					break;
 			}
 		}else{
+			//If Module Access is disabled, we disable and uncheck all the checkbox of the panels of the module
 			switch ($objModule->ModuleId) {
 				case 2:
 					$this->pnlAssets->DisabledAll();
@@ -634,10 +641,7 @@ protected function pnlAssets_Create($intModule){
 					$this->pnlReceiving->UnCheckAll();
 					break;
 			}
-		}
-
-			
-			
+		}		
 	}
 
 	protected function lstEdit_Change($strFormId, $strControlId, $strParameter) {
@@ -651,9 +655,8 @@ protected function pnlAssets_Create($intModule){
 			}
 			$objDeleteControl->SelectedValue = 3;
 			$objDeleteControl->Enabled = false;
-
-				
-				
+			
+			//If we set Edit Access to "None", we must uncheck and disable all Edit Column
 			switch ($objModule->ModuleId) {
 				case 2:
 					if(isset($this->pnlAssets)){
@@ -698,7 +701,7 @@ protected function pnlAssets_Create($intModule){
 					}
 					break;
 			}
-		}
+		}//if we set Edit Access to "Owner" or "All", we must enable and check all the checkboxs of the Edit Column
 		elseif ($objControl->SelectedValue == 2) {
 			if ($objDeleteControl->ItemCount == 3) {
 				$objDeleteControl->RemoveItem(2);
@@ -708,29 +711,29 @@ protected function pnlAssets_Create($intModule){
 			switch ($objModule->ModuleId) {
 				case 2:
 					if(isset($this->pnlAssets))
-					$this->pnlAssets->EnableEdit();
+					$this->pnlAssets->EnableEditColumn();
 					if(isset($this->pnlAssetModel))
-					$this->pnlAssetModel->EnableEdit();
+					$this->pnlAssetModel->EnableEditColumn();
 					break;
 				case 3:
 					if(isset($this->pnlInventory))
-					$this->pnlInventory->EnableEdit();
+					$this->pnlInventory->EnableEditColumn();
 					break;
 				case 4:
 					if(isset($this->pnlCompany))
-					$this->pnlCompany->EnableEdit();
+					$this->pnlCompany->EnableEditColumn();
 					if(isset($this->pnlContact))
-					$this->pnlContact->EnableEdit();
+					$this->pnlContact->EnableEditColumn();
 					if(isset($this->pnlAddress))
-					$this->pnlAddress->EnableEdit();
+					$this->pnlAddress->EnableEditColumn();
 					break;
 				case 5:
 					if(isset($this->pnlShipping))
-					$this->pnlShipping->EnableEdit();
+					$this->pnlShipping->EnableEditColumn();
 					break;
 				case 6:
 					if(isset($this->pnlReceiving))
-					$this->pnlReceiving->EnableEdit();
+					$this->pnlReceiving->EnableEditColumn();
 					break;
 			}
 		}
@@ -743,29 +746,29 @@ protected function pnlAssets_Create($intModule){
 			switch ($objModule->ModuleId) {
 				case 2:
 					if(isset($this->pnlAssets))
-					$this->pnlAssets->EnableEdit();
+					$this->pnlAssets->EnableEditColumn();
 					if(isset($this->pnlAssetModel))
-					$this->pnlAssetModel->EnableEdit();
+					$this->pnlAssetModel->EnableEditColumn();
 					break;
 				case 3:
 					if(isset($this->pnlInventory))
-					$this->pnlInventory->EnableEdit();
+					$this->pnlInventory->EnableEditColumn();
 					break;
 				case 4:
 					if(isset($this->pnlCompany))
-					$this->pnlCompany->EnableEdit();
+					$this->pnlCompany->EnableEditColumn();
 					if(isset($this->pnlContact))
-					$this->pnlContact->EnableEdit();
+					$this->pnlContact->EnableEditColumn();
 					if(isset($this->pnlAddress))
-					$this->pnlAddress->EnableEdit();
+					$this->pnlAddress->EnableEditColumn();
 					break;
 				case 5:
 					if(isset($this->pnlShipping))
-					$this->pnlShipping->EnableEdit();
+					$this->pnlShipping->EnableEditColumn();
 					break;
 				case 6:
 					if(isset($this->pnlReceiving))
-					$this->pnlReceiving->EnableEdit();
+					$this->pnlReceiving->EnableEditColumn();
 					break;
 			}
 		}
@@ -795,7 +798,6 @@ protected function pnlAssets_Create($intModule){
 					
 				if ($this->objAuthorizationArray) {
 					foreach ($this->objAuthorizationArray as $objAuthorization) {
-							
 						if ($this->blnEditMode) {
 							$objRoleModuleAuthorization = $this->objRoleModuleAuthorizationArray[$objRoleModule->RoleModuleId.'-'.$objAuthorization->AuthorizationId];
 						}
@@ -871,9 +873,10 @@ protected function pnlAssets_Create($intModule){
 	}
 
 
-	//Protected Update FieldLevelAuthorization
+	//Save all the checkboxs to the db
 	protected function UpdateFieldLevelAuthorizations(){
 		if ($this->objModuleArray) {
+			//First, we get all the panels that we need to manipulate 
 			foreach ($this->objModuleArray as $objModule) {
 				switch ($objModule->ModuleId) {
 					case 2:
@@ -897,11 +900,12 @@ protected function pnlAssets_Create($intModule){
 				}
 					
 			}
-
+			//One Panel= One Entity. For each entity, we must save chkBuiltIn for View and Edit and several CustomChecks, for View and Edit
 			foreach($arrEntity as $entity){
 				
+				//We look for the BuiltIn View entry, searching by RoleId, EntityId and authorizationId=1 (View)
 				$objRoleEntityQTypeBuiltInAuthView=RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId($this->objRole->RoleId,$entity['intEntity'],1);
-				
+				// If the entry doesn't exists, we create it.
 				if(!$objRoleEntityQTypeBuiltInAuthView){
 					$objRoleEntityQTypeBuiltInAuthView = new RoleEntityQtypeBuiltInAuthorization();
 					$objRoleEntityQTypeBuiltInAuthView->RoleId=$this->objRole->RoleId;
@@ -911,7 +915,9 @@ protected function pnlAssets_Create($intModule){
 				$objRoleEntityQTypeBuiltInAuthView->AuthorizedFlag=$entity['objPanel']->chkBuiltInView->Checked;
 				$objRoleEntityQTypeBuiltInAuthView->Save();
 
+				//We look for the BuiltIn Edit entry, searching by RoleId, EntityId and authorizationId=2 (Edit)
 				$objRoleEntityQTypeBuiltInAuthEdit=RoleEntityQtypeBuiltInAuthorization::LoadByRoleIdEntityQtypeIdAuthorizationId($this->objRole->RoleId,$entity['intEntity'],2);
+				// If the entry doesn't exists, we create it.
 				if(!$objRoleEntityQTypeBuiltInAuthEdit){
 					$objRoleEntityQTypeBuiltInAuthEdit = new RoleEntityQtypeBuiltInAuthorization();
 					$objRoleEntityQTypeBuiltInAuthEdit->RoleId=$this->objRole->RoleId;
@@ -921,71 +927,84 @@ protected function pnlAssets_Create($intModule){
 				$objRoleEntityQTypeBuiltInAuthEdit->AuthorizedFlag=$entity['objPanel']->chkBuiltInEdit->Checked;
 				$objRoleEntityQTypeBuiltInAuthEdit->Save();
 
-				if($entity['objPanel']->arrCustomChecks)foreach($entity['objPanel']->arrCustomChecks as $objCustomCheck){
-					$objEntityQtypeCustomField = EntityQtypeCustomField::LoadByEntityQtypeIdCustomFieldId($entity['intEntity'],$objCustomCheck['id']);
-						
-					$objRoleEntityQtypeCustomFieldView=RoleEntityQtypeCustomFieldAuthorization::LoadByRoleIdEntityQtypeCustomFieldIdAuthorizationId($this->objRole->RoleId,$objEntityQtypeCustomField->EntityQtypeCustomFieldId,1);
-					if(!$objRoleEntityQtypeCustomFieldView){
-						$objRoleEntityQtypeCustomFieldView = new RoleEntityQtypeCustomFieldAuthorization();
-						$objRoleEntityQtypeCustomFieldView->RoleId=$this->objRole->RoleId;
-						$objRoleEntityQtypeCustomFieldView->EntityQtypeCustomFieldId=$objEntityQtypeCustomField->EntityQtypeCustomFieldId;
-						$objRoleEntityQtypeCustomFieldView->AuthorizationId=1;
-
+				//We must now save the View and Edit checkboxs values of the Custom checks.
+				if($entity['objPanel']->arrCustomChecks){
+					foreach($entity['objPanel']->arrCustomChecks as $objCustomCheck){
+						//We look into EntityQtypeCustomFieldId because we need to get EntityQtypeCustomFieldId in order to save into the RoleEntityCustom tables
+						$objEntityQtypeCustomField = EntityQtypeCustomField::LoadByEntityQtypeIdCustomFieldId($entity['intEntity'],$objCustomCheck['id']);
+							
+						//We look for the Custom View entry, searching by RoleId, EntityQtypeCustomFieldId and authorization_id=1(View)
+						$objRoleEntityQtypeCustomFieldView=RoleEntityQtypeCustomFieldAuthorization::LoadByRoleIdEntityQtypeCustomFieldIdAuthorizationId($this->objRole->RoleId,$objEntityQtypeCustomField->EntityQtypeCustomFieldId,1);
+						// If the entry doesn't exists, we create it.
+						if(!$objRoleEntityQtypeCustomFieldView){
+							$objRoleEntityQtypeCustomFieldView = new RoleEntityQtypeCustomFieldAuthorization();
+							$objRoleEntityQtypeCustomFieldView->RoleId=$this->objRole->RoleId;
+							$objRoleEntityQtypeCustomFieldView->EntityQtypeCustomFieldId=$objEntityQtypeCustomField->EntityQtypeCustomFieldId;
+							$objRoleEntityQtypeCustomFieldView->AuthorizationId=1;
+	
+						}
+						$objRoleEntityQtypeCustomFieldView->AuthorizedFlag=$objCustomCheck['view']->Checked;
+						$objRoleEntityQtypeCustomFieldView->Save();
+							
+						//We look for the Custom View entry, searching by RoleId, EntityQtypeCustomFieldId and authorization_id=2(Edit)
+						$objRoleEntityQtypeCustomFieldEdit=RoleEntityQtypeCustomFieldAuthorization::LoadByRoleIdEntityQtypeCustomFieldIdAuthorizationId($this->objRole->RoleId,$objEntityQtypeCustomField->EntityQtypeCustomFieldId,2);
+						// If the entry doesn't exists, we create it.
+						if(!$objRoleEntityQtypeCustomFieldEdit){
+							$objRoleEntityQtypeCustomFieldEdit = new RoleEntityQtypeCustomFieldAuthorization();
+							$objRoleEntityQtypeCustomFieldEdit->RoleId=$this->objRole->RoleId;
+							$objRoleEntityQtypeCustomFieldEdit->EntityQtypeCustomFieldId=$objEntityQtypeCustomField->EntityQtypeCustomFieldId;
+							$objRoleEntityQtypeCustomFieldEdit->AuthorizationId=2;
+						}
+						$objRoleEntityQtypeCustomFieldEdit->AuthorizedFlag=$objCustomCheck['edit']->Checked;
+						$objRoleEntityQtypeCustomFieldEdit->Save();
+	
 					}
-					$objRoleEntityQtypeCustomFieldView->AuthorizedFlag=$objCustomCheck['view']->Checked;
-					$objRoleEntityQtypeCustomFieldView->Save();
-						
-					$objRoleEntityQtypeCustomFieldEdit=RoleEntityQtypeCustomFieldAuthorization::LoadByRoleIdEntityQtypeCustomFieldIdAuthorizationId($this->objRole->RoleId,$objEntityQtypeCustomField->EntityQtypeCustomFieldId,2);
-					if(!$objRoleEntityQtypeCustomFieldEdit){
-						$objRoleEntityQtypeCustomFieldEdit = new RoleEntityQtypeCustomFieldAuthorization();
-						$objRoleEntityQtypeCustomFieldEdit->RoleId=$this->objRole->RoleId;
-						$objRoleEntityQtypeCustomFieldEdit->EntityQtypeCustomFieldId=$objEntityQtypeCustomField->EntityQtypeCustomFieldId;
-						$objRoleEntityQtypeCustomFieldEdit->AuthorizationId=2;
-					}
-					$objRoleEntityQtypeCustomFieldEdit->AuthorizedFlag=$objCustomCheck['edit']->Checked;
-					$objRoleEntityQtypeCustomFieldEdit->Save();
-
 				}
-
 			}
 		}
 	}
+	// Change properties of Edit Custom and View Custom checkbox according to the Click Action to a View Custom Checkbox
 	protected function chkCustom_Click($strFormId, $strControlId, $strParameter) {
 		 
 		$objCustomView = $this->GetControl($strControlId);
 		$objCustomEdit = $this->GetControl($strParameter);
+		// If the View Custom Checkbox is not checked, we now want to disable and uncheck the Edit Custom Checkbox
 		if(!$objCustomView->Checked){
 			$objCustomEdit->Checked=false;
 			$objCustomEdit->Enabled=false;
-		}else{
+		}//If the View Custom Checkbox is checked, we now want to enable the Edit Custom Checkbox
+		else{
 			$objCustomEdit->Enabled=true;
 		}
 		 
 	}
+	// Select/deselect all View Column.
 	protected function chkEntityView_Click($strFormId, $strControlId, $strParameter) {
-		 
+		
 		$chkEntityView = $this->GetControl($strControlId);
-		 
+		// If we uncheck chkEntityView, we must uncheck all the View Column
 		if(!$chkEntityView->Checked){
-		$this->$strParameter->UnCheckViewColumn();
-		//but we have to leave the chkBuiltInView checked
-		$this->$strParameter->chkBuiltInView->Checked=true;
+			//$strParameter = Name of the current Panel
+			$this->$strParameter->UnCheckViewColumn();
+			//but we always have to leave the chkBuiltInView checked
+			$this->$strParameter->chkBuiltInView->Checked=true;
+		}//If we check chkEntityView, we must check all the View Column
+		else{
+			$this->$strParameter->CheckViewColumn();
 		}
-		else
-		$this->$strParameter->CheckViewColumn();
 	}
+	// Select/deselect all Edit Column
 	protected function chkEntityEdit_Click($strFormId, $strControlId, $strParameter) {
-		 
 		$chkEntityEdit = $this->GetControl($strControlId);
-
-		if(!$chkEntityEdit->Checked)
-		$this->$strParameter->UnCheckEditColumn();
-		else
-		$this->$strParameter->CheckEditColumn();
-
-
+		// If we uncheck $chkEntityEdit, we must uncheck all the Edit Column
+		if(!$chkEntityEdit->Checked){
+			//$strParameter = Name of the current Panel
+			$this->$strParameter->UnCheckEditColumn();
+		}//If we check $chkEntityEdit, we must check all the Edit Column
+		else{
+			$this->$strParameter->CheckEditColumn();
+		}
 	}
-
 }
 
 // Go ahead and run this form object to render the page and its event handlers, using

@@ -84,11 +84,13 @@
 							<td style="vertical-align:top;">
 								<table cellpadding="0" cellspacing="0">
 								<?php
-									if(isset($arrAssetModelFields))for ($i=0;$i<ceil(count($arrAssetModelFields)/2);$i++) {
-										echo('<tr>');
-										echo('<td class="record_field_name">'. $arrAssetModelFields[$i]['name'] .'&nbsp;</td>');
-										echo('<td class="record_field_value">'. $arrAssetModelFields[$i]['value'] .'&nbsp;</td>');
-										echo('</tr>');
+									if(isset($arrAssetModelFields)){
+										for ($i=0;$i<ceil(count($arrAssetModelFields)/2);$i++) {
+											echo('<tr>');
+											echo('<td class="record_field_name">'. $arrAssetModelFields[$i]['name'] .'&nbsp;</td>');
+											echo('<td class="record_field_value">'. $arrAssetModelFields[$i]['value'] .'&nbsp;</td>');
+											echo('</tr>');
+										}
 									}
 								?>
 								</table>
@@ -96,11 +98,13 @@
 							<td style="vertical-align:top;">
 								<table cellpadding="0" cellspacing="0">
 								<?php
-									if(isset($arrAssetModelFields))for ($i=ceil(count($arrAssetModelFields)/2);$i<count($arrAssetModelFields);$i++) {
-										echo('<tr>');
-										echo('<td class="record_field_name">'. $arrAssetModelFields[$i]['name'] .'&nbsp;</td>');
-										echo('<td class="record_field_value">'. $arrAssetModelFields[$i]['value'] .'&nbsp;</td>');
-										echo('</tr>');
+									if(isset($arrAssetModelFields)){
+										for ($i=ceil(count($arrAssetModelFields)/2);$i<count($arrAssetModelFields);$i++) {
+											echo('<tr>');
+											echo('<td class="record_field_name">'. $arrAssetModelFields[$i]['name'] .'&nbsp;</td>');
+											echo('<td class="record_field_value">'. $arrAssetModelFields[$i]['value'] .'&nbsp;</td>');
+											echo('</tr>');
+										}
 									}
 								?>				
 								</table>

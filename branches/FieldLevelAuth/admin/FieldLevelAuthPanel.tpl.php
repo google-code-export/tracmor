@@ -14,14 +14,16 @@
 	<td style="text-align: center;"></td>
 </tr>
 <?php
-if($_CONTROL->arrCustomChecks)foreach ($_CONTROL->arrCustomChecks as $ChkCustomFields){
-	echo "<tr>";
-	echo '<td class="role_table_left"></td>';
-	echo '<td class="record_field_name" style="text-align: right; ">'.$ChkCustomFields['name'].'</td>';
-	echo '<td style="text-align: center;">'.$ChkCustomFields['view']->Render(false).'</td>';
-	echo '<td style="text-align: center;">'.$ChkCustomFields['edit']->Render(false).'</td>';
-	echo '<td style="text-align: center;"></td>';
-	echo '</tr>';
+if($_CONTROL->arrCustomChecks){
+	foreach ($_CONTROL->arrCustomChecks as $ChkCustomFields){
+		echo "<tr>";
+		echo '<td class="role_table_left"></td>';
+		echo '<td class="record_field_name" style="text-align: right; ">'.$ChkCustomFields['name'].'</td>';
+		echo '<td style="text-align: center;">'.$ChkCustomFields['view']->Render(false).'</td>';
+		echo '<td style="text-align: center;">'.$ChkCustomFields['edit']->Render(false).'</td>';
+		echo '<td style="text-align: center;"></td>';
+		echo '</tr>';
+	}
 }
 ?>	
 </table>

@@ -26,8 +26,9 @@
 	// Custom Fields
 	if ($this->arrCustomFields) {
 		foreach ($this->arrCustomFields as $field) {
-			if(!$this->blnEditMode || $field['blnView'])
+			if(!$this->blnEditMode || $field['blnView']){
 				$arrReceiptFields[] = array('name' => $field['lbl']->Name . ":", 'value' => $field['lbl']->RenderWithError(false) . $field['input']->RenderWithError(false));
+			}
 		}
 	}
 ?>

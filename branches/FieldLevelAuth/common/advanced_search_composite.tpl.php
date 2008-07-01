@@ -56,8 +56,9 @@
 	if ($this->arrCustomFields) {
 		foreach ($this->arrCustomFields as $field) {
 			////Display Custom Field if the role has "View" access
-			if(($field['blnView']))
+			if(($field['blnView'])){
 				$arrAdvancedSearchFields[] = array('name' => $field['input']->Name.':', 'value' => $field['input']->RenderWithError(false));
+			}
 		}
 	}
 	

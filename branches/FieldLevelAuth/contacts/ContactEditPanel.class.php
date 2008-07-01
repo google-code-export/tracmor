@@ -46,9 +46,6 @@
 			// Create all custom asset model fields
 			$this->customFields_Create();
 			
-			// Set Display logic of the Custom Fields
-			$this->UpdateCustomFields();
-			
 			// Add Enter Key Events to each control except the Cancel Button
 			$arrControls = array($this->txtFirstName, $this->txtLastName, $this->txtTitle, $this->txtEmail, $this->txtDescription, $this->txtPhoneOffice, $this->txtPhoneHome, $this->txtPhoneMobile, $this->txtFax);
 			foreach ($arrControls as $ctlControl) {
@@ -105,6 +102,9 @@
 			
 			// Create the Custom Field Controls - labels and inputs (text or list) for each
 			$this->arrCustomFields = CustomField::CustomFieldControlsCreate($this->objContact->objCustomFieldArray, $this->blnEditMode, $this, false, true, false);
+			
+			// Set Display logic of the Custom Fields
+			$this->UpdateCustomFields();
 		}
 		
 		// Update address field when company is selected
@@ -143,8 +143,9 @@
 				if (!$objCustomField['blnEdit']){				
 					$objCustomField['lbl']->Display=true;
 					$objCustomField['input']->Display=false;
-					if(($objCustomField['blnRequired']))
-						$objCustomField['lbl']->Text=$objCustomField['EditAuth']->EntityQtypeCustomField->CustomField->DefaultCustomFieldValue->__toString();			
+					if(($objCustomField['blnRequired'])){
+						$objCustomField['lbl']->Text=$objCustomField['EditAuth']->EntityQtypeCustomField->CustomField->DefaultCustomFieldValue->__toString();
+					}			
 				}		
 			}
 			

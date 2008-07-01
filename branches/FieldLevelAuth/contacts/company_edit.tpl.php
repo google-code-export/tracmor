@@ -45,8 +45,9 @@
 			// Custom Fields
 		if ($this->arrCustomFields) {
 			foreach ($this->arrCustomFields as $field) {
-				if(!$this->blnEditMode || $field['blnView'])
+				if(!$this->blnEditMode || $field['blnView']){
 					$arrCompanyFields[] = array('name' => $field['lbl']->Name . ":", 'value' => $field['lbl']->RenderWithError(false) . $field['input']->RenderWithError(false));
+				}
 			}
 		}
 		
@@ -65,8 +66,9 @@
 			$arrCompanyFields[] = array('name' => 'Country:', 'value' => $this->lstCountry->RenderWithError(false));
 			if ($this->arrAddressCustomFields) {
 				foreach ($this->arrAddressCustomFields as $field) {
-					if(!$this->blnEditMode || $field['blnView'])
+					if(!$this->blnEditMode || $field['blnView']){
 						$arrCompanyFields[] = array('name' => $field['input']->Name . ":", 'value' => $field['input']->RenderWithError(false));
+					}
 				}
 			}
 		}
