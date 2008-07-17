@@ -242,6 +242,13 @@ class QAssetTransactComposite extends QControl {
 			}
 			
 			if (!$blnError) {
+			  $objRoleTransactionTypeAuthorizationArray = RoleTransactionTypeAuthorization::LoadArrayByRoleId(QApplication::$objUserAccount->RoleId);
+			  $intAuthorizationLevelIdArray = array();
+			  if ($objRoleTransactionTypeAuthorizationArray) {
+			    foreach ($objRoleTransactionTypeAuthorizationArray as $objRoleTransactionTypeAuthorization) {
+			      $intAuthorizationLevelIdArray[$objRoleTransactionTypeAuthorization->TransactionTypeId] = $objRoleTransactionTypeAuthorization->AuthorizationLevelId;
+			    }
+			  }
 				$objNewAsset = Asset::LoadByAssetCode($this->txtNewAssetCode->Text);
 				if (!($objNewAsset instanceof Asset)) {
 					$blnError = true;
@@ -275,6 +282,16 @@ class QAssetTransactComposite extends QControl {
 						$blnError = true;
 						$this->txtNewAssetCode->Warning = "That asset is reserved.";
 					}
+					// If the user has owner-only privileges for this transaction
+					elseif (array_key_exists(1,$intAuthorizationLevelIdArray) && $intAuthorizationLevelIdArray[1] != 2) {
+					  $blnError = true;
+						$this->txtNewAssetCode->Warning = "You do not have privileges for this transaction.";
+					}
+					// Check the user is the owner
+					elseif ($objNewAsset->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
+					  $blnError = true;
+						$this->txtNewAssetCode->Warning = "You do not the onwner.";
+					}
 				}
 				// Check in
 				elseif ($this->intTransactionTypeId == 2) {
@@ -293,6 +310,16 @@ class QAssetTransactComposite extends QControl {
 							$this->txtNewAssetCode->Warning = "That asset was not checked out by the current user.";
 						}
 					}
+					// If the user has owner-only privileges for this transaction
+					elseif (array_key_exists(2,$intAuthorizationLevelIdArray) && $intAuthorizationLevelIdArray[2] != 2) {
+					  $blnError = true;
+						$this->txtNewAssetCode->Warning = "You do not have privileges for this transaction.";
+					}
+					// Check the user is the owner
+					elseif ($objNewAsset->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
+					  $blnError = true;
+						$this->txtNewAssetCode->Warning = "You do not the onwner.";
+					}
 				}
 				elseif ($this->intTransactionTypeId ==3) {
 					if ($objNewAsset->CheckedOutFlag) {
@@ -303,6 +330,16 @@ class QAssetTransactComposite extends QControl {
 						$blnError = true;
 						$this->txtNewAssetCode->Warning = "That asset is reserved.";
 					}
+					// If the user has owner-only privileges for this transaction
+					elseif (array_key_exists(3,$intAuthorizationLevelIdArray) && $intAuthorizationLevelIdArray[3] != 2) {
+					  $blnError = true;
+						$this->txtNewAssetCode->Warning = "You do not have privileges for this transaction.";
+					}
+					// Check the user is the owner
+					elseif ($objNewAsset->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
+					  $blnError = true;
+						$this->txtNewAssetCode->Warning = "You do not the onwner.";
+					}
 				}
 				elseif ($this->intTransactionTypeId == 8) {
 					if ($objNewAsset->ReservedFlag) {
@@ -312,6 +349,16 @@ class QAssetTransactComposite extends QControl {
 					elseif ($objNewAsset->CheckedOutFlag) {
 						$blnError = true;
 						$this->txtNewAssetCode->Warning = "That asset is checked out.";
+					}
+					// If the user has owner-only privileges for this transaction
+					elseif (array_key_exists(8,$intAuthorizationLevelIdArray) && $intAuthorizationLevelIdArray[8] != 2) {
+					  $blnError = true;
+						$this->txtNewAssetCode->Warning = "You do not have privileges for this transaction.";
+					}
+					// Check the user is the owner
+					elseif ($objNewAsset->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
+					  $blnError = true;
+						$this->txtNewAssetCode->Warning = "You do not the onwner.";
 					}
 				}
 				// Unreserver
@@ -330,6 +377,16 @@ class QAssetTransactComposite extends QControl {
 							$blnError = true;
 							$this->txtNewAssetCode->Warning = "That asset was not reserved by the current user.";
 						}
+					}
+					// If the user has owner-only privileges for this transaction
+					elseif (array_key_exists(9,$intAuthorizationLevelIdArray) && $intAuthorizationLevelIdArray[9] != 2) {
+					  $blnError = true;
+						$this->txtNewAssetCode->Warning = "You do not have privileges for this transaction.";
+					}
+					// Check the user is the owner
+					elseif ($objNewAsset->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
+					  $blnError = true;
+						$this->txtNewAssetCode->Warning = "You do not the onwner.";
 					}
 				}
 				if (!$blnError && $objNewAsset instanceof Asset)  {
