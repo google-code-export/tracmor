@@ -454,6 +454,28 @@ class QAssetEditComposite extends QControl {
 		$this->pnlAttachments = new QAttachments($this, null, EntityQtype::Asset, $this->objAsset->AssetId);
 	}
 	
+	/**
+	 * Authorizes any control to determine if the user has access
+	 * If not, it sets the objControl->Visible to false
+	 *
+	 * @param object $objEntity - any entity with a created_by column (asset, location, etc.)
+	 * @param object $objControl - the control which is being evaluated - any QControl where visible is a property
+	 * @param integer $intTransactionTypeId - the transaction_type_id
+	 */
+	public static function AuthorizeControlByRoleTransactionType($objEntity, $objControl, $intTransactionTypeId) {
+		$objRoleTransactionTypeAuthorization = RoleTransactionTypeAuthorization::LoadArrayByRoleIdTransactionTypeId(QApplication::$objUserAccount->RoleId, $intTransactionTypeId);
+		if ($objRoleTransactionTypeAuthorization) {
+		  // None
+		  if ($objRoleTransactionTypeAuthorization[0]->AuthorizationLevelId == 3) {
+		    $objControl->Visible = false;
+		  }
+		  // Owner
+		  elseif ($objRoleTransactionTypeAuthorization[0]->AuthorizationLevelId == 2 && !($objEntity->CreatedBy == QApplication::$objUserAccount->UserAccountId)) {
+		    $objControl->Visible = false;
+		  }
+		}
+	}
+	
 	// Setup Move Button
 	protected function btnMove_Create() {
 		$this->btnMove = new QButton($this);
@@ -463,6 +485,7 @@ class QAssetEditComposite extends QControl {
 		$this->btnMove->AddAction(new QEnterKeyEvent(), new QTerminateAction());
 		$this->btnMove->CausesValidation = false;
 		QApplication::AuthorizeControl($this->objAsset, $this->btnMove, 2);
+		QAssetEditComposite::AuthorizeControlByRoleTransactionType($this->objAsset, $this->btnMove, 1);
 	}
 	
 	// Setup Checkout Button
@@ -478,6 +501,7 @@ class QAssetEditComposite extends QControl {
 			$this->btnCheckOut->Display = false;
 		}
 		QApplication::AuthorizeControl($this->objAsset, $this->btnCheckOut, 2);
+		QAssetEditComposite::AuthorizeControlByRoleTransactionType($this->objAsset, $this->btnCheckOut, 3);
 	}
 	
 	// Setup Check In Button
@@ -494,6 +518,7 @@ class QAssetEditComposite extends QControl {
 			$this->btnCheckIn->Display = false;
 		}
 		QApplication::AuthorizeControl($this->objAsset, $this->btnCheckIn, 2);
+		QAssetEditComposite::AuthorizeControlByRoleTransactionType($this->objAsset, $this->btnCheckIn, 2);
 	}
 	
 	// Setup Reserve Button
@@ -509,6 +534,7 @@ class QAssetEditComposite extends QControl {
 			$this->btnReserve->Display = false;
 		}
 		QApplication::AuthorizeControl($this->objAsset, $this->btnReserve, 2);
+		QAssetEditComposite::AuthorizeControlByRoleTransactionType($this->objAsset, $this->btnReserve, 8);
 	}
 	
 	// Setup Reserve Button
@@ -525,6 +551,7 @@ class QAssetEditComposite extends QControl {
 			$this->btnUnreserve->Display = false;
 		}
 		QApplication::AuthorizeControl($this->objAsset, $this->btnUnreserve, 2);
+		QAssetEditComposite::AuthorizeControlByRoleTransactionType($this->objAsset, $this->btnUnreserve, 9);
 	}
 	
 	// Setup Ship Button
