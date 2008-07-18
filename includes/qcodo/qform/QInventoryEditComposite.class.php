@@ -405,16 +405,18 @@ class QInventoryEditComposite extends QControl {
 	 * @param integer $intTransactionTypeId - the transaction_type_id
 	 */
 	public static function AuthorizeControlByRoleTransactionType($objEntity, $objControl, $intTransactionTypeId) {
-		$objRoleTransactionTypeAuthorization = RoleTransactionTypeAuthorization::LoadArrayByRoleIdTransactionTypeId(QApplication::$objUserAccount->RoleId, $intTransactionTypeId);
-		if ($objRoleTransactionTypeAuthorization) {
-		  // None
-		  if ($objRoleTransactionTypeAuthorization[0]->AuthorizationLevelId == 3) {
-		    $objControl->Visible = false;
-		  }
-		  // Owner
-		  elseif ($objRoleTransactionTypeAuthorization[0]->AuthorizationLevelId == 2 && !($objEntity->CreatedBy == QApplication::$objUserAccount->UserAccountId)) {
-		    $objControl->Visible = false;
-		  }
+		if ($objControl->Visible != false) {
+  	  $objRoleTransactionTypeAuthorization = RoleTransactionTypeAuthorization::LoadArrayByRoleIdTransactionTypeId(QApplication::$objUserAccount->RoleId, $intTransactionTypeId);
+  		if ($objRoleTransactionTypeAuthorization) {
+  		  // None
+  		  if ($objRoleTransactionTypeAuthorization[0]->AuthorizationLevelId == 3) {
+  		    $objControl->Visible = false;
+  		  }
+  		  // Owner
+  		  elseif ($objRoleTransactionTypeAuthorization[0]->AuthorizationLevelId == 2 && !($objEntity->CreatedBy == QApplication::$objUserAccount->UserAccountId)) {
+  		    $objControl->Visible = false;
+  		  }
+  		}
 		}
 	}
 	
