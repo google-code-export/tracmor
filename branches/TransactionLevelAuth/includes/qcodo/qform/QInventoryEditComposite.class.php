@@ -395,7 +395,29 @@ class QInventoryEditComposite extends QControl {
 		$this->btnDelete->Visible = false;
 		QApplication::AuthorizeControl($this->objInventoryModel, $this->btnDelete, 3);
 	}
-
+  
+	/**
+	 * Authorizes any control to determine if the user has access
+	 * If not, it sets the objControl->Visible to false
+	 *
+	 * @param object $objEntity - any entity with a created_by column (asset, location, etc.)
+	 * @param object $objControl - the control which is being evaluated - any QControl where visible is a property
+	 * @param integer $intTransactionTypeId - the transaction_type_id
+	 */
+	public static function AuthorizeControlByRoleTransactionType($objEntity, $objControl, $intTransactionTypeId) {
+		$objRoleTransactionTypeAuthorization = RoleTransactionTypeAuthorization::LoadArrayByRoleIdTransactionTypeId(QApplication::$objUserAccount->RoleId, $intTransactionTypeId);
+		if ($objRoleTransactionTypeAuthorization) {
+		  // None
+		  if ($objRoleTransactionTypeAuthorization[0]->AuthorizationLevelId == 3) {
+		    $objControl->Visible = false;
+		  }
+		  // Owner
+		  elseif ($objRoleTransactionTypeAuthorization[0]->AuthorizationLevelId == 2 && !($objEntity->CreatedBy == QApplication::$objUserAccount->UserAccountId)) {
+		    $objControl->Visible = false;
+		  }
+		}
+	}
+	
 	// Setup Move Button
 	protected function btnMove_Create() {
 		$this->btnMove = new QButton($this);
@@ -405,6 +427,7 @@ class QInventoryEditComposite extends QControl {
 		$this->btnMove->AddAction(new QEnterKeyEvent(), new QTerminateAction());
 		$this->btnMove->CausesValidation = false;
 		QApplication::AuthorizeControl($this->objInventoryModel, $this->btnMove, 2);
+		QAssetEditComposite::AuthorizeControlByRoleTransactionType($this->objInventoryModel, $this->btnMove, 1);
 	}
 
 	// Setup Take Out Button
@@ -416,6 +439,7 @@ class QInventoryEditComposite extends QControl {
 		$this->btnTakeOut->AddAction(new QEnterKeyEvent(), new QTerminateAction());
 		$this->btnTakeOut->CausesValidation = false;
 		QApplication::AuthorizeControl($this->objInventoryModel, $this->btnTakeOut, 2);
+		QAssetEditComposite::AuthorizeControlByRoleTransactionType($this->objInventoryModel, $this->btnTakeOut, 5);
 	}
 
 	// Setup Take Out Button
@@ -427,6 +451,7 @@ class QInventoryEditComposite extends QControl {
 		$this->btnRestock->AddAction(new QEnterKeyEvent(), new QTerminateAction());
 		$this->btnRestock->CausesValidation = false;
 		QApplication::AuthorizeControl($this->objInventoryModel, $this->btnRestock, 2);
+		QAssetEditComposite::AuthorizeControlByRoleTransactionType($this->objInventoryModel, $this->btnRestock, 4);
 	}
 
 	// Setup Ship Button
