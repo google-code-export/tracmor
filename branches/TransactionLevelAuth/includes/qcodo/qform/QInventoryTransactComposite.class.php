@@ -334,7 +334,7 @@ class QInventoryTransactComposite extends QControl {
   						$this->txtNewInventoryModelCode->Warning = "You do not have privileges for this transaction.";
   					}
   					// Check the user is the owner
-  					elseif ($objNewAsset->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
+  					elseif ($objNewInventoryLocation->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
   					  $blnError = true;
   						$this->txtNewInventoryModelCode->Warning = "You do not the onwner.";
   					}
@@ -350,7 +350,7 @@ class QInventoryTransactComposite extends QControl {
   						$this->txtNewInventoryModelCode->Warning = "You do not have privileges for this transaction.";
   					}
   					// Check the user is the owner
-  					elseif ($objNewAsset->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
+  					elseif ($objNewInventoryLocation->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
   					  $blnError = true;
   						$this->txtNewInventoryModelCode->Warning = "You do not the onwner.";
   					}
@@ -385,7 +385,7 @@ class QInventoryTransactComposite extends QControl {
   			$this->txtNewInventoryModelCode->Warning = "You do not have privileges for this transaction.";
   		}
   		// Check the user is the owner
-  		elseif ($objNewAsset->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
+  		elseif ($objNewInventoryLocation->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
   		  $blnError = true;
   			$this->txtNewInventoryModelCode->Warning = "You do not the onwner.";
   		}
