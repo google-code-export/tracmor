@@ -328,15 +328,15 @@ class QInventoryTransactComposite extends QControl {
 							$this->txtQuantity->Warning = "Quantity moved cannot exceed quantity available.";
 							$blnError = true;
 						}
-						// If the user has owner-only privileges for this transaction
-  					elseif (array_key_exists(1,$intAuthorizationLevelIdArray) && $intAuthorizationLevelIdArray[1] != 2) {
+						// If the user has 'None' privileges for this transaction
+  					elseif ($objRoleTransactionTypeAuthorization = RoleTransactionTypeAuthorization::LoadByRoleIdTransactionTypeId(QApplication::$objUserAccount->RoleId,1) && $objRoleTransactionTypeAuthorization->AuthorizationLevelId == 3) {
   					  $blnError = true;
   						$this->txtNewInventoryModelCode->Warning = "You do not have privileges for this transaction.";
   					}
-  					// Check the user is the owner
-  					elseif ($objNewInventoryLocation->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
+  					// Check the user is the owner (if he has owner-only privileges)
+  					elseif ($objRoleTransactionTypeAuthorization->AuthorizationLevelId == 2 && $objNewInventoryLocation->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
   					  $blnError = true;
-  						$this->txtNewInventoryModelCode->Warning = "You do not the onwner.";
+  						$this->txtNewInventoryModelCode->Warning = "You are not the owner of this asset.";
   					}
 					}
 					elseif ($this->intTransactionTypeId == 5) {
@@ -344,15 +344,15 @@ class QInventoryTransactComposite extends QControl {
 							$this->txtQuantity->Warning = "Quantity taken out cannot exceed quantity available.";
 							$blnError = true;
 						}
-						// If the user has owner-only privileges for this transaction
-  					elseif (array_key_exists(5,$intAuthorizationLevelIdArray) && $intAuthorizationLevelIdArray[5] != 2) {
+						// If the user has 'None' privileges for this transaction
+  					elseif ($objRoleTransactionTypeAuthorization = RoleTransactionTypeAuthorization::LoadByRoleIdTransactionTypeId(QApplication::$objUserAccount->RoleId,5) && $objRoleTransactionTypeAuthorization->AuthorizationLevelId == 3) {
   					  $blnError = true;
   						$this->txtNewInventoryModelCode->Warning = "You do not have privileges for this transaction.";
   					}
-  					// Check the user is the owner
-  					elseif ($objNewInventoryLocation->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
+  					// Check the user is the owner (if he has owner-only privileges)
+  					elseif ($objRoleTransactionTypeAuthorization->AuthorizationLevelId == 2 && $objNewInventoryLocation->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
   					  $blnError = true;
-  						$this->txtNewInventoryModelCode->Warning = "You do not the onwner.";
+  						$this->txtNewInventoryModelCode->Warning = "You are not the owner of this asset.";
   					}
 					}
 				}
@@ -379,15 +379,15 @@ class QInventoryTransactComposite extends QControl {
 					}
 				}
 			}
-			// If the user has owner-only privileges for this transaction
-  		elseif (array_key_exists(4,$intAuthorizationLevelIdArray) && $intAuthorizationLevelIdArray[4] != 2) {
+			// If the user has 'None' privileges for this transaction
+  		elseif ($objRoleTransactionTypeAuthorization = RoleTransactionTypeAuthorization::LoadByRoleIdTransactionTypeId(QApplication::$objUserAccount->RoleId,4) && $objRoleTransactionTypeAuthorization->AuthorizationLevelId == 3) {
   		  $blnError = true;
   			$this->txtNewInventoryModelCode->Warning = "You do not have privileges for this transaction.";
   		}
-  		// Check the user is the owner
-  		elseif ($objNewInventoryLocation->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
+  		// Check the user is the owner (if he has owner-only privileges)
+  		elseif ($objRoleTransactionTypeAuthorization->AuthorizationLevelId == 2 && $objNewInventoryLocation->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
   		  $blnError = true;
-  			$this->txtNewInventoryModelCode->Warning = "You do not the onwner.";
+  			$this->txtNewInventoryModelCode->Warning = "You are not the owner of this asset.";
   		}
 			
 			if (!$blnError) {
