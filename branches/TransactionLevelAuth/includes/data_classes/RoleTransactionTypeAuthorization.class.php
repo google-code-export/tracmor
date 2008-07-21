@@ -24,7 +24,7 @@
 		 * @return string a nicely formatted string representation of this object
 		 */
 		public function __toString() {
-			return sprintf('RoleTransactionTypeAuthorization Object %s',  $this->intIdroleTransactionTypeAuthorization);
+			return sprintf('RoleTransactionTypeAuthorization Object %s',  $this->intRoleTransactionTypeAuthorizationId);
 		}
 
     // This adds the created by and creation date before saving
@@ -38,6 +38,30 @@
 			}
 			parent::Save($blnForceInsert, $blnForceUpdate);
 		}
+		
+		/**
+  	 * Authorizes any control to determine if the user has access
+  	 * If not, it sets the objControl->Visible to false
+  	 *
+  	 * @param object $objEntity - any entity with a created_by column (asset, location, etc.)
+  	 * @param object $objControl - the control which is being evaluated - any QControl where visible is a property
+  	 * @param integer $intTransactionTypeId - the transaction_type_id
+  	 */
+  	public static function AuthorizeControlByRoleTransactionType($objEntity, $objControl, $intTransactionTypeId) {
+  		if ($objControl->Visible != false) {
+    	  $objRoleTransactionTypeAuthorization = RoleTransactionTypeAuthorization::LoadByRoleIdTransactionTypeId(QApplication::$objUserAccount->RoleId, $intTransactionTypeId);
+    		if ($objRoleTransactionTypeAuthorization) {
+    		  // None
+    		  if ($objRoleTransactionTypeAuthorization->AuthorizationLevelId == 3) {
+    		    $objControl->Visible = false;
+    		  }
+    		  // Owner
+    		  elseif ($objRoleTransactionTypeAuthorization->AuthorizationLevelId == 2 && !($objEntity->CreatedBy == QApplication::$objUserAccount->UserAccountId)) {
+    		    $objControl->Visible = false;
+    		  }
+    		}
+  		}
+  	}
 
 		// Override or Create New Load/Count methods
 		// (For obvious reasons, these methods are commented out...
