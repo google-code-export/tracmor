@@ -10,25 +10,6 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- Dumping data for table `address`
 --
 
-INSERT INTO `address` (`address_id`, `company_id`, `short_description`, `country_id`, `address_1`, `address_2`, `city`, `state_province_id`, `postal_code`, `created_by`, `creation_date`, `modified_by`, `modified_date`) VALUES
-(1, 1, 'Main Office', 228, '2700 Stevenson Dr', '', 'Springfield', 14, '62703', 1, '2006-10-25 16:02:19', 1, '2006-10-25 16:07:32'),
-(2, 2, 'Headquarters', 228, '3420 SW Cedar Hills Blvd', '', 'Beaverton', 38, '97005', 1, '2006-10-25 16:09:43', NULL, NULL),
-(3, 3, 'US Office', 228, '3010 Wake Forest Rd', '', 'Raleigh', 34, '27609', 1, '2006-10-25 16:28:08', NULL, NULL),
-(4, 3, 'UK Office', 227, '139-142 Westbourne Grove', '', 'London', NULL, '020 7229 4734', 1, '2006-10-25 16:30:44', NULL, NULL),
-(5, 4, 'Main Office', 228, '950 W El Camino Real', '', 'Mountain View', 5, '94040', 1, '2006-10-25 16:58:51', NULL, NULL),
-(6, 5, 'Shipping & Receiving', 228, '939 W Northern Lights Blvd', '', 'Anchorage', 2, '99503', 1, '2006-10-25 17:04:32', NULL, NULL),
-(7, 6, 'East Coast Offices', 228, '331 Avenue of the Americas', '', 'New York', 33, '10014', 1, '2006-10-25 17:08:58', NULL, NULL),
-(8, 6, 'West Coast Offices', 228, '200 Duboce Ave', '', 'San Francisco', 5, '94103', 1, '2006-10-25 17:09:44', NULL, NULL),
-(9, 7, 'Headquarters', 228, '3310 State St, Bismarck', '', 'Bismarck', 35, '58503', 1, '2006-10-25 17:16:04', NULL, NULL),
-(10, 8, 'Main Office', 228, '2440 S Maryland Pkwy', '', 'Las Vegas', 29, '89104', 1, '2006-10-25 17:23:41', NULL, NULL),
-(11, 9, 'Shipping Address', 228, '3802 S Dale Mabry Hwy', '', 'Tampa', 10, '33611', 1, '2006-10-25 17:27:17', NULL, NULL),
-(12, 10, 'Shipping Address', 228, '822 Grand Ave', '', 'San Diego', 5, '92109', 1, '2006-10-25 17:31:00', NULL, NULL),
-(13, 11, 'Austin Address', 228, '1503 W 35th St,', '', 'Austin', 44, '78703', 1, '2006-10-25 17:35:59', NULL, NULL),
-(14, 12, 'Seattle Address', 228, '535 Broadway E', '', 'Seattle', 48, '98102', 1, '2006-10-25 17:38:04', NULL, NULL),
-(15, 13, 'Chicago Address', 228, '2575 N Clybourn Ave', '', 'Chicago', 14, '60614', 1, '2006-10-25 17:51:08', NULL, NULL),
-(16, 14, 'Boston Address', 228, '700 Commonwealth Ave', '', 'Boston', 22, '02215', 1, '2006-10-25 17:54:42', NULL, NULL),
-(17, 15, 'Headquarters', 228, '5801 S Vermont Ave', '', 'Los Angeles', 5, '90044', 1, '2006-10-31 11:51:29', 1, '2006-10-31 11:53:44'),
-(18, 15, 'East Coast Office', 228, '2631 Skidaway Rd', '', 'Savannah', 11, '31404', 1, '2006-10-31 11:52:36', NULL, NULL);
 
 --
 -- Dumping data for table `admin_setting`
@@ -53,67 +34,11 @@ INSERT INTO `admin_setting` (`setting_id`, `short_description`, `VALUE`) VALUES
 -- Dumping data for table `asset`
 --
 
-INSERT INTO `asset` (`asset_id`, `asset_model_id`, `location_id`, `asset_code`, `image_path`, `checked_out_flag`, `reserved_flag`, `created_by`, `creation_date`, `modified_by`, `modified_date`) VALUES
-(1, 3, 18, '10005001', NULL, NULL, NULL, 1, '2006-10-31 15:01:43', 1, '2006-10-31 15:11:28'),
-(2, 3, 21, '10005009', NULL, NULL, NULL, 1, '2006-10-31 15:06:40', NULL, NULL),
-(3, 3, 55, '10005002', NULL, NULL, NULL, 1, '2006-10-31 15:07:42', 1, '2006-10-31 15:08:02'),
-(4, 3, 12, '10005004', NULL, '\0', NULL, 1, '2006-10-31 15:08:35', 1, '2006-10-31 15:09:17'),
-(5, 1, 23, '10004002', NULL, NULL, NULL, 1, '2006-10-31 15:10:40', NULL, NULL),
-(6, 4, 59, '10005033', NULL, NULL, NULL, 1, '2006-11-01 12:34:48', NULL, NULL),
-(7, 4, 63, '10005034', NULL, NULL, NULL, 1, '2006-11-01 12:35:19', NULL, NULL),
-(8, 4, 61, '10005032', NULL, NULL, NULL, 1, '2006-11-01 12:36:12', NULL, NULL),
-(9, 1, 19, '10005029', NULL, NULL, NULL, 1, '2006-11-01 12:36:38', NULL, NULL),
-(10, 1, 53, '10005021', NULL, NULL, NULL, 1, '2006-11-01 12:37:06', NULL, NULL),
-(11, 6, 16, '10005039', NULL, NULL, NULL, 1, '2006-11-01 12:37:33', NULL, NULL),
-(12, 6, 17, '10005038', NULL, NULL, NULL, 1, '2006-11-01 12:37:47', NULL, NULL),
-(13, 6, 22, '10005031', NULL, NULL, NULL, 1, '2006-11-01 12:38:00', 1, '2006-11-01 13:20:31'),
-(14, 1, 50, '10005098', NULL, NULL, NULL, 1, '2006-11-01 13:15:15', NULL, NULL),
-(15, 5, 56, '10005093', NULL, NULL, NULL, 1, '2006-11-01 13:15:58', NULL, NULL),
-(16, 5, 57, '10005088', NULL, NULL, NULL, 1, '2006-11-01 13:16:11', 1, '2006-11-01 13:16:50'),
-(17, 3, 47, '10004394', NULL, NULL, NULL, 1, '2006-11-01 13:17:27', NULL, NULL),
-(18, 3, 48, '10005947', NULL, NULL, NULL, 1, '2006-11-01 13:17:49', NULL, NULL),
-(19, 3, 24, '10005937', NULL, NULL, NULL, 1, '2006-11-01 13:18:16', NULL, NULL),
-(20, 5, 58, '10009844', NULL, NULL, NULL, 1, '2006-11-01 13:19:40', NULL, NULL),
-(21, 5, 60, '10005921', NULL, NULL, NULL, 1, '2006-11-01 13:21:48', 1, '2006-11-03 11:45:45'),
-(22, 7, 46, '10002001', NULL, NULL, NULL, 1, '2006-11-01 13:48:49', NULL, NULL),
-(23, 7, 46, '10008002', NULL, NULL, NULL, 1, '2006-11-01 13:50:07', NULL, NULL),
-(24, 7, 46, '10005987', NULL, NULL, NULL, 1, '2006-11-03 10:18:54', NULL, NULL),
-(25, 7, 46, '10005076', NULL, NULL, NULL, 1, '2006-11-03 10:19:23', NULL, NULL),
-(26, 7, 46, '10005977', NULL, NULL, NULL, 1, '2006-11-03 10:20:13', NULL, NULL),
-(27, 8, 40, '10005733', NULL, NULL, NULL, 1, '2006-11-03 11:41:25', NULL, NULL),
-(28, 8, 40, '10005732', NULL, NULL, NULL, 1, '2006-11-03 11:41:52', NULL, NULL),
-(29, 8, 40, '10005761', NULL, NULL, NULL, 1, '2006-11-03 11:42:00', NULL, NULL),
-(30, 8, 40, '10005877', NULL, NULL, NULL, 1, '2006-11-03 11:42:09', NULL, NULL),
-(31, 4, 62, '10005776', NULL, NULL, NULL, 1, '2006-11-03 11:47:02', 1, '2006-11-03 11:50:10'),
-(32, 4, 64, '10005633', NULL, NULL, NULL, 1, '2006-11-03 11:49:07', 1, '2006-11-03 11:51:24'),
-(33, 5, 65, '10005738', NULL, NULL, NULL, 1, '2006-11-03 11:52:02', NULL, NULL),
-(34, 10, 6, '30020001', NULL, NULL, NULL, 1, '2006-11-09 16:26:07', NULL, NULL),
-(35, 10, 6, '30020002', NULL, NULL, NULL, 1, '2006-11-09 16:27:25', NULL, NULL),
-(36, 9, 7, '30020003', NULL, NULL, NULL, 1, '2006-11-09 16:28:14', NULL, NULL),
-(37, 9, 8, '30020004', NULL, NULL, NULL, 1, '2006-11-09 16:29:06', 1, '2006-11-09 16:34:22'),
-(38, 9, 8, '30020005', NULL, NULL, NULL, 1, '2006-11-09 16:33:40', NULL, NULL),
-(39, 9, 8, '30020006', NULL, NULL, NULL, 1, '2006-11-09 16:40:03', 1, '2006-11-09 17:05:34'),
-(40, 11, 9, '30020007', NULL, NULL, NULL, 1, '2006-11-09 16:46:34', 1, '2006-11-09 17:07:11'),
-(41, 10, 2, '30020008', NULL, NULL, NULL, 1, '2006-11-09 16:52:13', 1, '2006-11-09 17:03:06'),
-(42, 9, 8, '30020009', NULL, NULL, NULL, 1, '2006-11-09 16:53:16', 1, '2006-11-09 17:01:54'),
-(43, 11, 2, '30020010', NULL, NULL, NULL, 1, '2006-11-09 16:54:24', 1, '2006-11-09 17:04:17');
 
 --
 -- Dumping data for table `asset_model`
 --
 
-INSERT INTO `asset_model` (`asset_model_id`, `category_id`, `manufacturer_id`, `asset_model_code`, `short_description`, `long_description`, `image_path`, `created_by`, `creation_date`, `modified_by`, `modified_date`) VALUES
-(1, 5, 2, 'DSR5000', 'Digital Survey Radar', 'Acme''s Flagship Digital Survey Radar Appliance.', NULL, 1, '2006-10-31 14:26:28', 1, '2006-10-31 14:55:18'),
-(2, 7, 5, 'TPS01', 'TPS Report', 'TPS Report Documents are essential for maintaining a high level of productivity.', NULL, 1, '2006-10-31 14:28:20', 1, '2006-10-31 14:33:50'),
-(3, 5, 3, 'CVG100', 'Cavitation Vortex Generator', 'Pegasus CVG-100', NULL, 1, '2006-10-31 14:32:57', 1, '2006-10-31 14:33:35'),
-(4, 6, 4, 'STHC4400', 'Hydraulic Crane', '855 C Water-cooled 4-cycle, in-line 6-cylinder\r\nCylinder, direct fuel injection type diesel engine', NULL, 1, '2006-10-31 14:35:44', NULL, NULL),
-(5, 6, 4, 'STWL9700', 'Wheel Loader', 'The SuperTech Wheel loader provides for a high breakout force and lower cycle time. It ensures a perfect combination of traction and breakout force for maximum use of rated capacity.', NULL, 1, '2006-10-31 14:37:47', NULL, NULL),
-(6, 5, 3, 'PLR88', 'Laser Rangefinder', 'Measures distances using an eye-safe laser and precision electronics', NULL, 1, '2006-10-31 14:48:39', NULL, NULL),
-(7, 7, 5, 'HR01', 'HR Employee Record', 'Employee Record Form.', NULL, 1, '2006-10-31 14:50:23', NULL, NULL),
-(8, 5, 3, 'WRIRGT90', 'Wide Range Infrared Gun Thermometer', 'Wide range temperature measurements from -58 to 1000Â°F, 0.1Â° resolution\r\n\r\nBuilt-in laser pointer identifies target area\r\n\r\nBacklighting illuminates display for taking measurements at night or in areas with low background light levels', NULL, 1, '2006-10-31 14:54:23', NULL, NULL),
-(9, 9, 6, '29029', 'L5', 'Linear array, 5.0/3.5mhz - 38mm - ART/Triplex - Vascular/Small Parts.', NULL, 1, '2006-11-09 16:17:43', 1, '2006-11-09 16:24:15'),
-(10, 9, 6, '34642', 'C3', 'General Purpose Abdominal and Obstetric, high performance curved array, multihertz (3.5 & 2.5 Mhz) - CDE, TCR.', NULL, 1, '2006-11-09 16:20:18', 1, '2006-11-09 16:24:52'),
-(11, 9, 6, '52103', '4V1 - aspen', 'DL connector type -\r\nAcuson Aspen\r\ntransducer,\r\napplications include:\r\nGeneral OB/GYN, fetal\r\nheart, abdominal\r\nvascular. For\r\ntechnically difficult\r\npatients.', NULL, 1, '2006-11-09 16:45:54', NULL, NULL);
 
 --
 -- Dumping data for table `asset_transaction`
@@ -157,61 +82,16 @@ INSERT INTO `authorization_level` (`authorization_level_id`, `short_description`
 -- Dumping data for table `category`
 --
 
-INSERT INTO `category` (`category_id`, `short_description`, `long_description`, `image_path`, `asset_flag`, `inventory_flag`, `created_by`, `creation_date`, `modified_by`, `modified_date`) VALUES
-(1, 'Widget', '', NULL, '\0', '', 1, '2006-10-31 11:01:23', 1, '2006-11-03 11:43:57'),
-(2, 'Sprocket', '', NULL, '\0', '', 1, '2006-10-31 11:01:35', 1, '2006-11-03 11:43:45'),
-(3, 'Circuit Board', '', NULL, '\0', '', 1, '2006-10-31 11:09:32', 1, '2006-11-03 11:43:38'),
-(5, 'Tool', '', NULL, '', '\0', 1, '2006-10-31 11:11:17', 1, '2006-11-03 11:43:50'),
-(6, 'Vehicle', '', NULL, '', '\0', 1, '2006-10-31 11:11:59', 1, '2006-11-03 11:43:54'),
-(7, 'Document', '', NULL, '', '\0', 1, '2006-10-31 11:12:07', 1, '2006-11-03 11:43:42'),
-(8, 'Ultrasound System', 'Ultrasound System', NULL, '', '\0', 1, '2006-11-09 15:55:02', NULL, NULL),
-(9, 'Ultrasound Transducer', 'Ultrasound Transducer', NULL, '', '\0', 1, '2006-11-09 15:58:01', 1, '2006-11-09 15:58:54');
 
 --
 -- Dumping data for table `company`
 --
 
-INSERT INTO `company` (`company_id`, `address_id`, `short_description`, `website`, `telephone`, `fax`, `email`, `long_description`, `created_by`, `creation_date`, `modified_by`, `modified_date`) VALUES
-(1, 1, 'UltraCo', 'http://www.ultraco.com', '(555)-522-9090', '(555)-522-9191', 'contact@ultraco.com', '', 1, '2006-10-25 16:02:19', 1, '2006-10-25 16:02:20'),
-(2, 2, 'Acme Corporation', 'http://www.acme.com', '(555) 989-1102', '(555) 933-1023', 'contact@acme.com', '', 1, '2006-10-25 16:06:10', 1, '2006-10-25 16:09:59'),
-(3, 3, 'SuperTech', 'http://www.supertech.com', '(555) 937-2847', '(555) 274-2874', 'admin@supertech.com', '', 1, '2006-10-25 16:28:08', 1, '2006-10-25 16:28:08'),
-(4, 5, 'Binary Industries', 'http://www.binaryind.com', '(555) 448-2099', '(555) 288-2022', 'contact@binaryind.com', '', 1, '2006-10-25 16:58:51', 1, '2006-10-25 16:58:51'),
-(5, 6, 'Computer Experts Inc.', 'http://computerexperts.com', '(555) 338-0991', '(555) 338-1100', 'contact@computerexperts.com', '', 1, '2006-10-25 17:04:32', 1, '2006-10-25 17:04:44'),
-(6, 7, 'Pegasus Systems', 'http://www.pegasys.com', '(555) 477-0099', '(555) 327-0091', 'greetings@pegasys.com', '', 1, '2006-10-25 17:08:58', 1, '2006-10-25 17:08:58'),
-(7, 9, 'Zenith Widget Manufacturing', 'http://www.zwm.com', '(555) 382-0282', '(555) 383-9988', 'contact@zwm.com', '', 1, '2006-10-25 17:16:04', 1, '2006-10-25 17:16:04'),
-(8, 10, 'Digital Data Services', 'http://ddservices.com', '(555) 332-0199', '(555) 438-2984', 'contact@ddservices.com', '', 1, '2006-10-25 17:23:40', 1, '2006-10-25 17:23:41'),
-(9, 11, 'Enterprise Associates', 'http://www.enterpriseassoc.com', '(555) 288-2084', '(555) 382-0385', 'http://contact@enterpriseassoc.com', '', 1, '2006-10-25 17:27:17', 1, '2006-10-25 17:27:17'),
-(10, 12, 'Financial Freedom Foundation', 'http://fff.org', '(555) 383-0092', '(555) 383-0001', 'http://contact@fff.org', '', 1, '2006-10-25 17:31:00', 1, '2006-10-25 17:31:00'),
-(11, 13, 'Gordon Industrial', 'http://www.gordanindustrial.com', '(555) 550-5055', '(555) 383-4049', 'contact@gordonindustrial.com', '', 1, '2006-10-25 17:35:59', 1, '2006-10-25 17:35:59'),
-(12, 14, 'High Tech Productions', 'http://hitechproductions.com', '(555) 333-0404', '(555) 484-3039', 'contact@hitechproductions.com', '', 1, '2006-10-25 17:38:04', 1, '2006-10-25 17:38:04'),
-(13, 15, 'Icarus Industries', 'http://icarusindustries.com', '(555) 333-3332', '(555) 444-5543', 'contact@icarusindustries.com', '', 1, '2006-10-25 17:51:07', 1, '2006-10-25 17:51:08'),
-(14, 16, 'Journey Ventures', 'http://journeyventures.com', '(555) 323-0099', '(555) 332-2092', 'contact@journeyventures.com', '', 1, '2006-10-25 17:54:42', 1, '2006-10-25 17:54:42'),
-(15, 17, 'Fictional Inc.', 'http://www.fictional.com', '(555) 228-3917', '(555) 344-3998', 'contact@fictional.com', '', 1, '2006-10-31 11:51:29', 1, '2006-10-31 11:51:29');
 
 --
 -- Dumping data for table `contact`
 --
 
-INSERT INTO `contact` (`contact_id`, `company_id`, `address_id`, `first_name`, `last_name`, `title`, `email`, `phone_office`, `phone_home`, `phone_mobile`, `fax`, `description`, `created_by`, `creation_date`, `modified_by`, `modified_date`) VALUES
-(1, 1, 1, 'Earl', 'Eberd', 'VP Engineering', 'earl.eberd@ultraco.com', '(555) 939-0099', '(555) 988-0211', '(555) 939-0999', '(555) 939-1112', '', 1, '2006-10-25 16:04:26', NULL, NULL),
-(2, 2, 2, 'Charles', 'Vanderbilt', 'VP Sales', 'charles.enchew@acme.com', '(555) 338-2832', '(555) 323-2212', '(555) 443-2221', '(555) 857-2984', '', 1, '2006-10-25 16:11:02', 1, '2006-10-25 16:12:17'),
-(3, 2, 2, 'Susan', 'Swanson', 'Director of Marketing', 'susan.swanson@acme.com', '(555) 448-3321', '(555) 323-6494', '(555) 487-2988', '(555) 487-5992', '', 1, '2006-10-25 16:11:56', NULL, NULL),
-(4, 3, 3, 'Stanley', 'Finch', 'CEO', 'sfinch@supertech.com', '(555) 338-2212', '(555) 238-3985', '(555) 274-2870', '(555) 327-4987', '', 1, '2006-10-25 16:28:59', NULL, NULL),
-(5, 3, 4, 'William', 'Walton', 'CFO', 'wwalton@supertech.com', '(555) 548-3094', '(555) 487-2098', '(555) 475-2990', '(555) 487-2998', '', 1, '2006-10-25 16:56:06', NULL, NULL),
-(6, 5, 6, 'Victor', 'Albertson', 'Operations Manager', 'v.albertson@computerexperts.com', '(555) 229-0092', '(555) 348-3948', '(555) 827-3841', '(555) 232-1009', '', 1, '2006-10-25 17:05:54', NULL, NULL),
-(7, 6, 7, 'Ellaine', 'Smithers', 'VP Operations', 'ellain.smithers@pegasys.com', '(555) 222-1009', '(555) 882-2088', '(555) 287-9987', '(555) 221-0998', '', 1, '2006-10-25 17:11:39', NULL, NULL),
-(8, 6, 8, 'Janet', 'Jones', 'Director of Sales', 'janet.jones@pegasys.com', '(555) 221-0843', '(555) 283-9238', '(555) 437-2982', '(555) 282-4810', '', 1, '2006-10-25 17:12:30', NULL, NULL),
-(9, 7, 9, 'Jennifer', 'Khan', 'Director of Marketing', 'jennifer.khan@zwm.com', '(555) 228-9438', '(555) 337-2874', '(555) 387-9882', '(555) 288-2998', '', 1, '2006-10-25 17:18:36', NULL, NULL),
-(10, 9, 11, 'Amelia', 'Tabalbag', 'Sales Associate', 'atabalbag@enterpriseassoc.com', '(555) 383-0393', '(555) 383-3921', '(555) 383-1112', '(555) 293-3099', '', 1, '2006-10-25 17:28:33', NULL, NULL),
-(11, 10, 12, 'Franklin', 'Benjamin', 'CFO', 'franklin@fff.org', '(555) 838-0091', '(555) 328-1021', '(555) 383-2922', '(555) 222-2211', '', 1, '2006-10-25 17:31:46', NULL, NULL),
-(12, 12, 14, 'Hillary', 'Morgan', 'CEO', 'hmorgan@hitechproductions.com', '(555) 383-2009', '(555) 221-1101', '(555) 848-0999', '(555) 333-2223', '', 1, '2006-10-25 17:39:05', NULL, NULL),
-(13, 13, 15, 'Barney', 'Clinkenbeard', 'Operations Manager', 'bclinkenbeard@icarusindustries.com', '(555) 222-2213', '(555) 488-3009', '(555) 343-3002', '(555) 443-2022', '', 1, '2006-10-25 17:52:55', NULL, NULL),
-(14, 14, 16, 'Justice', 'London', 'CEO', 'justice@journeyventures.com', '(555) 222-2093', '(555) 282-9484', '(555) 383-2097', '(555) 275-3853', '', 1, '2006-10-25 17:55:45', NULL, NULL),
-(15, 15, 17, 'Curt', 'Barnes', 'Sales Associate', 'cbarnes@fictional.com', '(555) 283-3084', '(555) 382-2947', '(555) 387-3999', '(555) 438-3988', '', 1, '2006-10-31 11:54:57', NULL, NULL),
-(16, 15, 18, 'Damien', 'Thompson', 'Sales Associate', 'dthompson@fictional.com', '(555) 348-3332', '(555) 383-9399', '(555) 388-0022', '(555) 488-0977', '', 1, '2006-10-31 11:56:28', NULL, NULL),
-(17, 15, 17, 'Frank', 'Zinn', 'Shipping & Receiving Manager', 'fzinn@fictional.com', '(555) 883-3009', '(555) 383-0098', '(555) 383-9988', '(555) 229-0990', '', 1, '2006-10-31 11:57:48', NULL, NULL),
-(18, 15, 17, 'Nancy', 'Newton', 'Manager of Operations', 'nnewton@fictional.com', '(555) 833-0099', '(555) 833-0093', '(555) 887-0982', '(555) 383-0398', '', 1, '2006-10-31 11:59:30', NULL, NULL),
-(19, 15, 17, 'Victoria', 'Stevens', 'Warehouse Manager', 'vstevens@fictional.com', '(555) 383-2009', '(555) 998-0998', '(555) 998-1112', '(555) 222-2233', '', 1, '2006-10-31 12:00:17', NULL, NULL);
 
 --
 -- Dumping data for table `country`
@@ -563,30 +443,11 @@ INSERT INTO `fedex_service_type` (`fedex_service_type_id`, `short_description`, 
 -- Dumping data for table `inventory_location`
 --
 
-INSERT INTO `inventory_location` (`inventory_location_id`, `inventory_model_id`, `location_id`, `quantity`, `created_by`, `creation_date`, `modified_by`, `modified_date`) VALUES
-(1, 3, 50, 45, 1, '2006-12-18 14:59:13', 1, '2006-12-18 15:19:21'),
-(2, 3, 16, 40, 1, '2006-12-18 15:19:21', NULL, NULL),
-(3, 3, 10, 120, 1, '2006-12-18 15:20:07', NULL, NULL),
-(4, 1, 5, 50, 1, '2006-12-18 15:22:59', 1, '2006-12-18 15:36:55'),
-(5, 2, 5, 400, 1, '2006-12-18 15:24:18', 1, '2006-12-18 15:24:20'),
-(6, 3, 5, 250, 1, '2006-12-18 15:35:17', 1, '2006-12-18 15:35:19'),
-(7, 2, 20, 70, 1, '2006-12-18 15:40:17', NULL, NULL),
-(8, 1, 24, 220, 1, '2006-12-18 15:40:47', NULL, NULL),
-(9, 4, 49, 80, 1, '2006-12-18 15:46:16', NULL, NULL),
-(10, 5, 36, 900, 1, '2006-12-18 15:48:28', NULL, NULL),
-(11, 6, 12, 3000, 1, '2006-12-18 15:49:44', NULL, NULL);
 
 --
 -- Dumping data for table `inventory_model`
 --
 
-INSERT INTO `inventory_model` (`inventory_model_id`, `category_id`, `manufacturer_id`, `inventory_model_code`, `short_description`, `long_description`, `image_path`, `price`, `created_by`, `creation_date`, `modified_by`, `modified_date`) VALUES
-(1, 1, 1, '99501005', 'Generic Widget', 'Generic widgets', NULL, NULL, 1, '2006-12-18 14:47:31', NULL, NULL),
-(2, 2, 4, '90054887', 'Generic Sprocket', 'Generic Sprocket', NULL, NULL, 1, '2006-12-18 14:51:31', NULL, NULL),
-(3, 1, 1, '95003398', 'Advanced High-End Widget', 'Advanced High-End Widget', NULL, NULL, 1, '2006-12-18 14:52:43', NULL, NULL),
-(4, 3, 4, '98890099', 'Generic Circuit Board', 'Generic circuit board for general purpose testing.', NULL, NULL, 1, '2006-12-18 15:45:50', NULL, NULL),
-(5, 3, 4, '98897667', 'D11-K', 'D11-K general purpose circuit board.', NULL, NULL, 1, '2006-12-18 15:47:58', NULL, NULL),
-(6, 2, 3, '98220112', 'PS-1000', 'Powered Sprocket from Pegasus', NULL, NULL, 1, '2006-12-18 15:49:15', NULL, NULL);
 
 --
 -- Dumping data for table `inventory_transaction`
@@ -610,81 +471,12 @@ INSERT INTO `location` (`location_id`, `short_description`, `long_description`, 
 (2, 'Shipped', NULL, NULL, NULL, NULL, NULL),
 (3, 'Taken Out', NULL, NULL, NULL, NULL, NULL),
 (4, 'New Inventory', NULL, NULL, NULL, NULL, NULL),
-(5, 'To Be Received', NULL, NULL, NULL, NULL, NULL),
-(6, 'R1B01', 'Room 1, Bin 1', 1, '2006-10-31 09:14:48', 1, '2006-10-31 09:17:11'),
-(7, 'R1B02', 'Room 1, Bin 2', 1, '2006-10-31 09:15:04', 1, '2006-10-31 09:17:18'),
-(8, 'R1B03', 'Room 1, Bin 3', 1, '2006-10-31 09:15:14', 1, '2006-10-31 09:17:23'),
-(9, 'R1B04', 'Room 1, Bin 4', 1, '2006-10-31 09:15:26', 1, '2006-10-31 09:17:28'),
-(10, 'R1B05', 'Room 1, Bin 5', 1, '2006-10-31 09:15:46', 1, '2006-10-31 09:17:36'),
-(11, 'R1B06', 'Room 1, Bin 6', 1, '2006-10-31 09:16:05', 1, '2006-10-31 09:17:40'),
-(12, 'R1B07', 'Room 1, Bin 7', 1, '2006-10-31 09:16:22', 1, '2006-10-31 09:17:50'),
-(13, 'R1B08', 'Room 1, Bin 8', 1, '2006-10-31 09:16:33', 1, '2006-10-31 09:17:54'),
-(14, 'R1B09', 'Room 1, Bin 9', 1, '2006-10-31 09:16:43', 1, '2006-10-31 09:18:01'),
-(15, 'R1B10', 'Room 1, Bin 10', 1, '2006-10-31 09:16:55', NULL, NULL),
-(16, 'R1B11', 'Room 1, Bin 11', 1, '2006-10-31 09:18:21', NULL, NULL),
-(17, 'R1B12', 'Room 1, Bin 12', 1, '2006-10-31 09:18:36', NULL, NULL),
-(18, 'R1B13', 'Room 1, Bin 13', 1, '2006-10-31 09:18:50', NULL, NULL),
-(19, 'R1B14', 'Room 1, Bin 14', 1, '2006-10-31 09:19:01', NULL, NULL),
-(20, 'R1B15', 'Room 1, Bin 15', 1, '2006-10-31 09:19:11', NULL, NULL),
-(21, 'R1B16', 'Room 1, Bin 16', 1, '2006-10-31 09:19:29', NULL, NULL),
-(22, 'R1B17', 'Room 1, Bin 17', 1, '2006-10-31 09:19:39', NULL, NULL),
-(23, 'R1B18', 'Room 1, Bin 18', 1, '2006-10-31 09:20:03', NULL, NULL),
-(24, 'R1B19', 'Room 1, Bin 19', 1, '2006-10-31 09:20:15', NULL, NULL),
-(25, 'R1B20', 'Room 1, Bin 20', 1, '2006-10-31 09:20:35', NULL, NULL),
-(26, 'R2B01', 'Room 2, Bin 1', 1, '2006-10-31 09:20:49', NULL, NULL),
-(27, 'R2B02', 'Room 2, Bin 2', 1, '2006-10-31 09:22:29', NULL, NULL),
-(28, 'R2B03', 'Room 2, Bin 3', 1, '2006-10-31 09:22:38', NULL, NULL),
-(29, 'R2B04', 'Room 2, Bin 4', 1, '2006-10-31 09:22:51', NULL, NULL),
-(30, 'R2B05', 'Room 2, Bin 5', 1, '2006-10-31 09:22:59', NULL, NULL),
-(31, 'R2B06', 'Room 2, Bin 6', 1, '2006-10-31 09:23:08', NULL, NULL),
-(32, 'R2B07', 'Room 2, Bin 7', 1, '2006-10-31 09:23:30', NULL, NULL),
-(33, 'R2B08', 'Room 2, Bin 8', 1, '2006-10-31 09:23:37', NULL, NULL),
-(34, 'R2B09', 'Room 2, Bin 9', 1, '2006-10-31 09:23:45', NULL, NULL),
-(35, 'R2B10', 'Room 2, Bin 10', 1, '2006-10-31 09:23:57', NULL, NULL),
-(36, 'R3B01', 'Room 3, Bin 1', 1, '2006-10-31 09:24:18', NULL, NULL),
-(37, 'R3B02', 'Room 3, Bin 2', 1, '2006-10-31 09:24:41', NULL, NULL),
-(38, 'R3B03', 'Room 3, Bin 3', 1, '2006-10-31 09:24:56', NULL, NULL),
-(39, 'R3B04', 'Room 3, Bin 4', 1, '2006-10-31 09:25:05', NULL, NULL),
-(40, 'R3B05', 'Room 3, Bin 5', 1, '2006-10-31 09:25:15', 1, '2006-10-31 09:25:23'),
-(41, 'R3B06', 'Room 3, Bin 6', 1, '2006-10-31 09:25:32', NULL, NULL),
-(42, 'R3B07', 'Room 3, Bin 7', 1, '2006-10-31 09:25:52', NULL, NULL),
-(43, 'R3B08', 'Room 3, Bin 8', 1, '2006-10-31 09:25:59', NULL, NULL),
-(44, 'R3B09', 'Room 3, Bin 9', 1, '2006-10-31 09:26:18', NULL, NULL),
-(45, 'R3B10', 'Room 3, Bin 10', 1, '2006-10-31 09:26:25', NULL, NULL),
-(46, 'R4B01', 'Room 4, Bin 1', 1, '2006-10-31 09:26:47', NULL, NULL),
-(47, 'R4B02', 'Room 4, Bin 2', 1, '2006-10-31 09:26:56', NULL, NULL),
-(48, 'R4B03', 'Room 4, Bin 3', 1, '2006-10-31 09:27:27', NULL, NULL),
-(49, 'R4B04', 'Room 4, Bin 4', 1, '2006-10-31 09:27:35', NULL, NULL),
-(50, 'R4B05', 'Room 4, Bin 5', 1, '2006-10-31 09:27:50', NULL, NULL),
-(51, 'R4B06', 'Room 4, Bin 6', 1, '2006-10-31 09:28:07', NULL, NULL),
-(52, 'R4B07', 'Room 4, Bin 7', 1, '2006-10-31 09:28:14', NULL, NULL),
-(53, 'R4B08', 'Room 4, Bin 8', 1, '2006-10-31 09:28:22', NULL, NULL),
-(54, 'R4B09', 'Room 4, Bin 9', 1, '2006-10-31 09:28:30', NULL, NULL),
-(55, 'R4B10', 'Room 4, Bin 10', 1, '2006-10-31 09:28:38', NULL, NULL),
-(56, 'WPS01', 'Warehouse, parking space 1', 1, '2006-10-31 14:57:01', 1, '2006-10-31 14:57:52'),
-(57, 'WPS02', 'Warehouse, parking space 2', 1, '2006-10-31 14:58:12', NULL, NULL),
-(58, 'WPS03', 'Warehouse, parking space 3', 1, '2006-10-31 14:58:27', NULL, NULL),
-(59, 'WPS04', 'Warehouse, parking space 4', 1, '2006-10-31 14:58:37', NULL, NULL),
-(60, 'WPS05', 'Warehouse, parking space 5', 1, '2006-10-31 14:58:50', NULL, NULL),
-(61, 'WPS06', 'Warehouse, parking space 6', 1, '2006-10-31 14:59:16', NULL, NULL),
-(62, 'WPS07', 'Warehouse, parking space 7', 1, '2006-10-31 14:59:25', NULL, NULL),
-(63, 'WPS08', 'Warehouse, parking space 8', 1, '2006-10-31 14:59:44', NULL, NULL),
-(64, 'WPS09', 'Warehouse, parking space 9', 1, '2006-10-31 14:59:55', NULL, NULL),
-(65, 'WPS10', 'Warehouse, parking space 10', 1, '2006-10-31 15:00:06', NULL, NULL);
+(5, 'To Be Received', NULL, NULL, NULL, NULL, NULL);
 
 --
 -- Dumping data for table `manufacturer`
 --
 
-INSERT INTO `manufacturer` (`manufacturer_id`, `short_description`, `long_description`, `image_path`, `created_by`, `creation_date`, `modified_by`, `modified_date`) VALUES
-(1, 'ZWM', 'Zenith Widget Manufacturing', NULL, 1, '2006-10-31 10:52:06', NULL, NULL),
-(2, 'Acme', '', NULL, 1, '2006-10-31 10:52:25', NULL, NULL),
-(3, 'Pegasus', 'Pegasus Systems', NULL, 1, '2006-10-31 10:52:52', NULL, NULL),
-(4, 'SuperTech', '', NULL, 1, '2006-10-31 10:53:34', NULL, NULL),
-(5, 'Fictional Inc.', '', NULL, 1, '2006-10-31 11:15:30', NULL, NULL),
-(6, 'Acuson', 'Acuson Corporation', NULL, 1, '2006-11-09 16:00:05', NULL, NULL),
-(7, 'GE', 'General Electric', NULL, 1, '2006-11-09 16:01:02', NULL, NULL),
-(8, 'Philips', 'Philips Ultrasound', NULL, 1, '2006-11-09 16:01:33', NULL, NULL);
 
 --
 -- Dumping data for table `module`
@@ -734,29 +526,29 @@ INSERT INTO `package_type` (`package_type_id`, `short_description`, `courier_id`
 --
 
 INSERT INTO `role` (`role_id`, `short_description`, `long_description`, `created_by`, `creation_date`, `modified_by`, `modified_date`) VALUES
-(1, 'Administrator', 'Administrator account will access to everything', 1, '2008-07-21 15:04:35', 1, '2008-07-21 15:16:29');
+(1, 'Administrator', 'Administrator account will access to everything', 1, '2008-07-22 20:35:37', NULL, NULL);
 
 --
 -- Dumping data for table `role_entity_qtype_built_in_authorization`
 --
 
 INSERT INTO `role_entity_qtype_built_in_authorization` (`role_entity_built_in_id`, `role_id`, `entity_qtype_id`, `authorization_id`, `authorized_flag`, `created_by`, `creation_date`, `modified_by`, `modified_date`) VALUES
-(1, 1, 1, 1, '', 1, '2008-07-11 22:14:47', 1, '2008-07-21 15:16:29'),
-(2, 1, 1, 2, '', 1, '2008-07-11 22:14:47', 1, '2008-07-21 15:16:29'),
-(3, 1, 4, 1, '', 1, '2008-07-11 22:14:47', 1, '2008-07-21 15:16:29'),
-(4, 1, 4, 2, '', 1, '2008-07-11 22:14:47', 1, '2008-07-21 15:16:29'),
-(5, 1, 2, 1, '', 1, '2008-07-11 22:14:47', 1, '2008-07-21 15:16:29'),
-(6, 1, 2, 2, '', 1, '2008-07-11 22:14:47', 1, '2008-07-21 15:16:29'),
-(7, 1, 7, 1, '', 1, '2008-07-11 22:14:47', 1, '2008-07-21 15:16:29'),
-(8, 1, 7, 2, '', 1, '2008-07-11 22:14:47', 1, '2008-07-21 15:16:29'),
-(9, 1, 8, 1, '', 1, '2008-07-11 22:14:47', 1, '2008-07-21 15:16:29'),
-(10, 1, 8, 2, '', 1, '2008-07-11 22:14:47', 1, '2008-07-21 15:16:29'),
-(11, 1, 9, 1, '', 1, '2008-07-11 22:14:47', 1, '2008-07-21 15:16:29'),
-(12, 1, 9, 2, '', 1, '2008-07-11 22:14:47', 1, '2008-07-21 15:16:29'),
-(13, 1, 10, 1, '', 1, '2008-07-11 22:14:47', 1, '2008-07-21 15:16:29'),
-(14, 1, 10, 2, '', 1, '2008-07-11 22:14:47', 1, '2008-07-21 15:16:29'),
-(15, 1, 11, 1, '', 1, '2008-07-11 22:14:47', 1, '2008-07-21 15:16:29'),
-(16, 1, 11, 2, '', 1, '2008-07-11 22:14:47', 1, '2008-07-21 15:16:30');
+(1, 1, 1, 1, '', 1, '2008-07-11 22:14:47', NULL, NULL),
+(2, 1, 1, 2, '', 1, '2008-07-11 22:14:47', NULL, NULL),
+(3, 1, 4, 1, '', 1, '2008-07-11 22:14:47', NULL, NULL),
+(4, 1, 4, 2, '', 1, '2008-07-11 22:14:47', NULL, NULL),
+(5, 1, 2, 1, '', 1, '2008-07-11 22:14:47', NULL, NULL),
+(6, 1, 2, 2, '', 1, '2008-07-11 22:14:47', NULL, NULL),
+(7, 1, 7, 1, '', 1, '2008-07-11 22:14:47', NULL, NULL),
+(8, 1, 7, 2, '', 1, '2008-07-11 22:14:47', NULL, NULL),
+(9, 1, 8, 1, '', 1, '2008-07-11 22:14:47', NULL, NULL),
+(10, 1, 8, 2, '', 1, '2008-07-11 22:14:47', NULL, NULL),
+(11, 1, 9, 1, '', 1, '2008-07-11 22:14:47', NULL, NULL),
+(12, 1, 9, 2, '', 1, '2008-07-11 22:14:47', NULL, NULL),
+(13, 1, 10, 1, '', 1, '2008-07-11 22:14:47', NULL, NULL),
+(14, 1, 10, 2, '', 1, '2008-07-11 22:14:47', NULL, NULL),
+(15, 1, 11, 1, '', 1, '2008-07-11 22:14:47', NULL, NULL),
+(16, 1, 11, 2, '', 1, '2008-07-11 22:14:47', NULL, NULL);
 
 --
 -- Dumping data for table `role_entity_qtype_custom_field_authorization`
@@ -769,12 +561,12 @@ INSERT INTO `role_entity_qtype_built_in_authorization` (`role_entity_built_in_id
 
 INSERT INTO `role_module` (`role_module_id`, `role_id`, `module_id`, `access_flag`, `created_by`, `creation_date`, `modified_by`, `modified_date`) VALUES
 (1, 1, 1, '', NULL, NULL, NULL, NULL),
-(2, 1, 2, '', NULL, NULL, 1, '2008-07-21 15:16:29'),
-(3, 1, 3, '', NULL, NULL, 1, '2008-07-21 15:16:29'),
-(4, 1, 4, '', NULL, NULL, 1, '2008-07-21 15:16:29'),
-(5, 1, 5, '', NULL, NULL, 1, '2008-07-21 15:16:29'),
-(6, 1, 6, '', NULL, NULL, 1, '2008-07-21 15:16:29'),
-(7, 1, 7, '', NULL, NULL, 1, '2008-07-21 15:16:29');
+(2, 1, 2, '', NULL, NULL, NULL, NULL),
+(3, 1, 3, '', NULL, NULL, NULL, NULL),
+(4, 1, 4, '', NULL, NULL, NULL, NULL),
+(5, 1, 5, '', NULL, NULL, NULL, NULL),
+(6, 1, 6, '', NULL, NULL, NULL, NULL),
+(7, 1, 7, '', NULL, NULL, NULL, NULL);
 
 --
 -- Dumping data for table `role_module_authorization`
@@ -784,37 +576,29 @@ INSERT INTO `role_module_authorization` (`role_module_authorization_id`, `role_m
 (1, 1, 1, 1, NULL, NULL, NULL, NULL),
 (2, 1, 2, 1, NULL, NULL, NULL, NULL),
 (3, 1, 3, 1, NULL, NULL, NULL, NULL),
-(4, 2, 1, 1, NULL, NULL, 1, '2008-07-21 15:16:29'),
-(5, 2, 2, 1, NULL, NULL, 1, '2008-07-21 15:16:29'),
-(6, 2, 3, 1, NULL, NULL, 1, '2008-07-21 15:16:29'),
-(7, 3, 1, 1, NULL, NULL, 1, '2008-07-21 15:16:29'),
-(8, 3, 2, 1, NULL, NULL, 1, '2008-07-21 15:16:29'),
-(9, 3, 3, 1, NULL, NULL, 1, '2008-07-21 15:16:29'),
-(10, 4, 1, 1, NULL, NULL, 1, '2008-07-21 15:16:29'),
-(11, 4, 2, 1, NULL, NULL, 1, '2008-07-21 15:16:29'),
-(12, 4, 3, 1, NULL, NULL, 1, '2008-07-21 15:16:29'),
-(13, 5, 1, 1, NULL, NULL, 1, '2008-07-21 15:16:29'),
-(14, 5, 2, 1, NULL, NULL, 1, '2008-07-21 15:16:29'),
-(15, 5, 3, 1, NULL, NULL, 1, '2008-07-21 15:16:29'),
-(16, 6, 1, 1, NULL, NULL, 1, '2008-07-21 15:16:29'),
-(17, 6, 2, 1, NULL, NULL, 1, '2008-07-21 15:16:29'),
-(18, 6, 3, 1, NULL, NULL, 1, '2008-07-21 15:16:29'),
-(19, 7, 1, 1, NULL, NULL, 1, '2008-07-21 15:16:29'),
-(20, 7, 2, 1, NULL, NULL, 1, '2008-07-21 15:16:29'),
-(21, 7, 3, 1, NULL, NULL, 1, '2008-07-21 15:16:29');
+(4, 2, 1, 1, NULL, NULL, NULL, NULL),
+(5, 2, 2, 1, NULL, NULL, NULL, NULL),
+(6, 2, 3, 1, NULL, NULL, NULL, NULL),
+(7, 3, 1, 1, NULL, NULL, NULL, NULL),
+(8, 3, 2, 1, NULL, NULL, NULL, NULL),
+(9, 3, 3, 1, NULL, NULL, NULL, NULL),
+(10, 4, 1, 1, NULL, NULL, NULL, NULL),
+(11, 4, 2, 1, NULL, NULL, NULL, NULL),
+(12, 4, 3, 1, NULL, NULL, NULL, NULL),
+(13, 5, 1, 1, NULL, NULL, NULL, NULL),
+(14, 5, 2, 1, NULL, NULL, NULL, NULL),
+(15, 5, 3, 1, NULL, NULL, NULL, NULL),
+(16, 6, 1, 1, NULL, NULL, NULL, NULL),
+(17, 6, 2, 1, NULL, NULL, NULL, NULL),
+(18, 6, 3, 1, NULL, NULL, NULL, NULL),
+(19, 7, 1, 1, NULL, NULL, NULL, NULL),
+(20, 7, 2, 1, NULL, NULL, NULL, NULL),
+(21, 7, 3, 1, NULL, NULL, NULL, NULL);
 
 --
 -- Dumping data for table `role_transaction_type_authorization`
 --
 
-INSERT INTO `role_transaction_type_authorization` (`role_transaction_type_authorization_id`, `role_id`, `transaction_type_id`, `authorization_level_id`, `created_by`, `creation_date`, `modified_by`, `modified_date`) VALUES
-(1, 1, 1, 1, 1, '2008-07-21 05:16:29', NULL, NULL),
-(2, 1, 2, 1, 1, '2008-07-21 05:16:29', NULL, NULL),
-(3, 1, 3, 1, 1, '2008-07-21 05:16:29', NULL, NULL),
-(4, 1, 8, 1, 1, '2008-07-21 05:16:29', NULL, NULL),
-(5, 1, 9, 1, 1, '2008-07-21 05:16:29', NULL, NULL),
-(6, 1, 5, 1, 1, '2008-07-21 05:16:29', NULL, NULL),
-(7, 1, 4, 1, 1, '2008-07-21 05:16:29', NULL, NULL);
 
 --
 -- Dumping data for table `shipment`
@@ -981,7 +765,7 @@ INSERT INTO `transaction_type` (`transaction_type_id`, `short_description`, `ass
 --
 
 INSERT INTO `user_account` (`user_account_id`, `first_name`, `last_name`, `username`, `password_hash`, `email_address`, `active_flag`, `admin_flag`, `portable_access_flag`, `portable_user_pin`, `role_id`, `created_by`, `creation_date`, `modified_by`, `modified_date`) VALUES
-(1, 'Admin', 'User', 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', NULL, '', '', NULL, NULL, 1, 1, '2008-07-21 15:04:16', NULL, NULL);
+(1, 'Admin', 'User', 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', NULL, '', '', NULL, NULL, 1, 1, '2008-07-22 20:35:19', NULL, NULL);
 
 --
 -- Dumping data for table `weight_unit`
