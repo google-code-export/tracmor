@@ -986,56 +986,7 @@ protected function pnlAssets_Create($intModule){
 			$objRoleModule->RoleId = $this->objRole->RoleId;
 			$objRoleModule->AccessFlag = true;
 			$objRoleModule->Save();
-
-			/*
-				// Give view, edit, and delete access for ALL for the home module
-				if ($this->objAuthorizationArray) {
-				foreach ($this->objAuthorizationArray as $objAuthorization) {
-				$objRoleModuleAuthorization = new RoleModuleAuthorization();
-				$objRoleModuleAuthorization->RoleModuleId = $objRoleModule->RoleModuleId;
-				$objRoleModuleAuthorization->AuthorizationId = $objAuthorization->AuthorizationId;
-				$objRoleModuleAuthorization->AuthorizationLevelId = 3;
-				$objRoleModuleAuthorization->Save();
-				}
-				}
-				*/
 		}
-		/*
-			// Delete all RoleModules - this will cascade to all RoleModuleAuthorizations also
-			if ($this->blnEditMode) {
-			// Set the Role Module Access
-			$objRoleModuleArray = RoleModule::LoadArrayByRoleId($this->objRole->RoleId);
-			if ($objRoleModuleArray) {
-			foreach ($objRoleModuleArray as $objRoleModule) {
-			$objRoleModule->Delete();
-			$objRoleModule = null;
-			}
-			}
-			}
-
-			if ($this->objModuleArray) {
-
-			foreach ($this->objModuleArray as $objModule) {
-				
-			$objRoleModule = new RoleModule();
-			$objRoleModule->ModuleId = $objModule->ModuleId;
-			$objRoleModule->RoleId = $this->objRole->RoleId;
-			$objRoleModule->AccessFlag = $this->arrControls[$objModule->ShortDescription]['access']->SelectedValue;
-			$objRoleModule->Save();
-				
-			if ($this->objAuthorizationArray) {
-			foreach ($this->objAuthorizationArray as $objAuthorization) {
-			$objRoleModuleAuthorization = new RoleModuleAuthorization();
-			$objRoleModuleAuthorization->RoleModuleId = $objRoleModule->RoleModuleId;
-			$objRoleModuleAuthorization->AuthorizationId = $objAuthorization->AuthorizationId;
-			$objRoleModuleAuthorization->AuthorizationLevelId = $this->arrControls[$objModule->ShortDescription][$objAuthorization->ShortDescription]->SelectedValue;
-			$objRoleModuleAuthorization->Save();
-			$objRoleModuleAuthorization = null;
-			}
-			}
-			$objRoleModule = null;
-			}
-			}*/
 	}
 
 

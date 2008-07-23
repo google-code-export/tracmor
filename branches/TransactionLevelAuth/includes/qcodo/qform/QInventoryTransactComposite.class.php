@@ -272,6 +272,23 @@ class QInventoryTransactComposite extends QControl {
 					$this->lstSourceLocation->Enabled = false;
 					$this->txtQuantity->Enabled = false;
 				}
+				if ($this->intTransactionTypeId == 1 || $this->intTransactionTypeId == 5) {
+				  $objRoleTransactionTypeAuthorization = RoleTransactionTypeAuthorization::LoadByRoleIdTransactionTypeId(QApplication::$objUserAccount->RoleId,$this->intTransactionTypeId);
+          if ($objRoleTransactionTypeAuthorization) {
+            // If the user has 'None' privileges for this transaction
+            if ($objRoleTransactionTypeAuthorization->AuthorizationLevelId == 3) {
+      			  $this->txtNewInventoryModelCode->Warning = "You do not have privileges for this transaction.";
+      			  $this->lstSourceLocation->Enabled = false;
+					    $this->txtQuantity->Enabled = false;
+    			  }
+    			  // Check the user is the owner (if he has owner-only privileges)
+      			elseif ($objRoleTransactionTypeAuthorization->AuthorizationLevelId == 2 && $objInventoryModel->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
+      			  $this->txtNewInventoryModelCode->Warning = "You are not the owner of this inventory.";
+      			  $this->lstSourceLocation->Enabled = false;
+					    $this->txtQuantity->Enabled = false;
+      			}
+          }
+				}
 			}
 			else {
 				$this->txtNewInventoryModelCode->Warning = 'That is not a valid inventory code.';
@@ -311,6 +328,7 @@ class QInventoryTransactComposite extends QControl {
 						}
 					}
 				}
+				
 				if (!$blnError) {
 					$objNewInventoryLocation = InventoryLocation::LoadLocations($intNewInventoryLocationId);
 					// This should not be possible because the list is populated with existing InventoryLocations
@@ -328,42 +346,12 @@ class QInventoryTransactComposite extends QControl {
 							$this->txtQuantity->Warning = "Quantity moved cannot exceed quantity available.";
 							$blnError = true;
 						}
-						else {
-  					  $objRoleTransactionTypeAuthorization = RoleTransactionTypeAuthorization::LoadByRoleIdTransactionTypeId(QApplication::$objUserAccount->RoleId,1);
-              if ($objRoleTransactionTypeAuthorization) {
-                // If the user has 'None' privileges for this transaction
-                if ($objRoleTransactionTypeAuthorization->AuthorizationLevelId == 3) {
-      					  $blnError = true;
-      						$this->txtNewInventoryModelCode->Warning = "You do not have privileges for this transaction.";
-    					  }
-    					  // Check the user is the owner (if he has owner-only privileges)
-      					elseif ($objRoleTransactionTypeAuthorization->AuthorizationLevelId == 2 && $objNewInventoryLocation->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
-      					  $blnError = true;
-      						$this->txtNewInventoryModelCode->Warning = "You are not the owner of this asset.";
-      					}
-              }
-            }
 					}
 					elseif ($this->intTransactionTypeId == 5) {
 						if ($objNewInventoryLocation->Quantity < $intTransactionQuantity) {
 							$this->txtQuantity->Warning = "Quantity taken out cannot exceed quantity available.";
 							$blnError = true;
 						}
-						else {
-  					  $objRoleTransactionTypeAuthorization = RoleTransactionTypeAuthorization::LoadByRoleIdTransactionTypeId(QApplication::$objUserAccount->RoleId,5);
-              if ($objRoleTransactionTypeAuthorization) {
-                // If the user has 'None' privileges for this transaction
-                if ($objRoleTransactionTypeAuthorization->AuthorizationLevelId == 3) {
-      					  $blnError = true;
-      						$this->txtNewInventoryModelCode->Warning = "You do not have privileges for this transaction.";
-    					  }
-    					  // Check the user is the owner (if he has owner-only privileges)
-      					elseif ($objRoleTransactionTypeAuthorization->AuthorizationLevelId == 2 && $objNewInventoryLocation->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
-      					  $blnError = true;
-      						$this->txtNewInventoryModelCode->Warning = "You are not the owner of this asset.";
-      					}
-              }
-            }
 					}
 				}
 			}
@@ -389,21 +377,21 @@ class QInventoryTransactComposite extends QControl {
 					}
 				}
 			}
-			else {
-  		  $objRoleTransactionTypeAuthorization = RoleTransactionTypeAuthorization::LoadByRoleIdTransactionTypeId(QApplication::$objUserAccount->RoleId,4);
+			if (!$blnError) {
+			  $objRoleTransactionTypeAuthorization = RoleTransactionTypeAuthorization::LoadByRoleIdTransactionTypeId(QApplication::$objUserAccount->RoleId,4);
         if ($objRoleTransactionTypeAuthorization) {
           // If the user has 'None' privileges for this transaction
           if ($objRoleTransactionTypeAuthorization->AuthorizationLevelId == 3) {
+      		  $this->txtNewInventoryModelCode->Warning = "You do not have privileges for this transaction.";
       		  $blnError = true;
-      			$this->txtNewInventoryModelCode->Warning = "You do not have privileges for this transaction.";
     			}
     			// Check the user is the owner (if he has owner-only privileges)
-      		elseif ($objRoleTransactionTypeAuthorization->AuthorizationLevelId == 2 && $objNewInventoryLocation->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
+      		elseif ($objRoleTransactionTypeAuthorization->AuthorizationLevelId == 2 && $objNewInventoryModel->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
+      		  $this->txtNewInventoryModelCode->Warning = "You are not the owner of this inventory.";
       		  $blnError = true;
-      			$this->txtNewInventoryModelCode->Warning = "You are not the owner of this asset.";
       		}
         }
-     }
+			}
 			
 			if (!$blnError) {
 				// Create a new InventoryLocation for the time being
