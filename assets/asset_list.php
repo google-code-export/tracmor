@@ -46,7 +46,7 @@
 		protected $ctlShortcutMenu;
 		
 		// Search Menu
-		protected $ctlSearchMenu;
+		public $ctlSearchMenu;
 		
 		/*// Basic Inputs
 		protected $lstCategory;
@@ -230,7 +230,7 @@
   	
   	// Create and Setup the Asset Search Composite Control
   	protected function ctlSearchMenu_Create() {
-  		$this->ctlSearchMenu = new QAssetSearchComposite($this);
+  		$this->ctlSearchMenu = new QAssetSearchComposite($this, null, false);
   	}
   	
   	/*protected function ctlAdvanced_Create() {

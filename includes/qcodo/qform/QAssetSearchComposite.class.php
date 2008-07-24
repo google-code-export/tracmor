@@ -66,7 +66,7 @@ class QAssetSearchComposite extends QControl {
 	public $objParentObject;
 	
 	// We want to override the constructor in order to setup the subcontrols
-	public function __construct($objParentObject, $intEntityQtypeId = null, $strControlId = null) {
+	public function __construct($objParentObject, $strControlId = null, $blnShowCheckboxes = false) {
 		
     // First, call the parent to do most of the basic setup
     try {
@@ -93,11 +93,19 @@ class QAssetSearchComposite extends QControl {
     // Allow for CSV Export
     $this->dtgAsset->ShowExportCsv = true;
     
+    // Add a 'Select All' checkbox
+    $this->dtgAsset->ShowCheckboxes = true;
+    
     // Enable Pagination, and set to 20 items per page
     $objPaginator = new QPaginator($this->dtgAsset);
     $this->dtgAsset->Paginator = $objPaginator;
     $this->dtgAsset->ItemsPerPage = 20;
     
+    // If the user wants the checkboxes column
+    if ($blnShowCheckboxes) {
+    	// This will render all of the necessary controls and actions. chkSelected_Render expects a unique ID for each row of the database.
+    	$this->dtgAsset->AddColumn(new QDataGridColumnExt('<?=$_CONTROL->chkSelectAll_Render() ?>', '<?=$_CONTROL->chkSelected_Render($_ITEM->AssetId) ?>', 'CssClass="dtg_column"', 'HtmlEntities=false'));
+    }
     $this->dtgAsset->AddColumn(new QDataGridColumnExt('<img src=../images/icons/attachment_gray.gif border=0 title=Attachments alt=Attachments>', '<?= Attachment::toStringIcon($_ITEM->GetVirtualAttribute(\'attachment_count\')); ?>', 'SortByCommand="__attachment_count ASC"', 'ReverseSortByCommand="__attachment_count DESC"', 'CssClass="dtg_column"', 'HtmlEntities="false"'));
     $this->dtgAsset->AddColumn(new QDataGridColumnExt('Asset Code', '<?= $_ITEM->__toStringWithLink("bluelink") ?> <?= $_ITEM->ToStringHoverTips($_CONTROL) ?>', 'SortByCommand="asset_code ASC"', 'ReverseSortByCommand="asset_code DESC"', 'CssClass="dtg_column"', 'HtmlEntities="false"'));
     $this->dtgAsset->AddColumn(new QDataGridColumnExt('Asset Model', '<?= $_ITEM->AssetModel->__toStringWithLink("bluelink") ?>', 'SortByCommand="asset__asset_model_id__short_description ASC"', 'ReverseSortByCommand="asset__asset_model_id__short_description DESC"', 'CssClass="dtg_column"', 'HtmlEntities="false"'));
