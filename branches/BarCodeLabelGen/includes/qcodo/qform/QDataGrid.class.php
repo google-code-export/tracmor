@@ -10,6 +10,9 @@
 		protected $pnlColumnToggleButton;
 		protected $lblColumnToggleButton;
 		
+		protected $blnShowCheckboxes = false;
+		protected $chkSelectAll;
+		
 		// Feel free to specify global display preferences/defaults for all QDataGrid controls
 		public function __construct($objParentObject, $strControlId = null) {
 			try {
@@ -33,13 +36,22 @@
 			$objHeaderStyle = $this->objRowStyle->ApplyOverride($this->objHeaderRowStyle);
 
 			$strToReturn = sprintf('<tr %s>', $objHeaderStyle->GetAttributes());
+			
+			/*if ($this->blnShowCheckboxes) {
+				$strCheckboxStyle = $objHeaderStyle->GetAttributes();
+				$strToReturn .= sprintf('<th %s>%s</th>', $strCheckboxStyle, '<input type="checkbox">');
+			}*/
+			
 			$intColumnIndex = 0;
+			
 			if ($this->objColumnArray) foreach ($this->objColumnArray as $objColumn) {
 				
 				if ($objColumn->OrderByClause) {						
 					// This Column is Sortable
 					$strArrowImage = "";
-					$strName = $objColumn->Name;
+					
+					//$strName = $objColumn->Name;
+					$strName = $this->ParseColumnHeaderHtml($objColumn);
 
 					if ($intColumnIndex == $this->intSortColumnIndex) {
 						//$strName = strtoupper($strName);
@@ -61,7 +73,8 @@
 						$strName,
 						$strArrowImage);
 				} else
-					$strToReturn .= sprintf('<th %s>%s</th>', $this->objHeaderRowStyle->GetAttributes(true, true, $objColumn), $objColumn->Name);
+					//$strToReturn .= sprintf('<th %s>%s</th>', $this->objHeaderRowStyle->GetAttributes(true, true, $objColumn), $objColumn->Name);
+					$strToReturn .= sprintf('<th %s>%s</th>', $this->objHeaderRowStyle->GetAttributes(true, true, $objColumn), $this->ParseColumnHeaderHtml($objColumn));
 				$intColumnIndex++;
 			}
 			
@@ -74,6 +87,7 @@
 				$strToggleStyle = $this->objHeaderRowStyle->GetAttributes();
 				$strToReturn .= sprintf('<th %s>%s</th>', $strToggleStyle, $this->pnlColumnToggleButton->Render(false));
 			}
+			
 			$strToReturn .= '</tr>';
 
 			return $strToReturn;
@@ -85,6 +99,11 @@
 
 			// Iterate through the Columns
 			$strColumnsHtml = '';
+			
+			/*if ($this->blnShowCheckboxes) {
+				$strColumnsHtml = sprintf('<td %s>%s</td>', '', '<input type="checkbox">');
+			}*/
+			
 			foreach ($this->objColumnArray as $objColumn) {
 				try {
 					
@@ -256,6 +275,98 @@
 			return $this->ParseColumnHtml($objColumn, $objObject);
 		}
 		
+		// Used upon rendering to find backticks and perform PHP eval's
+		// This method was based on the ParseColumnHtml in DatagridBase.class.php, but is used for the datagrid header row
+		// The header row is different than a regular datagrid row because it doesn't also have an associated object l.
+		protected function ParseColumnHeaderHtml($objColumn) {
+			$_FORM = $this->objForm;
+			$_CONTROL = $this;
+			$_COLUMN = $objColumn;
+
+			$strHtml = $objColumn->Name;
+			$intPosition = 0;
+			
+			while (($intStartPosition = strpos($strHtml, '<?=', $intPosition)) !== false) {
+				$intEndPosition = strpos($strHtml, '?>', $intStartPosition);
+				if ($intEndPosition === false)
+					return $strHtml;
+				$strToken = substr($strHtml, $intStartPosition + 3, ($intEndPosition - $intStartPosition) - 3);
+				$strToken = trim($strToken);
+				
+				if ($strToken) {
+					// Because Eval doesn't utilize exception management, we need to do hack thru the PHP Error Handler
+					set_error_handler("DataGridEvalHandleError");
+					global $__exc_dtg_errstr;
+					$__exc_dtg_errstr = sprintf("Incorrectly formatted DataGridColumn HTML in %s: %s", $this->strControlId, $strHtml);
+
+					try {
+						$strEvaledToken = eval(sprintf('return %s;', $strToken));
+					} catch (QCallerException $objExc) {
+						$objExc->DecrementOffset();
+						throw $objExc;
+					}
+
+					// Restore the original error handler
+					set_error_handler("QcodoHandleError");
+					$__exc_dtg_errstr = null;
+					unset($__exc_dtg_errstr);
+				} else {
+					$strEvaledToken = '';
+				}
+
+				$strHtml = sprintf("%s%s%s",
+					substr($strHtml, 0, $intStartPosition),
+					$strEvaledToken,
+					substr($strHtml, $intEndPosition + 2));
+
+				$intPosition = $intStartPosition + strlen($strEvaledToken);
+			}
+
+			return $strHtml;
+		}
+		
+		// Render the Select All checkbox to be displayed in the datagrid header row
+		public function chkSelectAll_Render() {
+			
+			if (!$this->chkSelectAll) {
+		  	$this->chkSelectAll = new QCheckBox($this);
+		  	$this->chkSelectAll->Name = 'Select All';
+		  	$this->chkSelectAll->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'chkSelectAll_Click'));
+			}
+			
+			return $this->chkSelectAll->Render(false);
+		}
+		
+		// This method (declared as public) will render the checkboxes for the datagrid
+		// $intId should be the primary key of the object in the database. It is used to name the controls so we can keep track of them.
+	  public function chkSelected_Render($intId) {
+	  	
+	    $strControlId = 'chkSelected' . $intId;
+	    // Let's see if the Checkbox exists already
+	    $chkSelected = $this->objForm->GetControl($strControlId);
+	    if (!$chkSelected) {
+        $chkSelected = new QCheckBox($this, $strControlId);
+        // We'll use Control Parameters to help us identify the Person ID being copied
+        $chkSelected->ActionParameter = $intId;
+        if ($this->chkSelectAll->Checked) {
+        	$chkSelected->Checked = true;
+        }
+	    }
+	    return $chkSelected->Render(false);
+	  }
+	  
+	  // If the header row checkbox is clicked, it will check all controls
+	  // Note that it only checks the checkboxes which have already been created (if the page has been viewed).
+	  // This is done so that we do not create too many controls with datagrids with a very large number of items.
+	  // When creating new checkboxes, it will assign it's value to all new checkboxes.
+	  public function chkSelectAll_Click() {
+	  	foreach ($this->objForm->GetAllControls() as $objControl) {
+	      if (substr($objControl->ControlId, 0, 11) == 'chkSelected') {
+	      	$objControl->Checked = $this->chkSelectAll->Checked;
+	      }
+	    }
+	  }
+		
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
@@ -293,6 +404,15 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+					
+				case "ShowCheckboxes":
+					try {
+						$this->blnShowCheckboxes = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}					
 					
 				case "ShowExportCsv":
 					try {
