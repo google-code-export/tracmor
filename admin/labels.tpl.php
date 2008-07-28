@@ -51,7 +51,7 @@
 					<table>
             <tr>
               <td>
-                 <?php $this->ctlSearchMenu->Render(); ?>		
+                 <?php $this->ctlSearchMenu->Render(); ?>
               </td>
             </tr>
 					</table>
