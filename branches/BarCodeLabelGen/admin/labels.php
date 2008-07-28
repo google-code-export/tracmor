@@ -73,6 +73,7 @@
 		protected function objLabelTypeControl_Create() {
 			$this->objLabelTypeControl = new QListBox($this);
 			$this->objLabelTypeControl->Width = 100;
+			$this->objLabelTypeControl->AddItem(new QListItem('-Select-',0));
 			$this->objLabelTypeControl->AddItem(new QListItem('Assets',1));
 			$this->objLabelTypeControl->AddItem(new QListItem('Inventory',2));
 			$this->objLabelTypeControl->AddItem(new QListItem('Locations',3));
@@ -80,14 +81,14 @@
 			$this->objLabelTypeControl->AddAction(new QChangeEvent(), new QAjaxAction('objLabelTypeControl_Change'));
 		}
 		
-		// 
+		// Create and display the search on change Label Type
 		protected function objLabelTypeControl_Change() {
       switch ($this->objLabelTypeControl->SelectedValue) {
   		  case 1:
   		    $this->ctlSearchMenu = new QAssetSearchComposite($this, null, true);
   		    break;
   		  case 2:
-  		    
+  		    $this->ctlSearchMenu = new QInventorySearchComposite($this, null, true);
   		    break;
   		  case 3:
   		    
@@ -98,6 +99,7 @@
   		  default:
   		    break;
   		}
+  		
 		}
 		
 		// Create and Setup the Asset Search Composite Control
