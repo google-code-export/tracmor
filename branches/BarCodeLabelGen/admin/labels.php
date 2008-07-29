@@ -42,7 +42,10 @@
 		protected $ctlSearchMenu;
 		
 		// Buttons
-		protected $btnSave;
+		protected $btnPrintLabels;
+		
+		// Array of ObjectIds of checked items 
+		protected $intObjectIdArray;
 		
 		protected function Form_Create() {
 			// Create the Header Menu
@@ -57,7 +60,7 @@
 			
 			$this->objLabelTypeControl_Create();
 			// Create Buttons
-			//$this->btnSave_Create();
+			$this->btnPrintLabels_Create();
 			
 			// Create Panels
 			//$this->pnlSaveNotification_Create();
@@ -82,7 +85,8 @@
 		
 		// Create and display the search on change Label Type
 		protected function objLabelTypeControl_Change() {
-      switch ($this->objLabelTypeControl->SelectedValue) {
+      // Create and display search control
+		  switch ($this->objLabelTypeControl->SelectedValue) {
   		  case 1:
   		    $this->ctlSearchMenu = new QAssetSearchComposite($this, null, true);
   		    break;
@@ -93,12 +97,41 @@
   		    $this->ctlSearchMenu = new QLocationSearchComposite($this, null, true);
   		    break;
   		  case 4:
-  		    $this->ctlHeaderMenu = new QUserSearchComposite($this, null, true);
+  		    $this->ctlSearchMenu = new QUserSearchComposite($this, null, true);
   		    break;  
   		  default:
   		    break;
   		}
+  		// Uncheck all on change Label Type
+      foreach ($this->GetAllControls() as $objControl) {
+        if (substr($objControl->ControlId, 0, 11) == 'chkSelected') {
+          $objControl->Checked = false;
+        }
+      }
+      if (!$this->ctlSearchMenu) $this->btnPrintLabels->Display = false;
+      else $this->btnPrintLabels->Display = true;
   	}
+  	
+  	// Create and Setup the PrintLabels Button
+		protected function btnPrintLabels_Create() {
+			$this->btnPrintLabels = new QButton($this);
+			$this->btnPrintLabels->Text = 'Print Labels';
+			$this->btnPrintLabels->AddAction(new QClickEvent(), new QServerAction('btnPrintLabels_Click'));
+			$this->btnPrintLabels->Display = false;
+		}
+		
+		// PrintLables button click action
+		protected function btnPrintLabels_Click() {
+		  $this->intObjectIdArray = array();
+			foreach ($this->GetAllControls() as $objControl) {
+        if (substr($objControl->ControlId, 0, 11) == 'chkSelected') {
+          if ($objControl->Checked) {
+            array_push($this->intObjectIdArray, $objControl->ActionParameter);
+          }
+        }
+      }
+      //print_r($this->intObjectIdArray);
+		}
 		
 		/*// Create and Setup the MinAssetCode Text Field
 		protected function txtMinAssetCode_Create() {
