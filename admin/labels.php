@@ -56,7 +56,6 @@
 			//$this->chkPortablePinRequired_Create();
 			
 			$this->objLabelTypeControl_Create();
-			$this->ctlSearchMenu_Create();
 			// Create Buttons
 			//$this->btnSave_Create();
 			
@@ -72,13 +71,13 @@
 		// Create and Setup the Label Type drop-down select list
 		protected function objLabelTypeControl_Create() {
 			$this->objLabelTypeControl = new QListBox($this);
-			$this->objLabelTypeControl->Width = 100;
-			$this->objLabelTypeControl->AddItem(new QListItem('-Select-',0));
+			$this->objLabelTypeControl->Width = 150;
+			$this->objLabelTypeControl->AddItem(new QListItem('- Select One -',0));
 			$this->objLabelTypeControl->AddItem(new QListItem('Assets',1));
 			$this->objLabelTypeControl->AddItem(new QListItem('Inventory',2));
 			$this->objLabelTypeControl->AddItem(new QListItem('Locations',3));
 			$this->objLabelTypeControl->AddItem(new QListItem('Users',4));
-			$this->objLabelTypeControl->AddAction(new QChangeEvent(), new QAjaxAction('objLabelTypeControl_Change'));
+			$this->objLabelTypeControl->AddAction(new QChangeEvent(), new QServerAction('objLabelTypeControl_Change'));
 		}
 		
 		// Create and display the search on change Label Type
@@ -91,22 +90,16 @@
   		    $this->ctlSearchMenu = new QInventorySearchComposite($this, null, true);
   		    break;
   		  case 3:
-  		    
+  		    $this->ctlSearchMenu = new QLocationSearchComposite($this, null, true);
   		    break;
   		  case 4:
-  		    
+  		    $this->ctlHeaderMenu = new QUserSearchComposite($this, null, true);
   		    break;  
   		  default:
   		    break;
   		}
-  		
-		}
-		
-		// Create and Setup the Asset Search Composite Control
-  	protected function ctlSearchMenu_Create() {
-  		$this->ctlSearchMenu = new QAssetSearchComposite($this, null, true);
   	}
-  	
+		
 		/*// Create and Setup the MinAssetCode Text Field
 		protected function txtMinAssetCode_Create() {
 			$this->txtMinAssetCode = new QTextBox($this);

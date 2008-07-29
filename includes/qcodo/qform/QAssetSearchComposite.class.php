@@ -161,6 +161,12 @@ class QAssetSearchComposite extends QControl {
 		
 	}
 	
+	public function SetDataBinderByAjax() {
+	  $this->dtgAsset->SetDataBinder('dtgAsset_Bind', $this);
+	  $this->dtgAsset_Bind();
+	  $this->btnSearch_Click();
+	}
+	
 	public function GetJavaScriptAction() {
 			return "onchange";
 	}

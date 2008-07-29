@@ -48,10 +48,10 @@
 							<td class="record_field_edit"><?php $this->objLabelTypeControl->RenderWithError(); ?></td>
 						</tr>
 					</table>
-					<table>
+					<table width="100%">
             <tr>
               <td>
-                 <?php $this->ctlSearchMenu->Render(); ?>
+                 <?php if ($this->ctlSearchMenu) $this->ctlSearchMenu->Render(); ?>
               </td>
             </tr>
 					</table>
