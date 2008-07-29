@@ -63,7 +63,7 @@ class QLocationSearchComposite extends QControl {
     // If the user wants the checkboxes column
     if ($blnShowCheckboxes) {
     	// This will render all of the necessary controls and actions. chkSelected_Render expects a unique ID for each row of the database.
-    	$this->dtgLocation->AddColumn(new QDataGridColumnExt('<?=$_CONTROL->chkSelectAll_Render() ?>', '<?=$_CONTROL->chkSelected_Render("Location".$_ITEM->LocationId) ?>', 'CssClass="dtg_column"', 'HtmlEntities=false'));
+    	$this->dtgLocation->AddColumn(new QDataGridColumnExt('<?=$_CONTROL->chkSelectAll_Render() ?>', '<?=$_CONTROL->chkSelected_Render($_ITEM->LocationId) ?>', 'CssClass="dtg_column"', 'HtmlEntities=false'));
     }
     $this->dtgLocation->AddColumn(new QDataGridColumnExt('Location', '<?= $_ITEM->__toStringWithLink("bluelink") ?>', 'SortByCommand="short_description ASC"', 'ReverseSortByCommand="short_description DESC"', 'CssClass="dtg_column"', 'HtmlEntities=false'));
     $this->dtgLocation->AddColumn(new QDataGridColumnExt('Description', '<?= $_ITEM->LongDescription ?>', 'Width=200', 'SortByCommand="long_description ASC"', 'ReverseSortByCommand="long_description DESC"', 'CssClass="dtg_column"'));

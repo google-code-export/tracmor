@@ -63,7 +63,7 @@ class QUserSearchComposite extends QControl {
     // If the user wants the checkboxes column
     if ($blnShowCheckboxes) {
     	// This will render all of the necessary controls and actions. chkSelected_Render expects a unique ID for each row of the database.
-    	$this->dtgUserAccount->AddColumn(new QDataGridColumnExt('<?=$_CONTROL->chkSelectAll_Render() ?>', '<?=$_CONTROL->chkSelected_Render("User".$_ITEM->UserAccountId) ?>', 'CssClass="dtg_column"', 'HtmlEntities=false'));
+    	$this->dtgUserAccount->AddColumn(new QDataGridColumnExt('<?=$_CONTROL->chkSelectAll_Render() ?>', '<?=$_CONTROL->chkSelected_Render($_ITEM->UserAccountId) ?>', 'CssClass="dtg_column"', 'HtmlEntities=false'));
     }
     $this->dtgUserAccount->AddColumn(new QDataGridColumnExt('Username', '<?= $_ITEM->__toStringWithLink("bluelink") ?>', array('OrderByClause' => QQ::OrderBy(QQN::UserAccount()->Username), 'ReverseOrderByClause' => QQ::OrderBy(QQN::UserAccount()->Username, false), 'CssClass' => "dtg_column", 'HtmlEntities' => false)));
     $this->dtgUserAccount->AddColumn(new QDataGridColumnExt('Name', '<?= $_ITEM->FirstName ?> <?= $_ITEM->LastName ?>', array('OrderByClause' => QQ::OrderBy(QQN::UserAccount()->LastName, false, QQN::UserAccount()->FirstName, false), 'ReverseOrderByClause' => QQ::OrderBy(QQN::UserAccount()->LastName, QQN::UserAccount()->FirstName), 'CssClass' => "dtg_column")));

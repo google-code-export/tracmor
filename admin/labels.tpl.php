@@ -55,6 +55,8 @@
               </td>
             </tr>
 					</table>
+					<br />
+					<?php $this->btnPrintLabels->Render(); ?>
 				</td>
 			</tr>
    </table>
