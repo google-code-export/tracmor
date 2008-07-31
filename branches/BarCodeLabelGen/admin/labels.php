@@ -27,20 +27,15 @@
 		// Header Menu
 		protected $ctlHeaderMenu;
 		
-		// Inputs
-		/*protected $txtMinAssetCode;
-		protected $txtImageUploadPrefix;
-		protected $chkCustomShipmentNumbers;
-		protected $chkCustomReceiptNumbers;
-		protected $chkPortablePinRequired;
-		protected $pnlSaveNotification;
-		*/
 		// Drop-down select list
 		protected $objLabelTypeControl;
-		
+		// Modal dialog for printing labels
+		protected $dlgPrintLabels;
+		protected $objLabelStock;
+		protected $objLabelOffset;
+		protected $btnPrint;
 		// Search Menu
 		protected $ctlSearchMenu;
-		
 		// Buttons
 		protected $btnPrintLabels;
 		
@@ -50,20 +45,43 @@
 		protected function Form_Create() {
 			// Create the Header Menu
 			$this->ctlHeaderMenu_Create();
-			
-			// Create Inputs
-			//$this->txtMinAssetCode_Create();
-			//$this->txtImageUploadPrefix_Create();
-			//$this->chkCustomShipmentNumbers_Create();
-			//$this->chkCustomReceiptNumbers_Create();
-			//$this->chkPortablePinRequired_Create();
-			
+			// Create Label Type
 			$this->objLabelTypeControl_Create();
-			// Create Buttons
+
+			// Create Modal Window for Printing Labels
 			$this->btnPrintLabels_Create();
-			
-			// Create Panels
-			//$this->pnlSaveNotification_Create();
+			$this->dlgPrintLabels = new QDialogBox($this);
+      $this->dlgPrintLabels->Text = '';
+      
+      // Let's setup some basic appearance options
+      $this->dlgPrintLabels->Width = '300px';
+      $this->dlgPrintLabels->Height = '100px';
+      $this->dlgPrintLabels->Overflow = QOverflow::Auto;
+      $this->dlgPrintLabels->Padding = '10px';
+      $this->dlgPrintLabels->FontSize = '12px';
+      //$this->dlgPrintLabels->FontNames = QFontFamily::Georgia;
+      $this->dlgPrintLabels->BackColor = '#ffffff';
+      // Make sure this Dislog Box is "hidden"
+      $this->dlgPrintLabels->Display = false;
+
+      // Add some contorls into modal window
+      //$txtLabelStock = new QLabel($this->dlgPrintLabels);
+      //$txtLabelStock->Text = "Label Stock: ";
+      $this->objLabelStock = new QListBox($this->dlgPrintLabels);
+      $this->objLabelStock->Width = 200;
+      $this->objLabelStock->AddItem(new QListItem('- Select One -',0));
+			$this->objLabelStock->AddItem(new QListItem('Avery 6577 (5/8" x 3")',1));
+			$this->objLabelStock->AddItem(new QListItem('Avery 6576 (1-1/4" x 1-3/4")',2));
+			//$txtLabelOffset = new QLabel($this->dlgPrintLabels);
+			//$txtLabelOffset->Text = "Label Offset: ";
+			$this->objLabelOffset = new QListBox($this->dlgPrintLabels);
+			$this->objLabelOffset->Width = 200;
+			$this->objLabelOffset->AddItem(new QListItem('None',0));
+			$this->btnPrint = new QButton($this->dlgPrintLabels);
+			$this->btnPrint->Text = "Print";
+			$this->btnPrint->AddAction(new QClickEvent(), new QAjaxAction('btnPrint_Click'));
+			//$this->dlgPrintLabels->AutoRenderChildren = true;
+      $this->dlgPrintLabels->Template = 'labels_printing_labels.tpl.php';
 		}
 		
 		// Create and Setup the Header Composite Control
@@ -116,7 +134,7 @@
 		protected function btnPrintLabels_Create() {
 			$this->btnPrintLabels = new QButton($this);
 			$this->btnPrintLabels->Text = 'Print Labels';
-			$this->btnPrintLabels->AddAction(new QClickEvent(), new QServerAction('btnPrintLabels_Click'));
+			$this->btnPrintLabels->AddAction(new QClickEvent(), new QAjaxAction('btnPrintLabels_Click'));
 			$this->btnPrintLabels->Display = false;
 		}
 		
@@ -130,88 +148,25 @@
           }
         }
       }
-      //print_r($this->intObjectIdArray);
+      
+      if (count($this->intObjectIdArray)) {
+		    $this->dlgPrintLabels->ShowDialogBox();
+		  }
+		  else {
+		    // There must be alert message
+		    
+		  }
 		}
 		
-		/*// Create and Setup the MinAssetCode Text Field
-		protected function txtMinAssetCode_Create() {
-			$this->txtMinAssetCode = new QTextBox($this);
-			$this->txtMinAssetCode->Name = 'Minimum Asset Code';
-			$this->txtMinAssetCode->Text = QApplication::$TracmorSettings->MinAssetCode;
+		protected function btnPrint_Click() {
+		  if ($this->objLabelStock->SelectedValue) {
+		    $this->objLabelStock->Warning = "";
+		    
+		  }
+		  else {
+		    $this->objLabelStock->Warning = "Please select one";
+		  }
 		}
-		
-		// Create and Setup the MinAssetCode Text Field
-		protected function txtImageUploadPrefix_Create() {
-			$this->txtImageUploadPrefix = new QTextBox($this);
-			$this->txtImageUploadPrefix->Name = 'Image Upload Prefix';
-			$this->txtImageUploadPrefix->Text = QApplication::$TracmorSettings->ImageUploadPrefix;
-		}
-		
-		// Create and Setup the CustomShipmentNumbers Checkbox
-		protected function chkCustomShipmentNumbers_Create() {
-			$this->chkCustomShipmentNumbers = new QCheckBox($this);
-			$this->chkCustomShipmentNumbers->Name = 'Custom Shipment Numbers';
-			if (QApplication::$TracmorSettings->CustomShipmentNumbers == '1') {
-				$this->chkCustomShipmentNumbers->Checked = true;
-			}
-			else {
-				$this->chkCustomShipmentNumbers->Checked = false;
-			}
-		}
-		
-		// Create and Setup the CustomShipmentNumbers Checkbox
-		protected function chkCustomReceiptNumbers_Create() {
-			$this->chkCustomReceiptNumbers = new QCheckBox($this);
-			$this->chkCustomReceiptNumbers->Name = 'Custom Receipt Numbers';
-			if (QApplication::$TracmorSettings->CustomReceiptNumbers == '1') {
-				$this->chkCustomReceiptNumbers->Checked = true;
-			}
-			else {
-				$this->chkCustomReceiptNumbers->Checked = false;
-			}
-		}
-		
-		// Create and Setup the PortablePinRequired Checkbox
-		protected function chkPortablePinRequired_Create() {
-			$this->chkPortablePinRequired = new QCheckBox($this);
-			$this->chkPortablePinRequired->Name = 'Portabl Pin Required';
-			if (QApplication::$TracmorSettings->PortablePinRequired == '1') {
-				$this->chkPortablePinRequired->Checked = true;
-			}
-			else {
-				$this->chkPortablePinRequired->Checked = false;
-			}
-		}
-		
-		// Create and Setup the Save Buttons
-		protected function btnSave_Create() {
-			$this->btnSave = new QButton($this);
-			$this->btnSave->Text = 'Save';
-			$this->btnSave->AddAction(new QClickEvent(), new QAjaxAction('btnSave_Click'));
-		}
-		
-		// Create and Setup the Save Notification Panel
-		protected function pnlSaveNotification_Create() {
-			$this->pnlSaveNotification = new QPanel($this);
-			$this->pnlSaveNotification->Name = 'Save Notification';
-			$this->pnlSaveNotification->Text = 'Your settings have been saved';
-			$this->pnlSaveNotification->CssClass="save_notification";
-			$this->pnlSaveNotification->Display = false;
-		}
-		
-		// Save button click action
-		// Setting a TracmorSetting saves it to the database automagically because the __set() method has been altered
-		protected function btnSave_Click() {
-			QApplication::$TracmorSettings->MinAssetCode = $this->txtMinAssetCode->Text;
-			QApplication::$TracmorSettings->ImageUploadPrefix = $this->txtImageUploadPrefix->Text;
-			// We have to cast these to string because the admin_settings value column is TEXT, and checkboxes give boolean values
-			QApplication::$TracmorSettings->CustomShipmentNumbers = (string) $this->chkCustomShipmentNumbers->Checked;
-			QApplication::$TracmorSettings->CustomReceiptNumbers = (string) $this->chkCustomReceiptNumbers->Checked;
-			QApplication::$TracmorSettings->PortablePinRequired = (string) $this->chkPortablePinRequired->Checked;
-			
-			// Show saved notification
-			$this->pnlSaveNotification->Display = true;
-		}*/
 	}
 
   	// Go ahead and run this form object to generate the page
