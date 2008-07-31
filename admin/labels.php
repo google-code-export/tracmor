@@ -150,11 +150,12 @@
       }
       
       if (count($this->intObjectIdArray)) {
+        $this->btnPrintLabels->Warning = "";
 		    $this->dlgPrintLabels->ShowDialogBox();
 		  }
 		  else {
 		    // There must be alert message
-		    
+		    $this->btnPrintLabels->Warning = "You must check at least one item.";
 		  }
 		}
 		
