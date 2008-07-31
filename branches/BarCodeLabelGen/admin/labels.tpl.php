@@ -57,7 +57,7 @@
 					</table>
 					<br />
 					<?php $this->dlgPrintLabels->Render(); ?>
-					<?php $this->btnPrintLabels->Render(); ?>
+					<?php $this->btnPrintLabels->RenderWithError(); ?>
 				</td>
 			</tr>
    </table>
