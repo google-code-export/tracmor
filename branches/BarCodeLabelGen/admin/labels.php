@@ -140,14 +140,20 @@
 		
 		// PrintLables button click action
 		protected function btnPrintLabels_Click() {
-		  $this->intObjectIdArray = array();
-			foreach ($this->GetAllControls() as $objControl) {
+			
+			$this->intObjectIdArray = array();
+			
+			/*foreach ($this->GetAllControls() as $objControl) {
         if (substr($objControl->ControlId, 0, 11) == 'chkSelected') {
           if ($objControl->Checked) {
             array_push($this->intObjectIdArray, $objControl->ActionParameter);
           }
         }
-      }
+      }*/
+			
+			$this->intObjectIdArray = array();
+			// You will need to put a switch statement in here to make this work for all four entity types
+		  $this->intObjectIdArray = $this->ctlSearchMenu->dtgAsset->GetSelected('AssetId');
       
       if (count($this->intObjectIdArray)) {
         $this->btnPrintLabels->Warning = "";
@@ -167,6 +173,8 @@
 		  else {
 		    $this->objLabelStock->Warning = "Please select one";
 		  }
+		  
+		  
 		}
 	}
 

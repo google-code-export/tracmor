@@ -62,7 +62,7 @@ class QAssetSearchComposite extends QControl {
 	protected $strDateModifiedLast;
 	protected $blnAttachment;
 	
-	protected $dtgAsset;
+	public $dtgAsset;
 	public $objParentObject;
 	
 	// We want to override the constructor in order to setup the subcontrols

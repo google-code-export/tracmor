@@ -366,6 +366,59 @@
 	      }
 	    }
 	  }
+	  
+	  public function GetSelected($strId) {
+	  	$intObjectIdArray = array();
+	  	/*$intNotCheckedObjectIdArray = array();
+	  	foreach ($this->objForm->GetAllControls() as $objControl) {
+        if (substr($objControl->ControlId, 0, 11) == 'chkSelected') {
+          if ($objControl->Checked) {
+            array_push($this->intObjectIdArray, $objControl->ActionParameter);
+          }
+          else {
+          	array_push($intNotCheckedObjectIdArray, $objControl->ActionParameter);
+          }
+        }
+      }*/
+	  	
+      if ($this->chkSelectAll->Checked) {
+      	
+      	$intItemsPerPage = $this->ItemsPerPage;
+      	$intPageNumber = $this->PageNumber;
+      	
+      	$this->ItemsPerPage = 200000000;
+      	$this->PageNumber = 1;
+      	
+      	$this->DataBind();
+      	
+      	foreach ($this->DataSource as $objObject) {
+      		if ($chkControl = $this->objForm->GetControl('chkSelected' . $objObject->$strId)) {
+      			if ($chkControl->Checked) {
+      				array_push($intObjectIdArray, $objObject->$strId);
+      			}
+      		}
+      		elseif ($this->chkSelectAll->Checked) {
+      			array_push($intObjectIdArray, $objObject->$strId);
+      		}
+      	}
+	  	}
+	  	else {
+	  		foreach ($this->objForm->GetAllControls() as $objControl) {
+	        if (substr($objControl->ControlId, 0, 11) == 'chkSelected') {
+	          if ($objControl->Checked) {
+	            array_push($intObjectIdArray, $objControl->ActionParameter);
+	          }
+	        }
+	  		}
+	  	}
+	  	
+	  	$this->ItemsPerPage = $intItemsPerPage;
+      $this->PageNumber = $intPageNumber;
+      
+      $this->DataBind();
+	  	
+	  	return $intObjectIdArray;
+	  }
 		
 		/////////////////////////
 		// Public Properties: GET
