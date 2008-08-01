@@ -24,7 +24,7 @@
 
 class QLocationSearchComposite extends QControl {
 	
-	protected $dtgLocation;
+	public $dtgLocation;
 	public $objParentObject;
 	
 	// We want to override the constructor in order to setup the subcontrols
