@@ -412,10 +412,10 @@
 	  		}
 	  	}
 	  	
-	  	$this->ItemsPerPage = $intItemsPerPage;
-      $this->PageNumber = $intPageNumber;
+	  	//$this->ItemsPerPage = $intItemsPerPage;
+      //$this->PageNumber = $intPageNumber;
       
-      $this->DataBind();
+      //$this->DataBind();
 	  	
 	  	return $intObjectIdArray;
 	  }

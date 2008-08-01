@@ -56,7 +56,7 @@ class QInventorySearchComposite extends QControl {
 	protected $strDateModifiedLast;
 	protected $blnAttachment;
 	
-	protected $dtgInventoryModel;
+	public $dtgInventoryModel;
 	public $objParentObject;
 	
 	// We want to override the constructor in order to setup the subcontrols

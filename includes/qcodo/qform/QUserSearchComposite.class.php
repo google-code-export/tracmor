@@ -24,7 +24,7 @@
 
 class QUserSearchComposite extends QControl {
 	
-	protected $dtgUserAccount;
+	public $dtgUserAccount;
 	public $objParentObject;
 	
 	// We want to override the constructor in order to setup the subcontrols
