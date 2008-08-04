@@ -328,7 +328,7 @@ class QAssetSearchComposite extends QControl {
 		$this->btnSearch->Name = 'search';
 		$this->btnSearch->Text = 'Search';
 		$this->btnSearch->AddAction(new QClickEvent(), new QServerControlAction($this, 'btnSearch_Click'));
-		$this->btnSearch->AddAction(new QEnterKeyEvent(), new QServerAction($this, 'btnSearch_Click'));
+		$this->btnSearch->AddAction(new QEnterKeyEvent(), new QServerControlAction($this, 'btnSearch_Click'));
 		$this->btnSearch->AddAction(new QEnterKeyEvent(), new QTerminateAction());
   }
   

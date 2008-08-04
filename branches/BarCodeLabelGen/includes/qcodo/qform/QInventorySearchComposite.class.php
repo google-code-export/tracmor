@@ -238,7 +238,7 @@ class QInventorySearchComposite extends QControl {
  		foreach (Location::LoadAllLocations(false, false, 'short_description') as $objLocation) {
  			$this->lstLocation->AddItem($objLocation->ShortDescription, $objLocation->LocationId);
  		}
-    $this->lstLocation->AddAction(new QEnterKeyEvent(), new QServerAction('btnSearch_Click'));
+    $this->lstLocation->AddAction(new QEnterKeyEvent(), new QServerControlAction($this, 'btnSearch_Click'));
     $this->lstLocation->AddAction(new QEnterKeyEvent(), new QTerminateAction());  		
  	}
 
@@ -263,14 +263,14 @@ class QInventorySearchComposite extends QControl {
 	protected function txtShortDescription_Create() {
 	  $this->txtShortDescription = new QTextBox($this);
 		$this->txtShortDescription->Name = 'Model';
-    $this->txtShortDescription->AddAction(new QEnterKeyEvent(), new QServerAction('btnSearch_Click'));
+    $this->txtShortDescription->AddAction(new QEnterKeyEvent(), new QServerControlAction($this, 'btnSearch_Click'));
     $this->txtShortDescription->AddAction(new QEnterKeyEvent(), new QTerminateAction());
 	}
 	  
 	protected function txtInventoryModelCode_Create() {
 	 	$this->txtInventoryModelCode = new QTextBox($this);
 	 	$this->txtInventoryModelCode->Name = 'Inventory Code';
-	 	$this->txtInventoryModelCode->AddAction(new QEnterKeyEvent(), new QServerAction('btnSearch_Click'));
+	 	$this->txtInventoryModelCode->AddAction(new QEnterKeyEvent(), new QServerControlAction($this, 'btnSearch_Click'));
 	 	$this->txtInventoryModelCode->AddAction(new QEnterKeyEvent(), new QTerminateAction());
 	}
   
@@ -287,8 +287,8 @@ class QInventorySearchComposite extends QControl {
 		$this->btnSearch = new QButton($this);
 		$this->btnSearch->Name = 'search';
 		$this->btnSearch->Text = 'Search';
-		$this->btnSearch->AddAction(new QClickEvent(), new QServerAction('btnSearch_Click'));
-		$this->btnSearch->AddAction(new QEnterKeyEvent(), new QServerAction('btnSearch_Click'));
+		$this->btnSearch->AddAction(new QClickEvent(), new QServerControlAction($this, 'btnSearch_Click'));
+		$this->btnSearch->AddAction(new QEnterKeyEvent(), new QServerControlAction($this, 'btnSearch_Click'));
 		$this->btnSearch->AddAction(new QEnterKeyEvent(), new QTerminateAction());
   }
 	  
@@ -296,8 +296,8 @@ class QInventorySearchComposite extends QControl {
   	$this->btnClear = new QButton($this);
 		$this->btnClear->Name = 'clear';
 		$this->btnClear->Text = 'Clear';
-		$this->btnClear->AddAction(new QClickEvent(), new QServerAction('btnClear_Click'));
-		$this->btnClear->AddAction(new QEnterKeyEvent(), new QServerAction('btnClear_Click'));
+		$this->btnClear->AddAction(new QClickEvent(), new QServerControlAction($this, 'btnClear_Click'));
+		$this->btnClear->AddAction(new QEnterKeyEvent(), new QServerControlAction($this, 'btnClear_Click'));
 		$this->btnClear->AddAction(new QEnterKeyEvent(), new QTerminateAction());
   }
 	  
@@ -306,17 +306,17 @@ class QInventorySearchComposite extends QControl {
   	$this->lblAdvanced->Name = 'Advanced';
   	$this->lblAdvanced->Text = 'Advanced Search';
   	$this->lblAdvanced->AddAction(new QClickEvent(), new QToggleDisplayAction($this->ctlAdvanced));
-  	$this->lblAdvanced->AddAction(new QClickEvent(), new QAjaxAction('lblAdvanced_Click'));
+  	$this->lblAdvanced->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'lblAdvanced_Click'));
   	$this->lblAdvanced->SetCustomStyle('text-decoration', 'underline');
   	$this->lblAdvanced->SetCustomStyle('cursor', 'pointer');
   }
 	  
-  protected function btnSearch_Click() {
+  public function btnSearch_Click() {
   	$this->blnSearch = true;
 		$this->dtgInventoryModel->PageNumber = 1;
   }
 
-  protected function btnClear_Click() {
+  public function btnClear_Click() {
  		// Set controls to null
   	$this->lstCategory->SelectedIndex = 0;
   	$this->lstManufacturer->SelectedIndex = 0;
@@ -344,7 +344,7 @@ class QInventorySearchComposite extends QControl {
   	$this->blnSearch = false;
  	}
   	
-  protected function lblAdvanced_Click() {
+  public function lblAdvanced_Click() {
   	if ($this->blnAdvanced) {
   		
   		$this->blnAdvanced = false;
