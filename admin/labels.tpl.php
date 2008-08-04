@@ -45,7 +45,7 @@
 					<table>
 						<tr>
 							<td class="record_field_name">Label Type: </td>
-							<td class="record_field_edit"><?php $this->objLabelTypeControl->RenderWithError(); ?></td>
+							<td class="record_field_edit"><?php $this->lstLabelTypeControl->RenderWithError(); ?></td>
 						</tr>
 					</table>
 					<table width="100%">

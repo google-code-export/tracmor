@@ -28,11 +28,11 @@
 		protected $ctlHeaderMenu;
 		
 		// Drop-down select list
-		protected $objLabelTypeControl;
+		protected $lstLabelTypeControl;
 		// Modal dialog for printing labels
 		protected $dlgPrintLabels;
-		protected $objLabelStock;
-		protected $objLabelOffset;
+		protected $lstLabelStock;
+		protected $lstLabelOffset;
 		protected $btnPrint;
 		// Search Menu
 		protected $ctlSearchMenu;
@@ -47,7 +47,7 @@
 			// Create the Header Menu
 			$this->ctlHeaderMenu_Create();
 			// Create Label Type
-			$this->objLabelTypeControl_Create();
+			$this->lstLabelTypeControl_Create();
 
 			// Create Modal Window for Printing Labels
 			$this->btnPrintLabels_Create();
@@ -68,15 +68,17 @@
       // Add some contorls into modal window
       //$txtLabelStock = new QLabel($this->dlgPrintLabels);
       //$txtLabelStock->Text = "Label Stock: ";
-      $this->objLabelStock = new QListBox($this->dlgPrintLabels);
-      $this->objLabelStock->Width = 200;
-      $this->objLabelStock->AddItem(new QListItem('- Select One -',0));
-			$this->objLabelStock->AddItem(new QListItem('Avery 6577 (5/8" x 3")',1));
-			$this->objLabelStock->AddItem(new QListItem('Avery 6576 (1-1/4" x 1-3/4")',2));
+      $this->lstLabelStock = new QListBox($this->dlgPrintLabels);
+      $this->lstLabelStock->Width = 200;
+      $this->lstLabelStock->AddItem(new QListItem('- Select One -',0));
+			$this->lstLabelStock->AddItem(new QListItem('Avery 6577 (5/8" x 3")',1));
+			$this->lstLabelStock->AddItem(new QListItem('Avery 6576 (1-1/4" x 1-3/4")',2));
+			$this->lstLabelStock->AddAction(new QChangeEvent(), new QAjaxAction('lstLabelStock_Change'));
 			//$txtLabelOffset = new QLabel($this->dlgPrintLabels);
 			//$txtLabelOffset->Text = "Label Offset: ";
-			$this->objLabelOffset = new QListBox($this->dlgPrintLabels);
-			$this->objLabelOffset->Width = 200;
+			$this->lstLabelOffset = new QListBox($this->dlgPrintLabels);
+			$this->lstLabelOffset->Width = 200;
+			$this->lstLabelOffset->AddItem(new QListItem('None',null,1));
 			$this->btnPrint = new QButton($this->dlgPrintLabels);
 			$this->btnPrint->Text = "Print";
 			$this->btnPrint->AddAction(new QClickEvent(), new QAjaxAction('btnPrint_Click'));
@@ -90,21 +92,21 @@
 		}
 		
 		// Create and Setup the Label Type drop-down select list
-		protected function objLabelTypeControl_Create() {
-			$this->objLabelTypeControl = new QListBox($this);
-			$this->objLabelTypeControl->Width = 150;
-			$this->objLabelTypeControl->AddItem(new QListItem('- Select One -',0));
-			$this->objLabelTypeControl->AddItem(new QListItem('Assets',1));
-			$this->objLabelTypeControl->AddItem(new QListItem('Inventory',2));
-			$this->objLabelTypeControl->AddItem(new QListItem('Locations',3));
-			$this->objLabelTypeControl->AddItem(new QListItem('Users',4));
-			$this->objLabelTypeControl->AddAction(new QChangeEvent(), new QServerAction('objLabelTypeControl_Change'));
+		protected function lstLabelTypeControl_Create() {
+			$this->lstLabelTypeControl = new QListBox($this);
+			$this->lstLabelTypeControl->Width = 150;
+			$this->lstLabelTypeControl->AddItem(new QListItem('- Select One -',0));
+			$this->lstLabelTypeControl->AddItem(new QListItem('Assets',1));
+			$this->lstLabelTypeControl->AddItem(new QListItem('Inventory',2));
+			$this->lstLabelTypeControl->AddItem(new QListItem('Locations',3));
+			$this->lstLabelTypeControl->AddItem(new QListItem('Users',4));
+			$this->lstLabelTypeControl->AddAction(new QChangeEvent(), new QServerAction('lstLabelTypeControl_Change'));
 		}
 		
 		// Create and display the search on change Label Type
-		protected function objLabelTypeControl_Change() {
+		protected function lstLabelTypeControl_Change() {
       // Create and display search control
-		  switch ($this->objLabelTypeControl->SelectedValue) {
+		  switch ($this->lstLabelTypeControl->SelectedValue) {
   		  case 1:
   		    $this->ctlSearchMenu = new QAssetSearchComposite($this, null, true);
   		    break;
@@ -120,7 +122,7 @@
   		  default:
   		    break;
   		}
-  		// Uncheck all on change Label Type
+  		// Uncheck all items on change Label Type
       foreach ($this->GetAllControls() as $objControl) {
         if (substr($objControl->ControlId, 0, 11) == 'chkSelected') {
           $objControl->Checked = false;
@@ -142,7 +144,7 @@
 		protected function btnPrintLabels_Click() {
 			$this->strBarCodeArray = array();
 		  // Switch statement in here to make this work for all four entity types
-		  switch ($this->objLabelTypeControl->SelectedValue) {
+		  switch ($this->lstLabelTypeControl->SelectedValue) {
 		    case 1:
   		    $this->intObjectIdArray = $this->ctlSearchMenu->dtgAsset->GetSelected('AssetId');
   		    if (count($this->intObjectIdArray)) {
@@ -211,28 +213,47 @@
 		        
       if (count($this->strBarCodeArray)) {
         $this->btnPrintLabels->Warning = "";
-        $this->objLabelOffset->RemoveAllItems();
-        $this->objLabelOffset->AddItem(new QListItem('None',null,1));
-        for ($i = 0; $i < count($this->strBarCodeArray)-1; $i++) {
-          $this->objLabelOffset->AddItem(new QListItem($this->strBarCodeArray[$i],$i));
-        }
-		    $this->dlgPrintLabels->ShowDialogBox();
+        $this->dlgPrintLabels->ShowDialogBox();
 		  }
 		  else {
-		    // There must be alert message
+		    // If we have no checked items
 		    $this->btnPrintLabels->Warning .= "You must check at least one item.";
 		  }
 		}
 		
+		protected function lstLabelStock_Change() {
+		  if ($this->lstLabelStock->SelectedValue) {
+		    $intLabelOffsetCount = 0;
+		    $this->lstLabelStock->Warning = "";
+  		  $this->lstLabelOffset->RemoveAllItems();
+  		  $this->lstLabelOffset->AddItem(new QListItem('None',null,1));
+  		  if ($this->lstLabelStock->SelectedValue == 1 && count($this->strBarCodeArray) > 30) {
+ 		      $intLabelOffsetCount = 30;
+  		  }
+  		  elseif ($this->lstLabelStock->SelectedValue == 2 && count($this->strBarCodeArray) > 40) {
+  		    $intLabelOffsetCount = 40;
+  		  }
+  		  else {
+  		    $intLabelOffsetCount = count($this->strBarCodeArray)-1;
+  		  }
+        for ($i = 0; $i < $intLabelOffsetCount; $i++) {
+          $this->lstLabelOffset->AddItem(new QListItem($this->strBarCodeArray[$i],$i));
+        }
+		  }
+		  else {
+		    $this->lstLabelStock->Warning = "Please select one";
+		  }
+		}
+		
 		protected function btnPrint_Click() {
-		  if ($this->objLabelStock->SelectedValue) {
-		    $this->objLabelStock->Warning = "";
+		  if ($this->lstLabelStock->SelectedValue) {
+		    $this->lstLabelStock->Warning = "";
 		    // There must be PDF generation 
 		    
 		    $this->dlgPrintLabels->HideDialogBox();
 		  }
 		  else {
-		    $this->objLabelStock->Warning = "Please select one";
+		    $this->lstLabelStock->Warning = "Please select one";
 		  }
 		  
 		  
