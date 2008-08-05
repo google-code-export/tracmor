@@ -341,7 +341,7 @@
 		// $intId should be the primary key of the object in the database. It is used to name the controls so we can keep track of them.
 	  public function chkSelected_Render($intId) {
 	  	
-	    $strControlId = 'chkSelected' . $intId;
+	    $strControlId = 'chkSelected' . $intId . 'x' . $this->ControlId;
 	    // Let's see if the Checkbox exists already
 	    $chkSelected = $this->objForm->GetControl($strControlId);
 	    if (!$chkSelected) {
@@ -392,7 +392,7 @@
       	$this->DataBind();
       	
       	foreach ($this->DataSource as $objObject) {
-      		if ($chkControl = $this->objForm->GetControl('chkSelected' . $objObject->$strId)) {
+      		if ($chkControl = $this->objForm->GetControl('chkSelected' . $objObject->$strId . 'x' . $this->ControlId)) {
       			if ($chkControl->Checked) {
       				array_push($intObjectIdArray, $objObject->$strId);
       			}
