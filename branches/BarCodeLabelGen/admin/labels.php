@@ -34,6 +34,7 @@
 		protected $lstLabelStock;
 		protected $lstLabelOffset;
 		protected $btnPrint;
+		protected $dlgGeneratedLabels;
 		// Search Menu
 		protected $ctlSearchMenu;
 		// Buttons
@@ -64,6 +65,16 @@
       $this->dlgPrintLabels->BackColor = '#ffffff';
       // Make sure this Dislog Box is "hidden"
       $this->dlgPrintLabels->Display = false;
+      
+      $this->dlgGeneratedLabels = new QDialogBox($this);
+      $this->dlgGeneratedLabels->Width = '600px';
+      $this->dlgGeneratedLabels->Height = '400px';
+      $this->dlgGeneratedLabels->Overflow = QOverflow::Auto;
+      $this->dlgGeneratedLabels->Padding = '10px';
+      $this->dlgGeneratedLabels->FontSize = '12px';
+      $this->dlgGeneratedLabels->BackColor = '#ffffff';
+      // Make sure this Dislog Box is "hidden"
+      $this->dlgGeneratedLabels->Display = false;
 
       // Add some contorls into modal window
       //$txtLabelStock = new QLabel($this->dlgPrintLabels);
@@ -248,10 +259,41 @@
 		protected function btnPrint_Click() {
 		  if ($this->lstLabelStock->SelectedValue) {
 		    $this->lstLabelStock->Warning = "";
-		    // There must be PDF generation 
-		    
 		    $this->dlgPrintLabels->HideDialogBox();
-		  }
+		    // Bar Code Label Generation
+		    $this->dlgGeneratedLabels->Text = "<div class=\"title\">Bar Code Label Generation</div><table>";
+		    if (is_null($this->lstLabelOffset->SelectedValue)) {
+		      $i = 0;
+		    }
+		    else {
+		      $i = $this->lstLabelOffset->SelectedValue + 1;
+		    }
+		    // Count of total labels
+		    $intBarCodeArrayCount = count($this->strBarCodeArray);
+		    if ($this->lstLabelStock->SelectedValue == 1) {
+		      // Labels per row for Avery 6577 (5/8" x 3")
+		      $intNumberInTableRow = 2;
+		    }
+		    else {
+		      // Labels per row for Avery 6576 (1-1/4" x 1-3/4")
+		      $intNumberInTableRow = 4;
+		    }
+		    while ($i < $intBarCodeArrayCount) {
+		      $this->dlgGeneratedLabels->Text .= "<tr>";
+		      $j = 0;
+		      while ($j < $intNumberInTableRow) {
+		        if ($i < $intBarCodeArrayCount) {
+		          $this->dlgGeneratedLabels->Text .= "<td><img src=\"../includes/php/barcode.php?code=".$this->strBarCodeArray[$i++]."&encoding=128&scale=1\"></td>";
+		        }
+		        else {
+		          $this->dlgGeneratedLabels->Text .= "<td></td>";
+		        }
+		        $j++;
+		      }
+		    }
+		    $this->dlgGeneratedLabels->Text .= "</table>";
+		    $this->dlgGeneratedLabels->ShowDialogBox();
+  	  }
 		  else {
 		    $this->lstLabelStock->Warning = "Please select one";
 		  }
