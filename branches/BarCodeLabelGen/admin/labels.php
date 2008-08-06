@@ -84,7 +84,7 @@
 			$this->lstLabelOffset->AddItem(new QListItem('None',null,1));
 			$this->btnPrint = new QButton($this->dlgPrintLabels);
 			$this->btnPrint->Text = "Print";
-			$this->btnPrint->AddAction(new QClickEvent(), new QAjaxAction('btnPrint_Click'));
+			$this->btnPrint->AddAction(new QClickEvent(), new QServerAction('btnPrint_Click'));
 			//$this->dlgPrintLabels->AutoRenderChildren = true;
       $this->dlgPrintLabels->Template = 'labels_printing_labels.tpl.php';
 		}
@@ -294,6 +294,9 @@
 		}
 		
 		protected function btnPrint_Click() {
+			
+			$this->RenderCsvBegin(false);
+			
 		  if ($this->lstLabelStock->SelectedValue) {
 		    $this->lstLabelStock->Warning = "";
 		    $this->dlgPrintLabels->HideDialogBox();
@@ -332,7 +335,12 @@
           $pdf->writeHTML($htmlcontent);
         }
         // Close and save PDF document
-        $pdf->Output("../includes/php/tcpdf/images/tmp/result.pdf", "F");
+        ob_end_clean();
+        $pdf->Output("../includes/php/tcpdf/images/tmp/result.pdf", "I");
+        QApplication::$JavaScriptArray = array();
+				QApplication::$JavaScriptArrayHighPriority = array();
+        $this->RenderCsvEnd(false);
+				exit();
   	  }
 		  else {
 		    $this->lstLabelStock->Warning = "Please select one";
