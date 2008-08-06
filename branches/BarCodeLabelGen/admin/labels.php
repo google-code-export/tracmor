@@ -34,7 +34,7 @@
 		protected $lstLabelStock;
 		protected $lstLabelOffset;
 		protected $btnPrint;
-		protected $dlgGeneratedLabels;
+		
 		// Search Menu
 		protected $ctlSearchMenu;
 		// Buttons
@@ -43,6 +43,8 @@
 		// Array of ObjectIds of checked items 
 		protected $intObjectIdArray;
 		protected $strBarCodeArray;
+		protected $intCurrentBarCodeLabel;
+		protected $intLabelsPerPage;
 		
 		protected function Form_Create() {
 			// Create the Header Menu
@@ -66,16 +68,6 @@
       // Make sure this Dislog Box is "hidden"
       $this->dlgPrintLabels->Display = false;
       
-      $this->dlgGeneratedLabels = new QDialogBox($this);
-      $this->dlgGeneratedLabels->Width = '600px';
-      $this->dlgGeneratedLabels->Height = '400px';
-      $this->dlgGeneratedLabels->Overflow = QOverflow::Auto;
-      $this->dlgGeneratedLabels->Padding = '10px';
-      $this->dlgGeneratedLabels->FontSize = '12px';
-      $this->dlgGeneratedLabels->BackColor = '#ffffff';
-      // Make sure this Dislog Box is "hidden"
-      $this->dlgGeneratedLabels->Display = false;
-
       // Add some contorls into modal window
       //$txtLabelStock = new QLabel($this->dlgPrintLabels);
       //$txtLabelStock->Text = "Label Stock: ";
@@ -237,18 +229,15 @@
 		    $intLabelOffsetCount = 0;
 		    $this->lstLabelStock->Warning = "";
   		  $this->lstLabelOffset->RemoveAllItems();
-  		  $this->lstLabelOffset->AddItem(new QListItem('None',null,1));
-  		  if ($this->lstLabelStock->SelectedValue == 1 && count($this->strBarCodeArray) > 30) {
- 		      $intLabelOffsetCount = 30;
-  		  }
-  		  elseif ($this->lstLabelStock->SelectedValue == 2 && count($this->strBarCodeArray) > 40) {
-  		    $intLabelOffsetCount = 40;
+  		  $this->lstLabelOffset->AddItem(new QListItem('None',0,1));
+  		  if ($this->lstLabelStock->SelectedValue == 1) {
+ 		      $this->intLabelsPerPage = 30;
   		  }
   		  else {
-  		    $intLabelOffsetCount = count($this->strBarCodeArray)-1;
+  		    $this->intLabelsPerPage = 32;
   		  }
-        for ($i = 0; $i < $intLabelOffsetCount; $i++) {
-          $this->lstLabelOffset->AddItem(new QListItem($this->strBarCodeArray[$i],$i));
+  		  for ($i = 1; $i < $this->intLabelsPerPage; $i++) {
+          $this->lstLabelOffset->AddItem(new QListItem($i,$i));
         }
 		  }
 		  else {
@@ -256,49 +245,98 @@
 		  }
 		}
 		
+		protected function CreateTableByBarCodeArray () {
+		  $strTable = "<table width=\"100%\" height=\"100%\">";
+		  // Count of total labels
+		  $intBarCodeArrayCount = count($this->strBarCodeArray);
+		  if ($this->lstLabelStock->SelectedValue == 1) {
+		    // Labels per row for Avery 6577 (5/8" x 3")
+		    $intNumberInTableRow = 2;
+		  }
+		  else {
+		    // Labels per row for Avery 6576 (1-1/4" x 1-3/4")
+		    $intNumberInTableRow = 4;
+		  }
+		  
+		  $i = 0;
+		  while ($i < $this->intLabelsPerPage) {
+		    $strTable .= "<tr>";
+		    $j = 0;
+		    while ($j < $intNumberInTableRow) {
+		      if ($i < $this->lstLabelOffset->SelectedValue && $this->intCurrentBarCodeLabel == 0) {
+		        $strTable .= "<td><img src=\"../includes/php/tcpdf/images/_blank.png\" height=\"";
+		        if ($this->lstLabelStock->SelectedValue == 1) {
+		          $strTable .= "40";
+            }
+            else {
+              $strTable .= "60";
+            }
+            $strTable .= "\" /></td>";
+		      }
+		      elseif ($this->intCurrentBarCodeLabel < $intBarCodeArrayCount) {
+		        $strTable .= "<td><img src=\"../includes/php/tcpdf/images/tmp/".($this->intCurrentBarCodeLabel+1).".png\"";
+		        if ($this->lstLabelStock->SelectedValue == 1) {
+		          $strTable .= " height=\"40\"";
+            }
+            $strTable .= " border=\"0\" align=\"left\" /></td>";
+		        $image = ImageCreateFromPNG("http://localhost/tracmor/includes/php/barcode.php?code=".$this->strBarCodeArray[$this->intCurrentBarCodeLabel++]."&encoding=128&scale=1");
+		        ImagePNG($image,"../includes/php/tcpdf/images/tmp/".($this->intCurrentBarCodeLabel).".png");
+		      }
+		      else {
+		        $strTable .= "<td></td>";
+		      }
+		      $j++;
+		      $i++;
+		    }
+		    $strTable .= "</tr>";
+		  }
+		  return $strTable;
+		}
+		
 		protected function btnPrint_Click() {
 		  if ($this->lstLabelStock->SelectedValue) {
 		    $this->lstLabelStock->Warning = "";
 		    $this->dlgPrintLabels->HideDialogBox();
 		    // Bar Code Label Generation
-		    $this->dlgGeneratedLabels->Text = "<div class=\"title\">Bar Code Label Generation</div><table>";
-		    if (is_null($this->lstLabelOffset->SelectedValue)) {
-		      $i = 0;
-		    }
-		    else {
-		      $i = $this->lstLabelOffset->SelectedValue + 1;
-		    }
-		    // Count of total labels
-		    $intBarCodeArrayCount = count($this->strBarCodeArray);
-		    if ($this->lstLabelStock->SelectedValue == 1) {
-		      // Labels per row for Avery 6577 (5/8" x 3")
-		      $intNumberInTableRow = 2;
-		    }
-		    else {
-		      // Labels per row for Avery 6576 (1-1/4" x 1-3/4")
-		      $intNumberInTableRow = 4;
-		    }
-		    while ($i < $intBarCodeArrayCount) {
-		      $this->dlgGeneratedLabels->Text .= "<tr>";
-		      $j = 0;
-		      while ($j < $intNumberInTableRow) {
-		        if ($i < $intBarCodeArrayCount) {
-		          $this->dlgGeneratedLabels->Text .= "<td><img src=\"../includes/php/barcode.php?code=".$this->strBarCodeArray[$i++]."&encoding=128&scale=1\"></td>";
-		        }
-		        else {
-		          $this->dlgGeneratedLabels->Text .= "<td></td>";
-		        }
-		        $j++;
-		      }
-		    }
-		    $this->dlgGeneratedLabels->Text .= "</table>";
-		    $this->dlgGeneratedLabels->ShowDialogBox();
+		    $this->intCurrentBarCodeLabel = 0;
+		    
+		    include_once('../includes/php/tcpdf/config/lang/eng.php');
+        include_once('../includes/php/tcpdf/tcpdf.php');
+        
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true);
+        // set document information
+        $pdf->SetCreator("Tracmor");
+        $pdf->SetAuthor("Tracmor");
+        
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+        
+        // set margins
+        $pdf->SetMargins(10, 5, 10);
+        
+        // set auto page breaks
+        $pdf->SetAutoPageBreak(false);
+        
+        // set some language-dependent strings
+        $pdf->setLanguageArray($l); 
+        
+        // initialize document
+        $pdf->AliasNbPages();
+        
+        while ($this->intCurrentBarCodeLabel < count($this->strBarCodeArray)) {
+          // add a page
+          $pdf->AddPage();
+          // Create HTML content
+          $htmlcontent = $this->CreateTableByBarCodeArray();
+          // output the HTML content
+          $pdf->writeHTML($htmlcontent);
+        }
+        // Close and save PDF document
+        $pdf->Output("../includes/php/tcpdf/images/tmp/result.pdf", "F");
   	  }
 		  else {
 		    $this->lstLabelStock->Warning = "Please select one";
 		  }
-		  
-		  
 		}
 	}
 
