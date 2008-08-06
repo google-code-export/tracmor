@@ -295,7 +295,8 @@
 		
 		protected function btnPrint_Click() {
 			
-			$this->RenderCsvBegin(false);
+			// Begin rendering the QForm
+			$this->RenderBegin(false);
 			
 		  if ($this->lstLabelStock->SelectedValue) {
 		    $this->lstLabelStock->Warning = "";
@@ -334,12 +335,14 @@
           // output the HTML content
           $pdf->writeHTML($htmlcontent);
         }
-        // Close and save PDF document
+        
+        // Clean the Output Buffer
         ob_end_clean();
+        
+        // Close and save PDF document
         $pdf->Output("../includes/php/tcpdf/images/tmp/result.pdf", "I");
-        QApplication::$JavaScriptArray = array();
-				QApplication::$JavaScriptArrayHighPriority = array();
-        $this->RenderCsvEnd(false);
+        
+        $this->RenderEnd(false);
 				exit();
   	  }
 		  else {
