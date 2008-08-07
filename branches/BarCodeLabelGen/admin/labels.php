@@ -51,42 +51,10 @@
 			$this->ctlHeaderMenu_Create();
 			// Create Label Type
 			$this->lstLabelTypeControl_Create();
-
-			// Create Modal Window for Printing Labels
+			// Create Print Labels button
 			$this->btnPrintLabels_Create();
-			$this->dlgPrintLabels = new QDialogBox($this);
-      $this->dlgPrintLabels->Text = '';
-      
-      // Let's setup some basic appearance options
-      $this->dlgPrintLabels->Width = '300px';
-      $this->dlgPrintLabels->Height = '100px';
-      $this->dlgPrintLabels->Overflow = QOverflow::Auto;
-      $this->dlgPrintLabels->Padding = '10px';
-      $this->dlgPrintLabels->FontSize = '12px';
-      //$this->dlgPrintLabels->FontNames = QFontFamily::Georgia;
-      $this->dlgPrintLabels->BackColor = '#ffffff';
-      // Make sure this Dislog Box is "hidden"
-      $this->dlgPrintLabels->Display = false;
-      
-      // Add some contorls into modal window
-      //$txtLabelStock = new QLabel($this->dlgPrintLabels);
-      //$txtLabelStock->Text = "Label Stock: ";
-      $this->lstLabelStock = new QListBox($this->dlgPrintLabels);
-      $this->lstLabelStock->Width = 200;
-      $this->lstLabelStock->AddItem(new QListItem('- Select One -',0));
-			$this->lstLabelStock->AddItem(new QListItem('Avery 6577 (5/8" x 3")',1));
-			$this->lstLabelStock->AddItem(new QListItem('Avery 6576 (1-1/4" x 1-3/4")',2));
-			$this->lstLabelStock->AddAction(new QChangeEvent(), new QAjaxAction('lstLabelStock_Change'));
-			//$txtLabelOffset = new QLabel($this->dlgPrintLabels);
-			//$txtLabelOffset->Text = "Label Offset: ";
-			$this->lstLabelOffset = new QListBox($this->dlgPrintLabels);
-			$this->lstLabelOffset->Width = 200;
-			$this->lstLabelOffset->AddItem(new QListItem('None',null,1));
-			$this->btnPrint = new QButton($this->dlgPrintLabels);
-			$this->btnPrint->Text = "Print";
-			$this->btnPrint->AddAction(new QClickEvent(), new QServerAction('btnPrint_Click'));
-			//$this->dlgPrintLabels->AutoRenderChildren = true;
-      $this->dlgPrintLabels->Template = 'labels_printing_labels.tpl.php';
+			// Create Modal Window for Printing Labels
+			$this->dlgPrintLabels_Create();
 		}
 		
 		// Create and Setup the Header Composite Control
@@ -104,6 +72,46 @@
 			$this->lstLabelTypeControl->AddItem(new QListItem('Locations',3));
 			$this->lstLabelTypeControl->AddItem(new QListItem('Users',4));
 			$this->lstLabelTypeControl->AddAction(new QChangeEvent(), new QServerAction('lstLabelTypeControl_Change'));
+		}
+		
+		// Create and Setup the Modal Window for Printing Labels
+		protected function dlgPrintLabels_Create() {
+		  $this->dlgPrintLabels = new QDialogBox($this);
+      $this->dlgPrintLabels->Text = '';
+      
+      // Let's setup some basic appearance options
+      $this->dlgPrintLabels->Width = '300px';
+      $this->dlgPrintLabels->Height = '100px';
+      $this->dlgPrintLabels->Overflow = QOverflow::Auto;
+      $this->dlgPrintLabels->Padding = '10px';
+      $this->dlgPrintLabels->FontSize = '12px';
+      //$this->dlgPrintLabels->FontNames = QFontFamily::Georgia;
+      $this->dlgPrintLabels->BackColor = '#ffffff';
+      // Make sure this Dislog Box is "hidden"
+      $this->dlgPrintLabels->Display = false;
+      
+      // Add some contorls into modal window
+      $this->lstLabelStock = new QListBox($this->dlgPrintLabels);
+      $this->lstLabelStock->Width = 200;
+      $this->lstLabelStock->AddItem(new QListItem('- Select One -', 0));
+			$this->lstLabelStock->AddItem(new QListItem('Avery 6577 (5/8" x 3")', 1));
+			$this->lstLabelStock->AddItem(new QListItem('Avery 6576 (1-1/4" x 1-3/4")', 2));
+			$this->lstLabelStock->AddAction(new QChangeEvent(), new QAjaxAction('lstLabelStock_Change'));
+			$this->lstLabelOffset = new QListBox($this->dlgPrintLabels);
+			$this->lstLabelOffset->Width = 200;
+			$this->lstLabelOffset->AddItem(new QListItem('None', 0, 1));
+			$this->btnPrint = new QButton($this->dlgPrintLabels);
+			$this->btnPrint->Text = "Print";
+			$this->btnPrint->AddAction(new QClickEvent(), new QServerAction('btnPrint_Click'));
+			$this->dlgPrintLabels->Template = 'labels_printing_labels.tpl.php';
+		}
+  	
+  	// Create and Setup the Print Labels Button
+		protected function btnPrintLabels_Create() {
+			$this->btnPrintLabels = new QButton($this);
+			$this->btnPrintLabels->Text = 'Print Labels';
+			$this->btnPrintLabels->AddAction(new QClickEvent(), new QAjaxAction('btnPrintLabels_Click'));
+			$this->btnPrintLabels->Display = false;
 		}
 		
 		// Create and display the search on change Label Type
@@ -131,26 +139,25 @@
           $objControl->Checked = false;
         }
       }
-      if (!$this->ctlSearchMenu) $this->btnPrintLabels->Display = false;
-      else $this->btnPrintLabels->Display = true;
+      // Show/Hide Print Labels button
+      if (!$this->ctlSearchMenu) {
+        $this->btnPrintLabels->Display = false;
+      }
+      else {
+        $this->btnPrintLabels->Display = true;
+      }
   	}
-  	
-  	// Create and Setup the PrintLabels Button
-		protected function btnPrintLabels_Create() {
-			$this->btnPrintLabels = new QButton($this);
-			$this->btnPrintLabels->Text = 'Print Labels';
-			$this->btnPrintLabels->AddAction(new QClickEvent(), new QAjaxAction('btnPrintLabels_Click'));
-			$this->btnPrintLabels->Display = false;
-		}
 		
-		// PrintLables button click action
+		// Print Lables button click action
 		protected function btnPrintLabels_Click() {
 			$this->strBarCodeArray = array();
 		  // Switch statement in here to make this work for all four entity types
 		  switch ($this->lstLabelTypeControl->SelectedValue) {
 		    case 1:
+		      // Get Ids of selected items from the datagrid 
   		    $this->intObjectIdArray = $this->ctlSearchMenu->dtgAsset->GetSelected('AssetId');
   		    if (count($this->intObjectIdArray)) {
+  		      // Load an array of Assets by AssetId
   		      $objCheckedArray = Asset::QueryArray(QQ::In(QQN::Asset()->AssetId, $this->intObjectIdArray));
   		      $objAssetArrayById = array();
   		      // Create array of objects where the key is Id
@@ -164,8 +171,10 @@
   		    }
   		    break;
   		  case 2:
+  		    // Get Ids of selected items from the datagrid
   		    $this->intObjectIdArray = $this->ctlSearchMenu->dtgInventoryModel->GetSelected('InventoryModelId');
   		    if (count($this->intObjectIdArray)) {
+  		      // Load an array of Inventories by InventoryModelId
   		      $objCheckedArray = InventoryModel::QueryArray(QQ::In(QQN::InventoryModel()->InventoryModelId, $this->intObjectIdArray));
   		      $objInventoryModelArrayById = array();
   		      // Create array of objects where the key is Id
@@ -179,8 +188,10 @@
   		    }
   		    break;
   		  case 3:
+  		    // Get Ids of selected items from the datagrid
   		    $this->intObjectIdArray = $this->ctlSearchMenu->dtgLocation->GetSelected('LocationId');
   		    if (count($this->intObjectIdArray)) {
+  		      // Load an array of Locations by LocationId
   		      $objCheckedArray = Location::QueryArray(QQ::In(QQN::Location()->LocationId, $this->intObjectIdArray));
   		      $objLocationArrayById = array();
   		      // Create array of objects where the key is Id
@@ -194,8 +205,10 @@
   		    }
   		    break;
   		  case 4:
+  		    // Get Ids of selected items from the datagrid
   		    $this->intObjectIdArray = $this->ctlSearchMenu->dtgUserAccount->GetSelected('UserAccountId');
   		    if (count($this->intObjectIdArray)) {
+  		      // Load an array of UserAccounts by UserAccountId
   		      $objCheckedArray = UserAccount::QueryArray(QQ::In(QQN::UserAccount()->UserAccountId, $this->intObjectIdArray));
   		      $objUserAccountArrayById = array();
   		      // Create array of objects where the key is Id
@@ -224,20 +237,23 @@
 		  }
 		}
 		
+		// Create the Label Offset drop-down menu on change Label Stock
 		protected function lstLabelStock_Change() {
 		  if ($this->lstLabelStock->SelectedValue) {
 		    $intLabelOffsetCount = 0;
 		    $this->lstLabelStock->Warning = "";
   		  $this->lstLabelOffset->RemoveAllItems();
-  		  $this->lstLabelOffset->AddItem(new QListItem('None',0,1));
+  		  $this->lstLabelOffset->AddItem(new QListItem('None', 0, 1));
+  		  // Labels per page for Avery 6577 (5/8" x 3")
   		  if ($this->lstLabelStock->SelectedValue == 1) {
  		      $this->intLabelsPerPage = 30;
   		  }
+  		  // Labels per page for Avery 6576 (1-1/4" x 1-3/4")
   		  else {
   		    $this->intLabelsPerPage = 32;
   		  }
   		  for ($i = 1; $i < $this->intLabelsPerPage; $i++) {
-          $this->lstLabelOffset->AddItem(new QListItem($i,$i));
+          $this->lstLabelOffset->AddItem(new QListItem($i, $i));
         }
 		  }
 		  else {
@@ -245,7 +261,8 @@
 		  }
 		}
 		
-		protected function CreateTableByBarCodeArray () {
+		// Create and Setup the table per each page for Bar Code Label Generation
+		protected function CreateTableByBarCodeArray() {
 		  $strTable = "<table width=\"100%\" height=\"100%\">";
 		  // Count of total labels
 		  $intBarCodeArrayCount = count($this->strBarCodeArray);
@@ -263,6 +280,7 @@
 		    $strTable .= "<tr>";
 		    $j = 0;
 		    while ($j < $intNumberInTableRow) {
+		      // If Label Offset set
 		      if ($i < $this->lstLabelOffset->SelectedValue && $this->intCurrentBarCodeLabel == 0) {
 		        $strTable .= "<td><img src=\"../includes/php/tcpdf/images/_blank.png\" height=\"";
 		        if ($this->lstLabelStock->SelectedValue == 1) {
@@ -274,13 +292,14 @@
             $strTable .= "\" /></td>";
 		      }
 		      elseif ($this->intCurrentBarCodeLabel < $intBarCodeArrayCount) {
-		        $strTable .= "<td><img src=\"../includes/php/tcpdf/images/tmp/".($this->intCurrentBarCodeLabel+1).".png\"";
+		        $strTable .= "<td><img src=\"../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_".($this->intCurrentBarCodeLabel+1).".png\"";
 		        if ($this->lstLabelStock->SelectedValue == 1) {
 		          $strTable .= " height=\"40\"";
             }
             $strTable .= " border=\"0\" align=\"left\" /></td>";
 		        $image = ImageCreateFromPNG("http://localhost/tracmor/includes/php/barcode.php?code=".$this->strBarCodeArray[$this->intCurrentBarCodeLabel++]."&encoding=128&scale=1");
-		        ImagePNG($image,"../includes/php/tcpdf/images/tmp/".($this->intCurrentBarCodeLabel).".png");
+		        ImagePNG($image,"../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_".$this->intCurrentBarCodeLabel.".png");
+		        imagedestroy($image);
 		      }
 		      else {
 		        $strTable .= "<td></td>";
@@ -290,41 +309,44 @@
 		    }
 		    $strTable .= "</tr>";
 		  }
+		  
+		  $strTable .= "</table>";
 		  return $strTable;
 		}
 		
+		// Print button click action
 		protected function btnPrint_Click() {
-			
-			// Begin rendering the QForm
-			$this->RenderBegin(false);
-			
 		  if ($this->lstLabelStock->SelectedValue) {
-		    $this->lstLabelStock->Warning = "";
+		    // Begin rendering the QForm
+			  $this->RenderBegin(false);
+		    
+			  $this->lstLabelStock->Warning = "";
 		    $this->dlgPrintLabels->HideDialogBox();
-		    // Bar Code Label Generation
 		    $this->intCurrentBarCodeLabel = 0;
 		    
 		    include_once('../includes/php/tcpdf/config/lang/eng.php');
         include_once('../includes/php/tcpdf/tcpdf.php');
         
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true);
-        // set document information
+        // Set document information
         $pdf->SetCreator("Tracmor");
         $pdf->SetAuthor("Tracmor");
+        $pdf->SetTitle("Bar Code Label Generation");
         
+        // Disable header and footer
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
         
-        // set margins
+        // Set margins
         $pdf->SetMargins(10, 5, 10);
         
-        // set auto page breaks
+        // Disable auto page breaks
         $pdf->SetAutoPageBreak(false);
         
-        // set some language-dependent strings
+        // Set some language-dependent strings
         $pdf->setLanguageArray($l); 
         
-        // initialize document
+        // Initialize document
         $pdf->AliasNbPages();
         
         while ($this->intCurrentBarCodeLabel < count($this->strBarCodeArray)) {
@@ -339,8 +361,13 @@
         // Clean the Output Buffer
         ob_end_clean();
         
-        // Close and save PDF document
+        // Close and display PDF document
         $pdf->Output("../includes/php/tcpdf/images/tmp/result.pdf", "I");
+        
+        // Delete temporary created images
+        for ($i = 1; $i <= $this->intCurrentBarCodeLabel; $i++) {
+          @unlink("../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_".$i.".png");
+        }
         
         $this->RenderEnd(false);
 				exit();
@@ -351,6 +378,6 @@
 		}
 	}
 
-  	// Go ahead and run this form object to generate the page
+	// Go ahead and run this form object to generate the page
 	AdminLabelsForm::Run('AdminLabelsForm', 'labels.tpl.php');	
 ?>
