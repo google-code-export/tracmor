@@ -49,6 +49,11 @@
 							$lblColumn->Text = strip_tags($objColumn->Name);
 						}
 					}
+					// If it is a control (like a checkbox), then remove it from the toggle menu
+					elseif ($intMatch = substr($objColumn->Name, 0, 3) == '<?=') {
+						unset ($lblColumn);
+						continue;
+					}
 					else {
 						$lblColumn->Text = $objColumn->Name;
 					}

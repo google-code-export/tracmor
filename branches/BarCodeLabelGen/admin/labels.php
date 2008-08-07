@@ -21,7 +21,7 @@
 
 	// Include prepend.inc to load Qcodo
 	require('../includes/prepend.inc.php');		/* if you DO NOT have "includes/" in your include_path */
-	QApplication::Authenticate(2);
+	QApplication::Authenticate();
 	
 	class AdminLabelsForm extends QForm {
 		// Header Menu
