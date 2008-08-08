@@ -1,0 +1,1 @@
+INSERT INTO datagrid (short_description) VALUE ('location_list'), ('user_list');
