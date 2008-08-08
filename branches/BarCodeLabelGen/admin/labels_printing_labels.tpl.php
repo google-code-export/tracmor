@@ -10,3 +10,4 @@
 </table>
 <br />
 <?php $this->btnPrint->Render() ?>
+<?php $this->btnCancel->Render() ?>

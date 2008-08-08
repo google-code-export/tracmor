@@ -34,6 +34,7 @@
 		protected $lstLabelStock;
 		protected $lstLabelOffset;
 		protected $btnPrint;
+		protected $btnCancel;
 		
 		// Search Menu
 		protected $ctlSearchMenu;
@@ -90,6 +91,11 @@
       // Make sure this Dislog Box is "hidden"
       $this->dlgPrintLabels->Display = false;
       
+      /* If you try to make moveable - error "qc.regDB is not a function"
+      $this->dlgPrintLabels->Position = QPosition::Absolute;
+      $this->dlgPrintLabels->AddControlToMove();
+      */
+      
       // Add some contorls into modal window
       $this->lstLabelStock = new QListBox($this->dlgPrintLabels);
       $this->lstLabelStock->Width = 200;
@@ -103,6 +109,10 @@
 			$this->btnPrint = new QButton($this->dlgPrintLabels);
 			$this->btnPrint->Text = "Print";
 			$this->btnPrint->AddAction(new QClickEvent(), new QServerAction('btnPrint_Click'));
+			$this->btnPrint->AddAction(new QClickEvent(), new QToggleEnableAction($this->btnPrint));
+			$this->btnCancel = new QButton($this->dlgPrintLabels);
+			$this->btnCancel->Text = "Cancel";
+			$this->btnCancel->AddAction(new QClickEvent(), new QServerAction('btnCancel_Click'));
 			$this->dlgPrintLabels->Template = 'labels_printing_labels.tpl.php';
 		}
   	
@@ -151,6 +161,7 @@
 		// Print Lables button click action
 		protected function btnPrintLabels_Click() {
 			$this->strBarCodeArray = array();
+			set_time_limit(0);
 		  // Switch statement in here to make this work for all four entity types
 		  switch ($this->lstLabelTypeControl->SelectedValue) {
 		    case 1:
@@ -235,6 +246,12 @@
 		    // If we have no checked items
 		    $this->btnPrintLabels->Warning .= "You must check at least one item.";
 		  }
+		}
+		
+		// Cancel button click action
+		protected function btnCancel_Click() {
+		  $this->dlgPrintLabels->HideDialogBox();
+		  $this->btnPrint->Enabled = true;
 		}
 		
 		// Create the Label Offset drop-down menu on change Label Stock
@@ -327,6 +344,8 @@
 		    include_once('../includes/php/tcpdf/config/lang/eng.php');
         include_once('../includes/php/tcpdf/tcpdf.php');
         
+        set_time_limit(0);
+        
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true);
         // Set document information
         $pdf->SetCreator("Tracmor");
@@ -362,7 +381,7 @@
         ob_end_clean();
         
         // Close and display PDF document
-        $pdf->Output("../includes/php/tcpdf/images/tmp/result.pdf", "I");
+        $pdf->Output("BarCodeLabelGeneration.pdf", "D");
         
         // Delete temporary created images
         for ($i = 1; $i <= $this->intCurrentBarCodeLabel; $i++) {
