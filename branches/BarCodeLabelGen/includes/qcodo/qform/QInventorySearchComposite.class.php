@@ -184,6 +184,17 @@ class QInventorySearchComposite extends QControl {
 		return $strToReturn;		
 	}
 	
+	public function GetDataGridObjectNameId() {
+	  $strToReturn = array();
+	  // DataGrid name
+	  $strToReturn[0] = "dtgInventoryModel";
+	  // Id
+	  $strToReturn[1] = "InventoryModelId";
+	  // For Label generation
+	  $strToReturn[2] = "InventoryModelCode";
+	  return $strToReturn;
+	}
+	
   public function dtgInventoryModel_Bind() {
 			
 		// If the search button has been pressed

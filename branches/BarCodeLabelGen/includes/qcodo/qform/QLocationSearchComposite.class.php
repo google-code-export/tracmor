@@ -24,6 +24,17 @@
 
 class QLocationSearchComposite extends QControl {
 	
+  // Basic Inputs
+	protected $txtLocation;
+	
+  // Buttons
+	protected $btnSearch;
+	protected $blnSearch;
+	protected $btnClear;
+	
+	// Search Values
+	protected $strLocation;
+	
 	public $dtgLocation;
 	public $objParentObject;
 	
@@ -97,6 +108,10 @@ class QLocationSearchComposite extends QControl {
     $objStyle->CssClass = 'dtg_header';
       
     $this->dtgLocation->SetDataBinder('dtgLocation_Bind', $this);
+    
+    $this->txtLocation_Create();
+    $this->btnSearch_Create();
+    $this->btnClear_Create();
   }
 	
 	public function ParsePostData() {
@@ -139,17 +154,84 @@ class QLocationSearchComposite extends QControl {
 		return $strToReturn;		
 	}
 	
+	public function GetDataGridObjectNameId() {
+	  $strToReturn = array();
+	  // DataGrid name
+	  $strToReturn[0] = "dtgLocation";
+	  // Id
+	  $strToReturn[1] = "LocationId";
+	  // For Label generation
+	  $strToReturn[2] = "ShortDescription";
+	  return $strToReturn;
+	}
+	
   public function dtgLocation_Bind() {
-		$objExpansionMap[Location::ExpandCreatedByObject] = true;
-		// Get Total Count b/c of Pagination
-		$this->dtgLocation->TotalItemCount = Location::CountAllLocations();
-		if ($this->dtgLocation->TotalItemCount == 0) {
-			$this->dtgLocation->ShowHeader = false;
+    $this->strLocation = $this->txtLocation->Text;
+		if ($this->strLocation) {
+		  $this->dtgLocation->DataSource = Location::QuerySingle(QQ::Equal(QQN::Location()->ShortDescription, $this->strLocation), QQ::Clause(QQ::Expand(QQN::Location()->CreatedByObject)));
+		  if ($this->dtgLocation->DataSource) {
+		    $this->dtgLocation->TotalItemCount = 1;
+		    $this->dtgLocation->ShowHeader = true;
+		  }
+		  else {
+		    $this->dtgLocation->TotalItemCount = 0;
+		    $this->dtgLocation->ShowHeader = false;
+		  }
 		}
 		else {
-			$this->dtgLocation->DataSource = Location::LoadAllLocations(false, false, $this->dtgLocation->SortInfo, $this->dtgLocation->LimitInfo, $objExpansionMap);
-			$this->dtgLocation->ShowHeader = true;
+		  $objExpansionMap[Location::ExpandCreatedByObject] = true;
+  		// Get Total Count b/c of Pagination
+  		$this->dtgLocation->TotalItemCount = Location::CountAllLocations();
+  		if ($this->dtgLocation->TotalItemCount == 0) {
+  			$this->dtgLocation->ShowHeader = false;
+  		}
+  		else {
+  			$this->dtgLocation->DataSource = Location::LoadAllLocations(false, false, $this->dtgLocation->SortInfo, $this->dtgLocation->LimitInfo, $objExpansionMap);
+  			$this->dtgLocation->ShowHeader = true;
+		  }
 		}
+		$this->blnSearch = false;
+  }
+  
+  protected function txtLocation_Create() {
+  	$this->txtLocation = new QTextBox($this);
+  	$this->txtLocation->Name = 'Location Name';
+  	$this->txtLocation->AddAction(new QEnterKeyEvent(), new QServerControlAction($this, 'btnSearch_Click'));
+  	$this->txtLocation->AddAction(new QEnterKeyEvent(), new QTerminateAction());
+  }
+  
+  protected function btnSearch_Create() {
+		$this->btnSearch = new QButton($this);
+		$this->btnSearch->Name = 'search';
+		$this->btnSearch->Text = 'Search';
+		$this->btnSearch->AddAction(new QClickEvent(), new QServerControlAction($this, 'btnSearch_Click'));
+		$this->btnSearch->AddAction(new QEnterKeyEvent(), new QServerControlAction($this, 'btnSearch_Click'));
+		$this->btnSearch->AddAction(new QEnterKeyEvent(), new QTerminateAction());
+  }
+  
+  protected function btnClear_Create() {
+  	$this->btnClear = new QButton($this);
+		$this->btnClear->Name = 'clear';
+		$this->btnClear->Text = 'Clear';
+		$this->btnClear->AddAction(new QClickEvent(), new QServerControlAction($this, 'btnClear_Click'));
+		$this->btnClear->AddAction(new QEnterKeyEvent(), new QServerControlAction($this, 'btnSearch_Click'));
+		$this->btnClear->AddAction(new QEnterKeyEvent(), new QTerminateAction());			
+  }
+  
+  public function btnSearch_Click() {
+  	$this->blnSearch = true;
+		$this->dtgLocation->PageNumber = 1;
+  }
+  
+  public function btnClear_Click() {
+  	// Set controls to null
+	  $this->txtLocation->Text = '';
+	  	
+	  // Set search variables to null
+	  $this->strLocation = null;
+	  
+	  $this->dtgLocation->SortColumnIndex = 1;
+	  $this->blnSearch = false;
   }
   
  	// And our public getter/setters

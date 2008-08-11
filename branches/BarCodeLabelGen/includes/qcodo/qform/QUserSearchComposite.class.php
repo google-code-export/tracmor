@@ -24,6 +24,17 @@
 
 class QUserSearchComposite extends QControl {
 	
+  // Basic Inputs
+	protected $txtUsername;
+	
+  // Buttons
+	protected $btnSearch;
+	protected $blnSearch;
+	protected $btnClear;
+	
+	// Search Values
+	protected $strUsername;
+	
 	public $dtgUserAccount;
 	public $objParentObject;
 	
@@ -100,6 +111,10 @@ class QUserSearchComposite extends QControl {
     $objStyle->CssClass = 'dtg_header';
       
     $this->dtgUserAccount->SetDataBinder('dtgUserAccount_Bind', $this);
+    
+    $this->txtUsername_Create();
+    $this->btnSearch_Create();
+    $this->btnClear_Create();
   }
 	
 	public function ParsePostData() {
@@ -142,26 +157,92 @@ class QUserSearchComposite extends QControl {
 		return $strToReturn;		
 	}
 	
+	public function GetDataGridObjectNameId() {
+	  $strToReturn = array();
+	  // DataGrid name
+	  $strToReturn[0] = "dtgUserAccount";
+	  // Id
+	  $strToReturn[1] = "UserAccountId";
+	  // For Label generation
+	  $strToReturn[2] = "Username";
+	  return $strToReturn;
+	}
+	
   public function dtgUserAccount_Bind() {
-    $objExpansionMap[UserAccount::ExpandCreatedByObject] = true;
-		$objExpansionMap[UserAccount::ExpandRole] = true;
-		// Get Total Count b/c of Pagination
-		$this->dtgUserAccount->TotalItemCount = UserAccount::CountAll();
-		if ($this->dtgUserAccount->TotalItemCount == 0) {
-			$this->dtgUserAccount->ShowHeader = false;
+    $this->strUsername = $this->txtUsername->Text;
+		if ($this->strUsername) {
+		  $this->dtgUserAccount->DataSource = UserAccount::QuerySingle(QQ::Equal(QQN::UserAccount()->Username, $this->strUsername), QQ::Clause(QQ::Expand(QQN::UserAccount()->CreatedByObject)));
+		  if ($this->dtgUserAccount->DataSource) {
+		    $this->dtgUserAccount->TotalItemCount = 1;
+		    $this->dtgUserAccount->ShowHeader = true;
+		  }
+		  else {
+		    $this->dtgUserAccount->TotalItemCount = 0;
+		    $this->dtgUserAccount->ShowHeader = false;
+		  }
 		}
 		else {
-			$objClauses = array();
-			if ($objClause = $this->dtgUserAccount->OrderByClause)
-				array_push($objClauses, $objClause);
-			if ($objClause = $this->dtgUserAccount->LimitClause)
-				array_push($objClauses, $objClause);
-			if ($objClause = QQ::Expand(QQN::UserAccount()->CreatedByObject))
-				array_push($objClauses, $objClause);
-			if ($objClause = QQ::Expand(QQN::UserAccount()->Role))
-			$this->dtgUserAccount->DataSource = UserAccount::LoadAll($objClauses);
-			$this->dtgUserAccount->ShowHeader = true;
-		}		
+		  $objExpansionMap[UserAccount::ExpandCreatedByObject] = true;
+  		$objExpansionMap[UserAccount::ExpandRole] = true;
+  		// Get Total Count b/c of Pagination
+  		$this->dtgUserAccount->TotalItemCount = UserAccount::CountAll();
+  		if ($this->dtgUserAccount->TotalItemCount == 0) {
+  			$this->dtgUserAccount->ShowHeader = false;
+  		}
+  		else {
+  			$objClauses = array();
+  			if ($objClause = $this->dtgUserAccount->OrderByClause)
+  				array_push($objClauses, $objClause);
+  			if ($objClause = $this->dtgUserAccount->LimitClause)
+  				array_push($objClauses, $objClause);
+  			if ($objClause = QQ::Expand(QQN::UserAccount()->CreatedByObject))
+  				array_push($objClauses, $objClause);
+  			if ($objClause = QQ::Expand(QQN::UserAccount()->Role))
+  			$this->dtgUserAccount->DataSource = UserAccount::LoadAll($objClauses);
+  			$this->dtgUserAccount->ShowHeader = true;
+		  }
+		}
+  }
+  
+  protected function txtUsername_Create() {
+  	$this->txtUsername = new QTextBox($this);
+  	$this->txtUsername->Name = 'Username';
+  	$this->txtUsername->AddAction(new QEnterKeyEvent(), new QServerControlAction($this, 'btnSearch_Click'));
+  	$this->txtUsername->AddAction(new QEnterKeyEvent(), new QTerminateAction());
+  }
+  
+  protected function btnSearch_Create() {
+		$this->btnSearch = new QButton($this);
+		$this->btnSearch->Name = 'search';
+		$this->btnSearch->Text = 'Search';
+		$this->btnSearch->AddAction(new QClickEvent(), new QServerControlAction($this, 'btnSearch_Click'));
+		$this->btnSearch->AddAction(new QEnterKeyEvent(), new QServerControlAction($this, 'btnSearch_Click'));
+		$this->btnSearch->AddAction(new QEnterKeyEvent(), new QTerminateAction());
+  }
+  
+  protected function btnClear_Create() {
+  	$this->btnClear = new QButton($this);
+		$this->btnClear->Name = 'clear';
+		$this->btnClear->Text = 'Clear';
+		$this->btnClear->AddAction(new QClickEvent(), new QServerControlAction($this, 'btnClear_Click'));
+		$this->btnClear->AddAction(new QEnterKeyEvent(), new QServerControlAction($this, 'btnSearch_Click'));
+		$this->btnClear->AddAction(new QEnterKeyEvent(), new QTerminateAction());			
+  }
+  
+  public function btnSearch_Click() {
+  	$this->blnSearch = true;
+		$this->dtgUserAccount->PageNumber = 1;
+  }
+  
+  public function btnClear_Click() {
+  	// Set controls to null
+	  $this->txtUsername->Text = '';
+	  	
+	  // Set search variables to null
+	  $this->strUsername = null;
+	  
+	  $this->dtgUserAccount->SortColumnIndex = 1;
+	  $this->blnSearch = false;
   }
   
  	// And our public getter/setters
