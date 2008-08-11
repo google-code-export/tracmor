@@ -11,7 +11,7 @@
 		protected $lblColumnToggleButton;
 		
 		protected $blnShowCheckboxes = false;
-		protected $chkSelectAll;
+		public $chkSelectAll;
 		
 		// Feel free to specify global display preferences/defaults for all QDataGrid controls
 		public function __construct($objParentObject, $strControlId = null) {
@@ -36,11 +36,6 @@
 			$objHeaderStyle = $this->objRowStyle->ApplyOverride($this->objHeaderRowStyle);
 
 			$strToReturn = sprintf('<tr %s>', $objHeaderStyle->GetAttributes());
-			
-			/*if ($this->blnShowCheckboxes) {
-				$strCheckboxStyle = $objHeaderStyle->GetAttributes();
-				$strToReturn .= sprintf('<th %s>%s</th>', $strCheckboxStyle, '<input type="checkbox">');
-			}*/
 			
 			$intColumnIndex = 0;
 			
@@ -99,10 +94,6 @@
 
 			// Iterate through the Columns
 			$strColumnsHtml = '';
-			
-			/*if ($this->blnShowCheckboxes) {
-				$strColumnsHtml = sprintf('<td %s>%s</td>', '', '<input type="checkbox">');
-			}*/
 			
 			foreach ($this->objColumnArray as $objColumn) {
 				try {

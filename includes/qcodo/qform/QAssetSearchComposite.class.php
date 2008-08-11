@@ -94,7 +94,7 @@ class QAssetSearchComposite extends QControl {
     $this->dtgAsset->ShowExportCsv = true;
     
     // Add a 'Select All' checkbox
-    $this->dtgAsset->ShowCheckboxes = true;
+    $this->dtgAsset->ShowCheckboxes = false;
     
     // Enable Pagination, and set to 20 items per page
     $objPaginator = new QPaginator($this->dtgAsset);
@@ -161,10 +161,15 @@ class QAssetSearchComposite extends QControl {
 		
 	}
 	
-	public function SetDataBinderByAjax() {
-	  $this->dtgAsset->SetDataBinder('dtgAsset_Bind', $this);
-	  $this->dtgAsset_Bind();
-	  $this->btnSearch_Click();
+	public function GetDataGridObjectNameId() {
+	  $strToReturn = array();
+	  // DataGrid name
+	  $strToReturn[0] = "dtgAsset";
+	  // Id
+	  $strToReturn[1] = "AssetId";
+	  // For Label generation
+	  $strToReturn[2] = "AssetCode";
+	  return $strToReturn;
 	}
 	
 	public function GetJavaScriptAction() {

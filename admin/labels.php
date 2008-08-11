@@ -96,7 +96,7 @@
       $this->dlgPrintLabels->AddControlToMove();
       */
       
-      // Add some contorls into modal window
+      // Add some controls into modal window
       $this->lstLabelStock = new QListBox($this->dlgPrintLabels);
       $this->lstLabelStock->Width = 200;
       $this->lstLabelStock->AddItem(new QListItem('- Select One -', 0));
@@ -162,83 +162,49 @@
 		protected function btnPrintLabels_Click() {
 			$this->strBarCodeArray = array();
 			set_time_limit(0);
-		  // Switch statement in here to make this work for all four entity types
-		  switch ($this->lstLabelTypeControl->SelectedValue) {
-		    case 1:
-		      // Get Ids of selected items from the datagrid 
-  		    $this->intObjectIdArray = $this->ctlSearchMenu->dtgAsset->GetSelected('AssetId');
-  		    if (count($this->intObjectIdArray)) {
+			$blnError = false;
+			$arrDataGridObjectNameId = $this->ctlSearchMenu->GetDataGridObjectNameId();
+  		$this->intObjectIdArray = $this->ctlSearchMenu->$arrDataGridObjectNameId[0]->GetSelected($arrDataGridObjectNameId[1]);
+  		$objCheckedArray = array();
+  		if (count($this->intObjectIdArray)) {
+  		  // Switch statement for all four entity types
+  		  switch ($this->lstLabelTypeControl->SelectedValue) {
+  		    case 1:
   		      // Load an array of Assets by AssetId
-  		      $objCheckedArray = Asset::QueryArray(QQ::In(QQN::Asset()->AssetId, $this->intObjectIdArray));
-  		      $objAssetArrayById = array();
-  		      // Create array of objects where the key is Id
-  		      foreach ($objCheckedArray as $objAsset) {
-  		        $objAssetArrayById[$objAsset->AssetId] = $objAsset;
-  		      }
-  		      // Fill the BarCodeArray in the order items sorted in the datagrid
-  		      foreach ($this->intObjectIdArray as $intObjectId) {
-  		        $this->strBarCodeArray[] = $objAssetArrayById[$intObjectId]->AssetCode;
-  		      }
-  		    }
-  		    break;
-  		  case 2:
-  		    // Get Ids of selected items from the datagrid
-  		    $this->intObjectIdArray = $this->ctlSearchMenu->dtgInventoryModel->GetSelected('InventoryModelId');
-  		    if (count($this->intObjectIdArray)) {
-  		      // Load an array of Inventories by InventoryModelId
-  		      $objCheckedArray = InventoryModel::QueryArray(QQ::In(QQN::InventoryModel()->InventoryModelId, $this->intObjectIdArray));
-  		      $objInventoryModelArrayById = array();
-  		      // Create array of objects where the key is Id
-  		      foreach ($objCheckedArray as $objInventoryModel) {
-  		        $objInventoryModelArrayById[$objInventoryModel->InventoryModelId] = $objInventoryModel;
-  		      }
-  		      // Fill the BarCodeArray in the order items sorted in the datagrid
-  		      foreach ($this->intObjectIdArray as $intObjectId) {
-  		        $this->strBarCodeArray[] = $objInventoryModelArrayById[$intObjectId]->InventoryModelCode;
-  		      }
-  		    }
-  		    break;
-  		  case 3:
-  		    // Get Ids of selected items from the datagrid
-  		    $this->intObjectIdArray = $this->ctlSearchMenu->dtgLocation->GetSelected('LocationId');
-  		    if (count($this->intObjectIdArray)) {
-  		      // Load an array of Locations by LocationId
-  		      $objCheckedArray = Location::QueryArray(QQ::In(QQN::Location()->LocationId, $this->intObjectIdArray));
-  		      $objLocationArrayById = array();
-  		      // Create array of objects where the key is Id
-  		      foreach ($objCheckedArray as $objLocation) {
-  		        $objLocationArrayById[$objLocation->LocationId] = $objLocation;
-  		      }
-  		      // Fill the BarCodeArray in the order items sorted in the datagrid
-  		      foreach ($this->intObjectIdArray as $intObjectId) {
-  		        $this->strBarCodeArray[] = $objLocationArrayById[$intObjectId]->ShortDescription;
-  		      }
-  		    }
-  		    break;
-  		  case 4:
-  		    // Get Ids of selected items from the datagrid
-  		    $this->intObjectIdArray = $this->ctlSearchMenu->dtgUserAccount->GetSelected('UserAccountId');
-  		    if (count($this->intObjectIdArray)) {
-  		      // Load an array of UserAccounts by UserAccountId
-  		      $objCheckedArray = UserAccount::QueryArray(QQ::In(QQN::UserAccount()->UserAccountId, $this->intObjectIdArray));
-  		      $objUserAccountArrayById = array();
-  		      // Create array of objects where the key is Id
-  		      foreach ($objCheckedArray as $objUserAccount) {
-  		        $objUserAccountArrayById[$objUserAccount->UserAccountId] = $objUserAccount;
-  		      }
-  		      // Fill the BarCodeArray in the order items sorted in the datagrid
-  		      foreach ($this->intObjectIdArray as $intObjectId) {
-  		        $this->strBarCodeArray[] = $objUserAccountArrayById[$intObjectId]->Username;
-  		      }
-  		    }
-  		    break;  
-  		  default:
-  		    $this->btnPrintLabels->Warning = "Please select Label Type.<br/>";
-  		    $this->intObjectIdArray = array();
-  		    break;  
-		  }
-		        
-      if (count($this->strBarCodeArray)) {
+    		    $objCheckedArray = Asset::QueryArray(QQ::In(QQN::Asset()->AssetId, $this->intObjectIdArray));
+    		    break;
+    		  case 2:
+    		    // Load an array of Inventories by InventoryModelId
+    		    $objCheckedArray = InventoryModel::QueryArray(QQ::In(QQN::InventoryModel()->InventoryModelId, $this->intObjectIdArray));
+    		    break;
+    		  case 3:
+    		    // Load an array of Locations by LocationId
+    		    $objCheckedArray = Location::QueryArray(QQ::In(QQN::Location()->LocationId, $this->intObjectIdArray));
+    		    break;
+    		  case 4:
+    		    $objCheckedArray = UserAccount::QueryArray(QQ::In(QQN::UserAccount()->UserAccountId, $this->intObjectIdArray));
+    		    break;  
+    		  default:
+    		    $this->btnPrintLabels->Warning = "Please select Label Type.<br/>";
+    		    $this->intObjectIdArray = array();
+    		    $blnError = true;
+    		    break;  
+  		  }
+  		  $objArrayById = array();
+    		// Create array of objects where the key is Id
+    		foreach ($objCheckedArray as $objChecked) {
+    		  $objArrayById[$objChecked->$arrDataGridObjectNameId[1]] = $objChecked;
+    		}
+    		// Fill the BarCodeArray in the order items sorted in the datagrid
+    		foreach ($this->intObjectIdArray as $intObjectId) {
+    		  $this->strBarCodeArray[] = $objArrayById[$intObjectId]->$arrDataGridObjectNameId[2];
+    		}
+  		}
+  		else {
+  		  $blnError = true;
+  		}
+		  
+      if (!$blnError) {
         $this->btnPrintLabels->Warning = "";
         $this->dlgPrintLabels->ShowDialogBox();
 		  }
@@ -252,6 +218,12 @@
 		protected function btnCancel_Click() {
 		  $this->dlgPrintLabels->HideDialogBox();
 		  $this->btnPrint->Enabled = true;
+		  // Uncheck all items
+      foreach ($this->GetAllControls() as $objControl) {
+        if (substr($objControl->ControlId, 0, 11) == 'chkSelected') {
+          $objControl->Checked = false;
+        }
+      }
 		}
 		
 		// Create the Label Offset drop-down menu on change Label Stock
@@ -350,7 +322,7 @@
         // Set document information
         $pdf->SetCreator("Tracmor");
         $pdf->SetAuthor("Tracmor");
-        $pdf->SetTitle("Bar Code Label Generation");
+        $pdf->SetTitle("Bar Codes");
         
         // Disable header and footer
         $pdf->setPrintHeader(false);
@@ -381,7 +353,7 @@
         ob_end_clean();
         
         // Close and display PDF document
-        $pdf->Output("BarCodeLabelGeneration.pdf", "D");
+        $pdf->Output("BarCodes.pdf", "D");
         
         // Delete temporary created images
         for ($i = 1; $i <= $this->intCurrentBarCodeLabel; $i++) {
