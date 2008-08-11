@@ -76,9 +76,9 @@ class QLocationSearchComposite extends QControl {
     	// This will render all of the necessary controls and actions. chkSelected_Render expects a unique ID for each row of the database.
     	$this->dtgLocation->AddColumn(new QDataGridColumnExt('<?=$_CONTROL->chkSelectAll_Render() ?>', '<?=$_CONTROL->chkSelected_Render($_ITEM->LocationId) ?>', 'CssClass="dtg_column"', 'HtmlEntities=false'));
     }
-    $this->dtgLocation->AddColumn(new QDataGridColumnExt('Location', '<?= $_ITEM->__toStringWithLink("bluelink") ?>', 'SortByCommand="short_description ASC"', 'ReverseSortByCommand="short_description DESC"', 'CssClass="dtg_column"', 'HtmlEntities=false'));
-    $this->dtgLocation->AddColumn(new QDataGridColumnExt('Description', '<?= $_ITEM->LongDescription ?>', 'Width=200', 'SortByCommand="long_description ASC"', 'ReverseSortByCommand="long_description DESC"', 'CssClass="dtg_column"'));
-    $this->dtgLocation->AddColumn(new QDataGridColumnExt('Created By', '<?= $_ITEM->CreatedByObject->__toStringFullName() ?>', 'SortByCommand="location__created_by__last_name DESC, location__created_by__first_name DESC"', 'ReverseSortByCommand="location__created_by__last_name ASC, location__created_by__first_name ASC"', 'CssClass="dtg_column"'));
+    $this->dtgLocation->AddColumn(new QDataGridColumnExt('Location', '<?= $_ITEM->__toStringWithLink("bluelink") ?>', array('OrderByClause' => QQ::OrderBy(QQN::Location()->ShortDescription), 'ReverseOrderByClause' => QQ::OrderBy(QQN::Location()->ShortDescription, false)), 'CssClass="dtg_column"', 'HtmlEntities=false'));
+    $this->dtgLocation->AddColumn(new QDataGridColumnExt('Description', '<?= $_ITEM->LongDescription ?>', 'Width=200', array('OrderByClause' => QQ::OrderBy(QQN::Location()->LongDescription), 'ReverseOrderByClause' => QQ::OrderBy(QQN::Location()->LongDescription, false)), 'CssClass="dtg_column"'));
+    $this->dtgLocation->AddColumn(new QDataGridColumnExt('Created By', '<?= $_ITEM->CreatedByObject->__toStringFullName() ?>', array('OrderByClause' => QQ::OrderBy(QQN::Location()->CreatedByObject->LastName), 'ReverseOrderByClause' => QQ::OrderBy(QQN::Location()->CreatedByObject->LastName, false)), 'CssClass="dtg_column"'));
     
     // Add the custom field columns with Display set to false. These can be shown by using the column toggle menu.
     $objCustomFieldArray = CustomField::LoadObjCustomFieldArray(2, false);
@@ -166,27 +166,41 @@ class QLocationSearchComposite extends QControl {
 	}
 	
   public function dtgLocation_Bind() {
+  	
+  	$objClauses = array();
+		if ($objClause = $this->dtgLocation->OrderByClause)
+			array_push($objClauses, $objClause);
+
+		$objClause = QQ::Expand(QQN::Location()->CreatedByObject);
+			array_push($objClauses, $objClause);
+  	
     $this->strLocation = $this->txtLocation->Text;
 		if ($this->strLocation) {
-		  $this->dtgLocation->DataSource = Location::QuerySingle(QQ::Equal(QQN::Location()->ShortDescription, $this->strLocation), QQ::Clause(QQ::Expand(QQN::Location()->CreatedByObject)));
-		  if ($this->dtgLocation->DataSource) {
-		    $this->dtgLocation->TotalItemCount = 1;
+			$this->dtgLocation->TotalItemCount = Location::QueryCount(QQ::AndCondition(QQ::Like(QQN::Location()->ShortDescription, '%' . $this->strLocation . '%'), QQ::GreaterThan(QQN::Location()->LocationId, 5)), $objClauses);
+		  if ($this->dtgLocation->TotalItemCount > 0) {
 		    $this->dtgLocation->ShowHeader = true;
+		    // Add the LimitClause information, as well
+				if ($objClause = $this->dtgLocation->LimitClause)
+					array_push($objClauses, $objClause);
+		    $this->dtgLocation->DataSource = Location::QueryArray(QQ::AndCondition(QQ::Like(QQN::Location()->ShortDescription, '%' . $this->strLocation . '%'), QQ::GreaterThan(QQN::Location()->LocationId, 5)), $objClauses);
 		  }
 		  else {
-		    $this->dtgLocation->TotalItemCount = 0;
 		    $this->dtgLocation->ShowHeader = false;
 		  }
 		}
 		else {
 		  $objExpansionMap[Location::ExpandCreatedByObject] = true;
   		// Get Total Count b/c of Pagination
-  		$this->dtgLocation->TotalItemCount = Location::CountAllLocations();
+  		$this->dtgLocation->TotalItemCount = Location::QueryCount(QQ::GreaterThan(QQN::Location()->LocationId, 5), $objClauses);
   		if ($this->dtgLocation->TotalItemCount == 0) {
   			$this->dtgLocation->ShowHeader = false;
   		}
   		else {
-  			$this->dtgLocation->DataSource = Location::LoadAllLocations(false, false, $this->dtgLocation->SortInfo, $this->dtgLocation->LimitInfo, $objExpansionMap);
+
+				if ($objClause = $this->dtgLocation->LimitClause)
+					array_push($objClauses, $objClause);
+  			
+		    $this->dtgLocation->DataSource = Location::QueryArray(QQ::GreaterThan(QQN::Location()->LocationId, 5), $objClauses);
   			$this->dtgLocation->ShowHeader = true;
 		  }
 		}
