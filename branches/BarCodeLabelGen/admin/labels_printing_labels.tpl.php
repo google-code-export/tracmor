@@ -9,5 +9,6 @@
   </tr>
 </table>
 <br />
-<?php $this->btnPrint->Render() ?>
-<?php $this->btnCancel->Render() ?>
+<?php $this->btnPrint->Render() ?>&nbsp;<?php $this->btnCancel->Render() ?>
+<br />
+<?php $this->txtWarning->Render() ?>
