@@ -41,6 +41,7 @@
 		protected $ctlSearchMenu;
 		// Buttons
 		protected $btnPrintLabels;
+		protected $blnPrintLabels;
 		
 		// Array of ObjectIds of checked items 
 		protected $intObjectIdArray;
@@ -126,7 +127,9 @@
 			$this->btnPrintLabels = new QButton($this);
 			$this->btnPrintLabels->Text = 'Print Labels';
 			$this->btnPrintLabels->AddAction(new QClickEvent(), new QAjaxAction('btnPrintLabels_Click'));
+			$this->btnPrintLabels->AddAction(new QClickEvent(), new QToggleEnableAction($this->btnPrintLabels));
 			$this->btnPrintLabels->Display = false;
+			$this->blnPrintLabels = false;
 		}
 		
 		// Create and display the search on change Label Type
@@ -160,66 +163,80 @@
       }
       else {
         $this->btnPrintLabels->Display = true;
+        $this->blnPrintLabels = false;
+  		  $this->btnPrintLabels->Enabled = true;
       }
   	}
 		
 		// Print Lables button click action
 		protected function btnPrintLabels_Click() {
-			$this->strBarCodeArray = array();
-			$this->strTablesBufferArray = array();
-			$this->intCurrentBarCodeLabel = 0;
-			$_SESSION["intGeneratingStatus"] = 0;
-			set_time_limit(0);
-			$blnError = false;
-			$arrDataGridObjectNameId = $this->ctlSearchMenu->GetDataGridObjectNameId();
-  		$this->intObjectIdArray = $this->ctlSearchMenu->$arrDataGridObjectNameId[0]->GetSelected($arrDataGridObjectNameId[1]);
-  		$objCheckedArray = array();
-  		if (count($this->intObjectIdArray)) {
-  		  // Switch statement for all four entity types
-  		  switch ($this->lstLabelTypeControl->SelectedValue) {
-  		    case 1:
-  		      // Load an array of Assets by AssetId
-    		    $objCheckedArray = Asset::QueryArray(QQ::In(QQN::Asset()->AssetId, $this->intObjectIdArray));
-    		    break;
-    		  case 2:
-    		    // Load an array of Inventories by InventoryModelId
-    		    $objCheckedArray = InventoryModel::QueryArray(QQ::In(QQN::InventoryModel()->InventoryModelId, $this->intObjectIdArray));
-    		    break;
-    		  case 3:
-    		    // Load an array of Locations by LocationId
-    		    $objCheckedArray = Location::QueryArray(QQ::In(QQN::Location()->LocationId, $this->intObjectIdArray));
-    		    break;
-    		  case 4:
-    		    $objCheckedArray = UserAccount::QueryArray(QQ::In(QQN::UserAccount()->UserAccountId, $this->intObjectIdArray));
-    		    break;  
-    		  default:
-    		    $this->btnPrintLabels->Warning = "Please select Label Type.<br/>";
-    		    $this->intObjectIdArray = array();
-    		    $blnError = true;
-    		    break;  
+			if ($this->blnPrintLabels) {
+  		  $this->strBarCodeArray = array();
+  			$this->strTablesBufferArray = array();
+  			$this->intCurrentBarCodeLabel = 0;
+  			// Set start value for PDF generation progress bar
+  			$_SESSION["intGeneratingStatus"] = 0;
+  			set_time_limit(0);
+  			$blnError = false;
+  			// Array[0] - DataGrid Object name; array[1] - Id; array[2] - used for Bar Code Label Generation 
+  			$arrDataGridObjectNameId = $this->ctlSearchMenu->GetDataGridObjectNameId();
+    		$this->intObjectIdArray = $this->ctlSearchMenu->$arrDataGridObjectNameId[0]->GetSelected($arrDataGridObjectNameId[1]);
+    		$objCheckedArray = array();
+    		if (count($this->intObjectIdArray)) {
+    		  // Switch statement for all four entity types
+    		  switch ($this->lstLabelTypeControl->SelectedValue) {
+    		    case 1:
+    		      // Load an array of Assets by AssetId
+      		    $objCheckedArray = Asset::QueryArray(QQ::In(QQN::Asset()->AssetId, $this->intObjectIdArray));
+      		    break;
+      		  case 2:
+      		    // Load an array of Inventories by InventoryModelId
+      		    $objCheckedArray = InventoryModel::QueryArray(QQ::In(QQN::InventoryModel()->InventoryModelId, $this->intObjectIdArray));
+      		    break;
+      		  case 3:
+      		    // Load an array of Locations by LocationId
+      		    $objCheckedArray = Location::QueryArray(QQ::In(QQN::Location()->LocationId, $this->intObjectIdArray));
+      		    break;
+      		  case 4:
+      		    $objCheckedArray = UserAccount::QueryArray(QQ::In(QQN::UserAccount()->UserAccountId, $this->intObjectIdArray));
+      		    break;  
+      		  default:
+      		    $this->btnPrintLabels->Warning = "Please select Label Type.<br/>";
+      		    $this->intObjectIdArray = array();
+      		    $blnError = true;
+      		    break;  
+    		  }
+    		  $objArrayById = array();
+      		// Create array of objects where the key is Id
+      		foreach ($objCheckedArray as $objChecked) {
+      		  $objArrayById[$objChecked->$arrDataGridObjectNameId[1]] = $objChecked;
+      		}
+      		// Fill the BarCodeArray in the order items sorted in the datagrid
+      		foreach ($this->intObjectIdArray as $intObjectId) {
+      		  $this->strBarCodeArray[] = $objArrayById[$intObjectId]->$arrDataGridObjectNameId[2];
+      		}
+    		}
+    		else {
+    		  $blnError = true;
+    		}
+  		  
+        if (!$blnError) {
+          $this->btnPrintLabels->Warning = "";
+          $this->dlgPrintLabels->ShowDialogBox();
   		  }
-  		  $objArrayById = array();
-    		// Create array of objects where the key is Id
-    		foreach ($objCheckedArray as $objChecked) {
-    		  $objArrayById[$objChecked->$arrDataGridObjectNameId[1]] = $objChecked;
-    		}
-    		// Fill the BarCodeArray in the order items sorted in the datagrid
-    		foreach ($this->intObjectIdArray as $intObjectId) {
-    		  $this->strBarCodeArray[] = $objArrayById[$intObjectId]->$arrDataGridObjectNameId[2];
-    		}
-  		}
-  		else {
-  		  $blnError = true;
-  		}
-		  
-      if (!$blnError) {
-        $this->btnPrintLabels->Warning = "";
-        $this->dlgPrintLabels->ShowDialogBox();
-		  }
-		  else {
-		    // If we have no checked items
-		    $this->btnPrintLabels->Warning .= "You must check at least one item.";
-		  }
+  		  else {
+  		    // If we have no checked items
+  		    $this->btnPrintLabels->Warning .= "You must check at least one item.";
+  		  }
+  		  // Enable Print Labels button
+  		  $this->btnPrintLabels->Enabled = true;
+  		  $this->blnPrintLabels = false;
+			}
+			else {
+			  $this->btnPrintLabels->Warning = "Please wait... loading.";
+			  $this->blnPrintLabels = true;
+			  QApplication::ExecuteJavaScript("document.getElementById('".$this->btnPrintLabels->ControlId."').click();");
+			}
 		}
 		
 		// Cancel button click action
@@ -228,18 +245,22 @@
 		  $_SESSION["intGeneratingStatus"] = -1;
 		  $this->dlgPrintLabels->HideDialogBox();
 		  $this->btnPrint->Enabled = true;
-		  // Uncheck all items
+		  $this->btnPrintLabels->Enabled = true;
+		  // Uncheck all items but SelectAll checkbox
       foreach ($this->GetAllControls() as $objControl) {
         if (substr($objControl->ControlId, 0, 11) == 'chkSelected') {
           $objControl->Checked = false;
         }
       }
       $arrDataGridObjectNameId = $this->ctlSearchMenu->GetDataGridObjectNameId();
+      // Uncheck SelectAll checkbox
       $this->ctlSearchMenu->$arrDataGridObjectNameId[0]->chkSelectAll->Checked = false;
       $this->txtWarning->Display = false;
+      // Delete temporary images
       for ($i = 1; $i <= $this->intCurrentBarCodeLabel; $i++) {
         @unlink("../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_".$i.".png");
       }
+      // Reset variables
       $this->intCurrentBarCodeLabel = 0;
       $this->strBarCodeArray = array();
       $this->strTablesBufferArray = array();
@@ -336,7 +357,6 @@
 		  if ($this->lstLabelStock->SelectedValue) {
 		    
 			  $this->lstLabelStock->Warning = "";
-		    //$this->dlgPrintLabels->HideDialogBox();
 		    
         set_time_limit(0);
         if ($_SESSION["intGeneratingStatus"] != -1) {
@@ -382,23 +402,9 @@
             
             // Close and save PDF document
             $pdf->Output("../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_BarCodes.pdf", "F");
-            
-            /*// Delete temporary created images
-            for ($i = 1; $i <= $this->intCurrentBarCodeLabel; $i++) {
-              @unlink("../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_".$i.".png");
-            }
-            
-            $this->txtWarning->Text = "PDF Generating completed!";
-  		      $this->txtWarning->Display = true;
-  		      
-  		      $this->strTablesBufferArray = array();
-  		      $this->intCurrentBarCodeLabel = 0;
-  		      
-  		      $this->dlgPrintLabels->HideDialogBox();
-  		      */
-            
+            // Cleaning up
             $this->btnCancel_Click();
-            
+            // Open generated PDF in new window
   		      QApplication::ExecuteJavaScript("window.open('../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_BarCodes.pdf','Bar Codes','resizeable=1,menubar=1,scrollbar=1,left=0,top=0,width=800,height=600');");
           }
         }
