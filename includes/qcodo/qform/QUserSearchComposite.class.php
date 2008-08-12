@@ -169,35 +169,37 @@ class QUserSearchComposite extends QControl {
 	}
 	
   public function dtgUserAccount_Bind() {
+    $objClauses = array();
+		if ($objClause = $this->dtgUserAccount->OrderByClause)
+			array_push($objClauses, $objClause);
+		$objClause = QQ::Expand(QQN::UserAccount()->CreatedByObject);
+			array_push($objClauses, $objClause);
+		$objClause = QQ::Expand(QQN::UserAccount()->Role);
+			array_push($objClauses, $objClause);	
+		
     $this->strUsername = $this->txtUsername->Text;
 		if ($this->strUsername) {
-		  $this->dtgUserAccount->DataSource = UserAccount::QuerySingle(QQ::Equal(QQN::UserAccount()->Username, $this->strUsername), QQ::Clause(QQ::Expand(QQN::UserAccount()->CreatedByObject)));
-		  if ($this->dtgUserAccount->DataSource) {
-		    $this->dtgUserAccount->TotalItemCount = 1;
+		  $this->dtgUserAccount->TotalItemCount = UserAccount::QueryCount(QQ::Like(QQN::UserAccount()->Username, '%' . $this->strUsername . '%'), $objClauses);
+		  if ($this->dtgUserAccount->TotalItemCount > 0) {
 		    $this->dtgUserAccount->ShowHeader = true;
+		    // Add the LimitClause information, as well
+				if ($objClause = $this->dtgUserAccount->LimitClause)
+					array_push($objClauses, $objClause);
+		    $this->dtgUserAccount->DataSource = UserAccount::QueryArray(QQ::Like(QQN::UserAccount()->Username, '%' . $this->strUsername . '%'), $objClauses);
 		  }
 		  else {
-		    $this->dtgUserAccount->TotalItemCount = 0;
 		    $this->dtgUserAccount->ShowHeader = false;
 		  }
 		}
 		else {
-		  $objExpansionMap[UserAccount::ExpandCreatedByObject] = true;
-  		$objExpansionMap[UserAccount::ExpandRole] = true;
-  		// Get Total Count b/c of Pagination
+		  // Get Total Count b/c of Pagination
   		$this->dtgUserAccount->TotalItemCount = UserAccount::CountAll();
   		if ($this->dtgUserAccount->TotalItemCount == 0) {
   			$this->dtgUserAccount->ShowHeader = false;
   		}
   		else {
-  			$objClauses = array();
-  			if ($objClause = $this->dtgUserAccount->OrderByClause)
-  				array_push($objClauses, $objClause);
   			if ($objClause = $this->dtgUserAccount->LimitClause)
   				array_push($objClauses, $objClause);
-  			if ($objClause = QQ::Expand(QQN::UserAccount()->CreatedByObject))
-  				array_push($objClauses, $objClause);
-  			if ($objClause = QQ::Expand(QQN::UserAccount()->Role))
   			$this->dtgUserAccount->DataSource = UserAccount::LoadAll($objClauses);
   			$this->dtgUserAccount->ShowHeader = true;
 		  }

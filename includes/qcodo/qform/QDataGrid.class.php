@@ -360,8 +360,10 @@
 	  
 	  public function GetSelected($strId) {
 	  	$intObjectIdArray = array();
-	  	
-      if ($this->chkSelectAll->Checked) {
+	  	$intItemsPerPage = $this->ItemsPerPage;
+      $intPageNumber = $this->PageNumber;
+      
+	  	if ($this->chkSelectAll->Checked) {
       	
       	for ($i=1; $i <= (ceil($this->TotalItemCount/200)); $i++) {
 			
@@ -394,8 +396,8 @@
 	  		}
 	  	}
 	  	
-	  	//$this->ItemsPerPage = $intItemsPerPage;
-      //$this->PageNumber = $intPageNumber;
+	  	$this->ItemsPerPage = $intItemsPerPage;
+      $this->PageNumber = $intPageNumber;
       
       //$this->DataBind();
 	  	

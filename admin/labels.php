@@ -35,6 +35,7 @@
 		protected $lstLabelOffset;
 		protected $btnPrint;
 		protected $btnCancel;
+		protected $txtWarning;
 		
 		// Search Menu
 		protected $ctlSearchMenu;
@@ -46,6 +47,7 @@
 		protected $strBarCodeArray;
 		protected $intCurrentBarCodeLabel;
 		protected $intLabelsPerPage;
+		protected $strTablesBufferArray;
 		
 		protected function Form_Create() {
 			// Create the Header Menu
@@ -108,11 +110,14 @@
 			$this->lstLabelOffset->AddItem(new QListItem('None', 0, 1));
 			$this->btnPrint = new QButton($this->dlgPrintLabels);
 			$this->btnPrint->Text = "Print";
-			$this->btnPrint->AddAction(new QClickEvent(), new QServerAction('btnPrint_Click'));
+			$this->btnPrint->AddAction(new QClickEvent(), new QAjaxAction('btnPrint_Click'));
 			$this->btnPrint->AddAction(new QClickEvent(), new QToggleEnableAction($this->btnPrint));
 			$this->btnCancel = new QButton($this->dlgPrintLabels);
 			$this->btnCancel->Text = "Cancel";
-			$this->btnCancel->AddAction(new QClickEvent(), new QServerAction('btnCancel_Click'));
+			$this->btnCancel->AddAction(new QClickEvent(), new QAjaxAction('btnCancel_Click'));
+			$this->txtWarning = new QLabel($this->dlgPrintLabels);
+			$this->txtWarning->Text = "Please wait... PDF Generating: 0% Complete";
+			$this->txtWarning->Display = false;
 			$this->dlgPrintLabels->Template = 'labels_printing_labels.tpl.php';
 		}
   	
@@ -161,6 +166,9 @@
 		// Print Lables button click action
 		protected function btnPrintLabels_Click() {
 			$this->strBarCodeArray = array();
+			$this->strTablesBufferArray = array();
+			$this->intCurrentBarCodeLabel = 0;
+			$_SESSION["intGeneratingStatus"] = 0;
 			set_time_limit(0);
 			$blnError = false;
 			$arrDataGridObjectNameId = $this->ctlSearchMenu->GetDataGridObjectNameId();
@@ -224,7 +232,17 @@
           $objControl->Checked = false;
         }
       }
-		}
+      $arrDataGridObjectNameId = $this->ctlSearchMenu->GetDataGridObjectNameId();
+      $this->ctlSearchMenu->$arrDataGridObjectNameId[0]->PageNumber = 1;
+      $this->ctlSearchMenu->$arrDataGridObjectNameId[0]->chkSelectAll->Checked = false;
+      $this->txtWarning->Display = false;
+      for ($i = 1; $i <= $this->intCurrentBarCodeLabel; $i++) {
+        @unlink("../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_".$i.".png");
+      }
+      $this->intCurrentBarCodeLabel = 0;
+      $this->strBarCodeArray = array();
+      $this->strTablesBufferArray = array();
+    }
 		
 		// Create the Label Offset drop-down menu on change Label Stock
 		protected function lstLabelStock_Change() {
@@ -244,6 +262,7 @@
   		  for ($i = 1; $i < $this->intLabelsPerPage; $i++) {
           $this->lstLabelOffset->AddItem(new QListItem($i, $i));
         }
+        $this->btnPrint->Enabled = true;
 		  }
 		  else {
 		    $this->lstLabelStock->Warning = "Please select one";
@@ -298,7 +317,8 @@
 		    }
 		    $strTable .= "</tr>";
 		  }
-		  
+		  // xx% Complete
+		  $_SESSION["intGeneratingStatus"] = ceil($this->intCurrentBarCodeLabel / $intBarCodeArrayCount * 100);
 		  $strTable .= "</table>";
 		  return $strTable;
 		}
@@ -307,18 +327,17 @@
 		protected function btnPrint_Click() {
 		  if ($this->lstLabelStock->SelectedValue) {
 		    // Begin rendering the QForm
-			  $this->RenderBegin(false);
+			  //$this->RenderBegin(false);
 		    
 			  $this->lstLabelStock->Warning = "";
-		    $this->dlgPrintLabels->HideDialogBox();
-		    $this->intCurrentBarCodeLabel = 0;
+		    //$this->dlgPrintLabels->HideDialogBox();
 		    
-		    include_once('../includes/php/tcpdf/config/lang/eng.php');
-        include_once('../includes/php/tcpdf/tcpdf.php');
+		    //include_once('../includes/php/tcpdf/config/lang/eng.php');
+        //include_once('../includes/php/tcpdf/tcpdf.php');
         
         set_time_limit(0);
         
-        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true);
+        /*$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true);
         // Set document information
         $pdf->SetCreator("Tracmor");
         $pdf->SetAuthor("Tracmor");
@@ -350,18 +369,72 @@
         }
         
         // Clean the Output Buffer
-        ob_end_clean();
+        //ob_end_clean();
         
         // Close and display PDF document
-        $pdf->Output("BarCodes.pdf", "D");
-        
+        //$pdf->Output("BarCodes.pdf", "D");
+        $pdf->Output("../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_BarCodes.pdf", "F");
         // Delete temporary created images
         for ($i = 1; $i <= $this->intCurrentBarCodeLabel; $i++) {
           @unlink("../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_".$i.".png");
         }
+        $this->txtWarning->Text = "Done!";
+        $this->txtWarning->Display = true;
+        //$this->RenderEnd(false);
+				//exit();*/
         
-        $this->RenderEnd(false);
-				exit();
+        if ($this->intCurrentBarCodeLabel < count($this->strBarCodeArray)) {
+          array_push($this->strTablesBufferArray, $this->CreateTableByBarCodeArray());
+          $this->txtWarning->Text = "Please wait... PDF Generating: ".$_SESSION["intGeneratingStatus"]."% Complete";
+		      $this->txtWarning->Display = true;
+		      $this->btnPrint->Enabled = true;
+        }
+        else {
+          include_once('../includes/php/tcpdf/config/lang/eng.php');
+          include_once('../includes/php/tcpdf/tcpdf.php');
+          
+          $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true);
+          // Set document information
+          $pdf->SetCreator("Tracmor");
+          $pdf->SetAuthor("Tracmor");
+          $pdf->SetTitle("Bar Codes");
+          
+          // Disable header and footer
+          $pdf->setPrintHeader(false);
+          $pdf->setPrintFooter(false);
+          
+          // Set margins
+          $pdf->SetMargins(10, 5, 10);
+          
+          // Disable auto page breaks
+          $pdf->SetAutoPageBreak(false);
+          
+          // Set some language-dependent strings
+          $pdf->setLanguageArray($l); 
+          
+          // Initialize document
+          $pdf->AliasNbPages();
+          
+          foreach ($this->strTablesBufferArray as $strTableBuffer) {
+            // add a page
+            $pdf->AddPage();
+            // output the HTML content
+            $pdf->writeHTML($strTableBuffer);
+          }
+          
+          // Close and save PDF document
+          $pdf->Output("../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_BarCodes.pdf", "F");
+          // Delete temporary created images
+          for ($i = 1; $i <= $this->intCurrentBarCodeLabel; $i++) {
+            @unlink("../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_".$i.".png");
+          }
+          
+          $this->txtWarning->Text = "PDF Generating completed!";
+		      $this->txtWarning->Display = true;
+		      
+		      $this->strTablesBufferArray = array();
+		      $this->intCurrentBarCodeLabel = 0;
+        }
   	  }
 		  else {
 		    $this->lstLabelStock->Warning = "Please select one";
