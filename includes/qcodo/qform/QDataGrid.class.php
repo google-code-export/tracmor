@@ -398,8 +398,6 @@
 	  	
 	  	$this->ItemsPerPage = $intItemsPerPage;
       $this->PageNumber = $intPageNumber;
-      
-      //$this->DataBind();
 	  	
 	  	return $intObjectIdArray;
 	  }
