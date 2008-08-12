@@ -58,6 +58,8 @@
 					<br />
 					<?php $this->dlgPrintLabels->Render(); ?>
 					<?php $this->btnPrintLabels->RenderWithError(); ?>
+					<br />
+					<br />
 				</td>
 			</tr>
    </table>
