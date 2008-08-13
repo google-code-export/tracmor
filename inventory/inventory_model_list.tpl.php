@@ -33,18 +33,18 @@
 	$this->ctlShortcutMenu->Render();
 ?>
 <!-- End Shortcut Menu -->
+		</td>
+		<td>
+			<img src="../images/empty.gif" width="10">
+		</td>
+		<td width="100%" valign="top">
 <!-- Begin Search Menu -->
 <?php
 	$this->ctlSearchMenu->Render();
 ?>
 <!-- End Search  Menu -->
 <!--
-		</td>
-		<td>
-			<img src="../images/empty.gif" width="10">
-		</td>
-		<td width="100%" valign="top">
-		<div class="title">&nbsp;Inventory Search</div>
+    <div class="title">&nbsp;Inventory Search</div>
 		<table style="border:1px solid #AAAAAA;background-color:#EEEEEE;font-family:verdana;font-size:10px;color:#444444;height:40px" width="100%">
 			<tr>
 				<td style="vertical-align:top;" noWrap>

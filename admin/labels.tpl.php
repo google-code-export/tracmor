@@ -58,6 +58,7 @@
 					<br />
 					<?php $this->dlgPrintLabels->Render(); ?>
 					<?php $this->btnPrintLabels->RenderWithError(); ?>
+					<div id="warning_loading"></div>
 					<br />
 					<br />
 				</td>
