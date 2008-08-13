@@ -179,6 +179,10 @@
 							$arrNames[] = strip_tags($col->Name);
 						}
           }
+          // Remove Checkbox Column
+          elseif (substr($col->Name, 0, 3) == '<?=') {
+          	continue;
+          }
           else {
         		$arrNames[] = $col->Name;
           }
@@ -209,6 +213,10 @@
 								$strHtml = substr($strHtml, $intStart, strlen($strHtml) - 2 - $intStart);
 							}
 	          }
+	          // Remove Checkbox Columns
+	          elseif (substr($objColumn->Name, 0, 3) == '<?=') {
+          		continue;
+          	}
 	          
 	          if ($objColumn->HtmlEntities)
 	            $strHtml = QApplication::HtmlEntities($strHtml);
