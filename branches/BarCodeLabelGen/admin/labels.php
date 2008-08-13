@@ -41,7 +41,7 @@
 		protected $ctlSearchMenu;
 		// Buttons
 		protected $btnPrintLabels;
-		protected $blnPrintLabels;
+		//protected $blnPrintLabels;
 		
 		// Array of ObjectIds of checked items 
 		protected $intObjectIdArray;
@@ -131,7 +131,7 @@
 			$this->btnPrintLabels->AddAction(new QClickEvent(), new QAjaxAction('btnPrintLabels_Click'));
 			$this->btnPrintLabels->AddAction(new QClickEvent(), new QToggleEnableAction($this->btnPrintLabels));
 			$this->btnPrintLabels->Display = false;
-			$this->blnPrintLabels = false;
+			//$this->blnPrintLabels = false;
 		}
 		
 		// Create and display the search on change Label Type
@@ -165,14 +165,14 @@
       }
       else {
         $this->btnPrintLabels->Display = true;
-        $this->blnPrintLabels = false;
+        //$this->blnPrintLabels = false;
   		  $this->btnPrintLabels->Enabled = true;
       }
   	}
 		
 		// Print Lables button click action
 		protected function btnPrintLabels_Click() {
-			if ($this->blnPrintLabels) {
+			//if ($this->blnPrintLabels) {
   		  $this->strBarCodeArray = array();
   			$this->strTablesBufferArray = array();
   			$this->intCurrentBarCodeLabel = 0;
@@ -235,13 +235,14 @@
   		  }
   		  // Enable Print Labels button
   		  $this->btnPrintLabels->Enabled = true;
-  		  $this->blnPrintLabels = false;
-			}
+  		  //$this->blnPrintLabels = false;
+			/*}
 			else {
 			  $this->btnPrintLabels->Warning = "Please wait... loading.";
 			  $this->blnPrintLabels = true;
 			  QApplication::ExecuteJavaScript("document.getElementById('".$this->btnPrintLabels->ControlId."').click(); document.getElementById('warning_loading').innerHTML = '';");
-			}
+			}*/
+			QApplication::ExecuteJavaScript("document.getElementById('warning_loading').innerHTML = '';");
 		}
 		
 		// Cancel button click action
@@ -351,7 +352,7 @@
 		  }
 		  
 		  $strTable .= "</table>";
-		  // If user clicked Cancel button or clicked outside of the modal dialog
+		  // If the user clicked Cancel button or clicked outside of the modal dialog
 		  if ($_SESSION["intGeneratingStatus"] != -1 || !($this->dlgPrintLabels->Visible && $this->dlgPrintLabels->Display)) {
 		    // xx% Complete
 		    $_SESSION["intGeneratingStatus"] = ceil($this->intCurrentBarCodeLabel / $intBarCodeArrayCount * 100);
@@ -368,9 +369,9 @@
 			  $this->lstLabelStock->Warning = "";
 		    
         set_time_limit(0);
-        // If user clicked Cancel button
+        // If the user clicked Cancel button
         if ($_SESSION["intGeneratingStatus"] != -1) {
-          // If user clicked outside of the modal dialog
+          // If the user clicked outside of the modal dialog
           if ($this->dlgPrintLabels->Visible && $this->dlgPrintLabels->Display) {
             if ($this->intCurrentBarCodeLabel < count($this->strBarCodeArray)) {
               array_push($this->strTablesBufferArray, $this->CreateTableByBarCodeArray());
