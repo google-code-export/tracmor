@@ -1,4 +1,4 @@
-		<div class="title"><?php _t('Locations'); ?></div>
+		<div class="title">Locations Search</div>
 		<table style="border:1px solid #AAAAAA;background-color:#EEEEEE;font-family:verdana;font-size:10;color:#444444;height:40" width="100%">
 			<tr>
 				<td style="vertical-align:top;" noWrap>

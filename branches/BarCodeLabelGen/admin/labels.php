@@ -116,6 +116,7 @@
 			$this->btnCancel = new QButton($this->dlgPrintLabels);
 			$this->btnCancel->Text = "Cancel";
 			$this->btnCancel->AddAction(new QClickEvent(), new QAjaxAction('btnCancel_Click'));
+			$this->btnCancel->AddAction(new QClickEvent(), new QJavaScriptAction("document.getElementById('warning_loading').innerHTML = '';"));
 			$this->txtWarning = new QLabel($this->dlgPrintLabels);
 			$this->txtWarning->Text = "Please wait... PDF Generating: 0% Complete";
 			$this->txtWarning->Display = false;
@@ -126,6 +127,7 @@
 		protected function btnPrintLabels_Create() {
 			$this->btnPrintLabels = new QButton($this);
 			$this->btnPrintLabels->Text = 'Print Labels';
+			$this->btnPrintLabels->AddAction(new QClickEvent(), new QJavaScriptAction("document.getElementById('warning_loading').innerHTML = 'Please wait... loading.';"));
 			$this->btnPrintLabels->AddAction(new QClickEvent(), new QAjaxAction('btnPrintLabels_Click'));
 			$this->btnPrintLabels->AddAction(new QClickEvent(), new QToggleEnableAction($this->btnPrintLabels));
 			$this->btnPrintLabels->Display = false;
@@ -222,6 +224,9 @@
   		  
         if (!$blnError) {
           $this->btnPrintLabels->Warning = "";
+          $this->lstLabelStock->SelectedValue = 0;
+          $this->lstLabelOffset->RemoveAllItems();
+          $this->lstLabelOffset->AddItem(new QListItem('None', 0, 1));
           $this->dlgPrintLabels->ShowDialogBox();
   		  }
   		  else {
@@ -235,7 +240,7 @@
 			else {
 			  $this->btnPrintLabels->Warning = "Please wait... loading.";
 			  $this->blnPrintLabels = true;
-			  QApplication::ExecuteJavaScript("document.getElementById('".$this->btnPrintLabels->ControlId."').click();");
+			  QApplication::ExecuteJavaScript("document.getElementById('".$this->btnPrintLabels->ControlId."').click(); document.getElementById('warning_loading').innerHTML = '';");
 			}
 		}
 		
@@ -246,6 +251,8 @@
 		  $this->dlgPrintLabels->HideDialogBox();
 		  $this->btnPrint->Enabled = true;
 		  $this->btnPrintLabels->Enabled = true;
+		  
+		  /*
 		  // Uncheck all items but SelectAll checkbox
       foreach ($this->GetAllControls() as $objControl) {
         if (substr($objControl->ControlId, 0, 11) == 'chkSelected') {
@@ -255,7 +262,8 @@
       $arrDataGridObjectNameId = $this->ctlSearchMenu->GetDataGridObjectNameId();
       // Uncheck SelectAll checkbox
       $this->ctlSearchMenu->$arrDataGridObjectNameId[0]->chkSelectAll->Checked = false;
-      $this->txtWarning->Display = false;
+      */
+		  
       // Delete temporary images
       for ($i = 1; $i <= $this->intCurrentBarCodeLabel; $i++) {
         @unlink("../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_".$i.".png");
@@ -343,7 +351,8 @@
 		  }
 		  
 		  $strTable .= "</table>";
-		  if ($_SESSION["intGeneratingStatus"] != -1) {
+		  // If user clicked Cancel button or clicked outside of the modal dialog
+		  if ($_SESSION["intGeneratingStatus"] != -1 || !($this->dlgPrintLabels->Visible && $this->dlgPrintLabels->Display)) {
 		    // xx% Complete
 		    $_SESSION["intGeneratingStatus"] = ceil($this->intCurrentBarCodeLabel / $intBarCodeArrayCount * 100);
 		    return $strTable;
@@ -359,53 +368,72 @@
 			  $this->lstLabelStock->Warning = "";
 		    
         set_time_limit(0);
+        // If user clicked Cancel button
         if ($_SESSION["intGeneratingStatus"] != -1) {
-          if ($this->intCurrentBarCodeLabel < count($this->strBarCodeArray)) {
-            array_push($this->strTablesBufferArray, $this->CreateTableByBarCodeArray());
-            $this->txtWarning->Text = "Please wait... PDF Generating: ".$_SESSION["intGeneratingStatus"]."% Complete";
-  		      $this->txtWarning->Display = true;
-  		      $this->btnPrint->Enabled = true;
-  		      QApplication::ExecuteJavaScript("document.getElementById('".$this->btnPrint->ControlId."').click();");
+          // If user clicked outside of the modal dialog
+          if ($this->dlgPrintLabels->Visible && $this->dlgPrintLabels->Display) {
+            if ($this->intCurrentBarCodeLabel < count($this->strBarCodeArray)) {
+              array_push($this->strTablesBufferArray, $this->CreateTableByBarCodeArray());
+              $this->txtWarning->Text = "Please wait... PDF Generating: ".$_SESSION["intGeneratingStatus"]."% Complete";
+    		      $this->txtWarning->Display = true;
+    		      $this->btnPrint->Enabled = true;
+    		      QApplication::ExecuteJavaScript("document.getElementById('".$this->btnPrint->ControlId."').click();");
+            }
+            else {
+              include_once('../includes/php/tcpdf/config/lang/eng.php');
+              include_once('../includes/php/tcpdf/tcpdf.php');
+              
+              $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true);
+              // Set document information
+              $pdf->SetCreator("Tracmor");
+              $pdf->SetAuthor("Tracmor");
+              $pdf->SetTitle("Bar Codes");
+              
+              // Disable header and footer
+              $pdf->setPrintHeader(false);
+              $pdf->setPrintFooter(false);
+              
+              // Set margins
+              $pdf->SetMargins(5, 5, 5);
+              
+              // Disable auto page breaks
+              $pdf->SetAutoPageBreak(false);
+              
+              // Set some language-dependent strings
+              $pdf->setLanguageArray($l); 
+              
+              // Initialize document
+              $pdf->AliasNbPages();
+              
+              foreach ($this->strTablesBufferArray as $strTableBuffer) {
+                // add a page
+                $pdf->AddPage();
+                // output the HTML content
+                $pdf->writeHTML($strTableBuffer);
+              }
+              
+              // Close and save PDF document
+              $pdf->Output("../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_BarCodes.pdf", "F");
+              // Cleaning up
+              $this->btnCancel_Click();
+              
+              // Uncheck all items but SelectAll checkbox
+              foreach ($this->GetAllControls() as $objControl) {
+                if (substr($objControl->ControlId, 0, 11) == 'chkSelected') {
+                  $objControl->Checked = false;
+                }
+              }
+              $arrDataGridObjectNameId = $this->ctlSearchMenu->GetDataGridObjectNameId();
+              // Uncheck SelectAll checkbox
+              $this->ctlSearchMenu->$arrDataGridObjectNameId[0]->chkSelectAll->Checked = false;
+              
+              // Open generated PDF in new window
+    		      QApplication::ExecuteJavaScript("window.open('../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_BarCodes.pdf','Bar Codes','resizeable=1,menubar=1,scrollbar=1,left=0,top=0,width=800,height=600');");
+            }
           }
           else {
-            include_once('../includes/php/tcpdf/config/lang/eng.php');
-            include_once('../includes/php/tcpdf/tcpdf.php');
-            
-            $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true);
-            // Set document information
-            $pdf->SetCreator("Tracmor");
-            $pdf->SetAuthor("Tracmor");
-            $pdf->SetTitle("Bar Codes");
-            
-            // Disable header and footer
-            $pdf->setPrintHeader(false);
-            $pdf->setPrintFooter(false);
-            
-            // Set margins
-            $pdf->SetMargins(10, 5, 10);
-            
-            // Disable auto page breaks
-            $pdf->SetAutoPageBreak(false);
-            
-            // Set some language-dependent strings
-            $pdf->setLanguageArray($l); 
-            
-            // Initialize document
-            $pdf->AliasNbPages();
-            
-            foreach ($this->strTablesBufferArray as $strTableBuffer) {
-              // add a page
-              $pdf->AddPage();
-              // output the HTML content
-              $pdf->writeHTML($strTableBuffer);
-            }
-            
-            // Close and save PDF document
-            $pdf->Output("../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_BarCodes.pdf", "F");
             // Cleaning up
             $this->btnCancel_Click();
-            // Open generated PDF in new window
-  		      QApplication::ExecuteJavaScript("window.open('../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_BarCodes.pdf','Bar Codes','resizeable=1,menubar=1,scrollbar=1,left=0,top=0,width=800,height=600');");
           }
         }
   	  }
