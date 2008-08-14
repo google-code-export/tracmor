@@ -11,10 +11,10 @@ Name:
 	TCPDF
 
 Version:
-	4.0.014
+	4.0.019
 	
 Release date:
-	2008-07-29
+	2008-08-13
 
 Author:
 	Nicola Asuni 
@@ -55,7 +55,7 @@ Main Features:
 // 	* supports stroke and clipping mode for text;
 // 	* supports clipping masks;
 // 	* supports Grayscale, RGB and CMYK colors and transparency;
-// 	* supports links;
+// 	* supports links and annotations;
 // 	* supports page compression (requires zlib extension);
 // 	* supports PDF user's rights.
 

@@ -1,3 +1,27 @@
+4.0.019 (2008-08-13)
+	- Rowspan on first cell bug was fixed.
+
+4.0.018 (2008-08-08)
+	- Default cellpadding for HTML tables was fixed.
+	- Annotation() function was added to support some PDF annotations (see example_036.php and section 8.4 of PDF reference 1.7).
+	- HTML links are now correclty shifted during line alignments.
+	- function getAliasNbPages() was added and Footer() was updated.
+	- RowSpan mode for HTML tables was fixed.
+	- Bugs item #2043610 "Multiple sizes vertical align wrong" was fixed.
+	- ImageEPS() function was improved and RTL alignment was fixed (see example_032.php).
+
+4.0.017 (2008-08-05)
+	- Missing CNZ and CEO style modes were added to Rect() function.
+	- Fonts utils were updated to include support for OpenType fonts.
+	- getLastH() function was added.
+
+4.0.016 (2008-07-30)
+	- setPageMark() function was added. This function must be called after calling Image() function for a background image.
+
+4.0.015 (2008-07-29)
+	- Some functions were changed to support different page formats (see example_028.php).
+	- The signature of setPage() function is changed.
+
 4.0.014 (2008-07-29)
 	- K_PATH_MAIN calculation on tcpdf_config.php was fixed.
 	- HTML support for EPS/AI images was added (see example_006.php).
