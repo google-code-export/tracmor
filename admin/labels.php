@@ -287,14 +287,20 @@
 		    $this->lstLabelStock->Warning = "";
   		  $this->lstLabelOffset->RemoveAllItems();
   		  $this->lstLabelOffset->AddItem(new QListItem('None', 0, 1));
-  		  // Labels per page for Avery 6577 (5/8" x 3")
-  		  if ($this->lstLabelStock->SelectedValue == 1) {
- 		      $this->intLabelsPerPage = 30;
+  		  switch ($this->lstLabelStock->SelectedValue) {
+  		    case 1:
+  		      // Labels per page for Avery 6577 (5/8" x 3")
+  		      $this->intLabelsPerPage = 30;
+  		      break;
+  		    case 2:
+  		      // Labels per page for Avery 6576 (1-1/4" x 1-3/4")
+  		      $this->intLabelsPerPage = 32;
+  		      break;
+  		    default:
+  		      throw new QCallerException('Label Stock Not Provided');
+  		      break;
   		  }
-  		  // Labels per page for Avery 6576 (1-1/4" x 1-3/4")
-  		  else {
-  		    $this->intLabelsPerPage = 32;
-  		  }
+  		  
   		  for ($i = 1; $i < $this->intLabelsPerPage; $i++) {
           $this->lstLabelOffset->AddItem(new QListItem($i, $i));
         }
@@ -310,16 +316,21 @@
 		  $strTable = "<table width=\"100%\" height=\"100%\" border=\"1\">";
 		  // Count of total labels
 		  $intBarCodeArrayCount = count($this->strBarCodeArray);
-		  if ($this->lstLabelStock->SelectedValue == 1) {
-		    // Labels per row for Avery 6577 (5/8" x 3")
-		    $intNumberInTableRow = 2;
-		    $intImageHeight = 40;
-		  }
-		  else {
-		    // Labels per row for Avery 6576 (1-1/4" x 1-3/4")
-		    $intNumberInTableRow = 4;
-		    $intImageHeight = 60;
-		  }
+		  switch ($this->lstLabelStock->SelectedValue) {
+  		  case 1:
+    		  // Labels per row for Avery 6577 (5/8" x 3")
+  		    $intNumberInTableRow = 2;
+  		    $intImageHeight = 40;
+    		  break;
+  		  case 2:
+    		  // Labels per row for Avery 6576 (1-1/4" x 1-3/4")
+  		    $intNumberInTableRow = 4;
+  		    $intImageHeight = 60;
+    		  break;
+  		  default:
+  		    throw new QCallerException('Label Stock Not Provided'); 
+  		  break;
+  		}
 		  
 		  $i = 0;
 		  while ($i < $this->intLabelsPerPage) {
