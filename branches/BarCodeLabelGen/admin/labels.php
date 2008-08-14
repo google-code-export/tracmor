@@ -313,7 +313,7 @@
 		
 		// Create and Setup the table per each page for Bar Code Label Generation
 		protected function CreateTableByBarCodeArray() {
-		  $strTable = "<table width=\"100%\" height=\"100%\" border=\"1\">";
+		  $strTable = "<table width=\"100%\" height=\"100%\" border=\"1\" style=\"text-align:center\">";
 		  // Count of total labels
 		  $intBarCodeArrayCount = count($this->strBarCodeArray);
 		  switch ($this->lstLabelStock->SelectedValue) {
@@ -348,7 +348,9 @@
 		        imagedestroy($image);
 		      }
 		      else {
-		        $strTable .= "<td></td>";
+		        if (!isset($arrImageSize))
+		          $arrImageSize = getimagesize(sprintf("../includes/php/tcpdf/images/tmp/%s_%s.png", $_SESSION['intUserAccountId'], $this->intCurrentBarCodeLabel));
+		        $strTable .= sprintf("<td><img src=\"../includes/php/tcpdf/images/_blank.png\" height=\"%s\" width=\"%s\" /></td>", $intImageHeight, $arrImageSize[0]);
 		      }
 		      $j++;
 		      $i++;
@@ -400,7 +402,7 @@
               $pdf->setPrintFooter(false);
               
               // Set margins
-              $pdf->SetMargins(5, 5, 5);
+              $pdf->SetMargins(11.9, 13, 11.9);
               
               // Disable auto page breaks
               $pdf->SetAutoPageBreak(false);
@@ -417,6 +419,20 @@
               
               // Initialize document
               $pdf->AliasNbPages();
+              
+              switch ($this->lstLabelStock->SelectedValue) {
+          		  case 1:
+            		  // Labels per row for Avery 6577 (5/8" x 3")
+          		    $pdf->SetFontSize(10);
+            		  break;
+          		  case 2:
+            		  // Labels per row for Avery 6576 (1-1/4" x 1-3/4")
+          		    $pdf->SetFontSize(33);
+            		  break;
+          		  default:
+          		    throw new QCallerException('Label Stock Not Provided'); 
+          		  break;
+          		}
               
               foreach ($this->strTablesBufferArray as $strTableBuffer) {
                 // add a page
