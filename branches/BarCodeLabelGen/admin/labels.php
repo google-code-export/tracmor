@@ -111,8 +111,9 @@
 			$this->lstLabelOffset->AddItem(new QListItem('None', 0, 1));
 			$this->btnPrint = new QButton($this->dlgPrintLabels);
 			$this->btnPrint->Text = "Print";
-			$this->btnPrint->AddAction(new QClickEvent(), new QAjaxAction('btnPrint_Click'));
 			$this->btnPrint->AddAction(new QClickEvent(), new QToggleEnableAction($this->btnPrint));
+			$this->btnPrint->AddAction(new QClickEvent(), new QToggleEnableAction($this->lstLabelStock, false));
+			$this->btnPrint->AddAction(new QClickEvent(), new QAjaxAction('btnPrint_Click'));
 			$this->btnCancel = new QButton($this->dlgPrintLabels);
 			$this->btnCancel->Text = "Cancel";
 			$this->btnCancel->AddAction(new QClickEvent(), new QAjaxAction('btnCancel_Click'));
@@ -227,6 +228,8 @@
           $this->lstLabelStock->SelectedValue = 0;
           $this->lstLabelOffset->RemoveAllItems();
           $this->lstLabelOffset->AddItem(new QListItem('None', 0, 1));
+          $this->lstLabelStock->Enabled = true;
+          $this->lstLabelOffset->Enabled = true;
           $this->dlgPrintLabels->ShowDialogBox();
   		  }
   		  else {
@@ -304,16 +307,18 @@
 		
 		// Create and Setup the table per each page for Bar Code Label Generation
 		protected function CreateTableByBarCodeArray() {
-		  $strTable = "<table width=\"100%\" height=\"100%\">";
+		  $strTable = "<table width=\"100%\" height=\"100%\" border=\"1\">";
 		  // Count of total labels
 		  $intBarCodeArrayCount = count($this->strBarCodeArray);
 		  if ($this->lstLabelStock->SelectedValue == 1) {
 		    // Labels per row for Avery 6577 (5/8" x 3")
 		    $intNumberInTableRow = 2;
+		    $intImageHeight = 40;
 		  }
 		  else {
 		    // Labels per row for Avery 6576 (1-1/4" x 1-3/4")
 		    $intNumberInTableRow = 4;
+		    $intImageHeight = 60;
 		  }
 		  
 		  $i = 0;
@@ -323,23 +328,12 @@
 		    while ($j < $intNumberInTableRow) {
 		      // If Label Offset set
 		      if ($i < $this->lstLabelOffset->SelectedValue && $this->intCurrentBarCodeLabel == 0) {
-		        $strTable .= "<td><img src=\"../includes/php/tcpdf/images/_blank.png\" height=\"";
-		        if ($this->lstLabelStock->SelectedValue == 1) {
-		          $strTable .= "40";
-            }
-            else {
-              $strTable .= "60";
-            }
-            $strTable .= "\" /></td>";
+		        $strTable .= sprintf("<td><img src=\"../includes/php/tcpdf/images/_blank.png\" height=\"%s\" /></td>", $intImageHeight);
 		      }
 		      elseif ($this->intCurrentBarCodeLabel < $intBarCodeArrayCount) {
-		        $strTable .= "<td><img src=\"../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_".($this->intCurrentBarCodeLabel+1).".png\"";
-		        if ($this->lstLabelStock->SelectedValue == 1) {
-		          $strTable .= " height=\"40\"";
-            }
-            $strTable .= " border=\"0\" align=\"left\" /></td>";
-		        $image = ImageCreateFromPNG("http://localhost/tracmor/includes/php/barcode.php?code=".$this->strBarCodeArray[$this->intCurrentBarCodeLabel++]."&encoding=128&scale=1");
-		        ImagePNG($image,"../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_".$this->intCurrentBarCodeLabel.".png");
+		        $strTable .= sprintf("<td><img src=\"../includes/php/tcpdf/images/tmp/%s_%s.png\" height=\"%s\" border=\"0\" align=\"left\" /></td>", $_SESSION['intUserAccountId'], $this->intCurrentBarCodeLabel+1, $intImageHeight);
+		        $image = ImageCreateFromPNG(sprintf("http://localhost/tracmor/includes/php/barcode.php?code=%s&encoding=128&scale=1",  $this->strBarCodeArray[$this->intCurrentBarCodeLabel++]));
+		        ImagePNG($image, sprintf("../includes/php/tcpdf/images/tmp/%s_%s.png", $_SESSION['intUserAccountId'], $this->intCurrentBarCodeLabel));
 		        imagedestroy($image);
 		      }
 		      else {
@@ -401,7 +395,14 @@
               $pdf->SetAutoPageBreak(false);
               
               // Set some language-dependent strings
-              $pdf->setLanguageArray($l); 
+              $pdf->setLanguageArray($l);
+              
+              // Set the color used for all drawing operations (lines, rectangles and cell borders).
+              $pdf->SetDrawColor(255); // white
+              // Set Cell Padding
+              $pdf->SetCellPadding(0);
+              // Set Cell Spacing
+              $pdf->SetLineWidth(0);
               
               // Initialize document
               $pdf->AliasNbPages();
