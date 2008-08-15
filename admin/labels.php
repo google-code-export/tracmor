@@ -290,11 +290,11 @@
   		  switch ($this->lstLabelStock->SelectedValue) {
   		    case 1:
   		      // Labels per page for Avery 6577 (5/8" x 3")
-  		      $this->intLabelsPerPage = 30;
+  		      $this->intLabelsPerPage = 32; // 16 lines * 2 columns
   		      break;
   		    case 2:
   		      // Labels per page for Avery 6576 (1-1/4" x 1-3/4")
-  		      $this->intLabelsPerPage = 32;
+  		      $this->intLabelsPerPage = 32; // 8 lines * 4 columns
   		      break;
   		    default:
   		      throw new QCallerException('Label Stock Not Provided');
@@ -313,19 +313,22 @@
 		
 		// Create and Setup the table per each page for Bar Code Label Generation
 		protected function CreateTableByBarCodeArray() {
-		  $strTable = "<table width=\"100%\" height=\"100%\" border=\"1\" style=\"text-align:center\">";
-		  // Count of total labels
+		  $strTable = "<table width=\"510px\" height=\"100%\" border=\"1\" style=\"text-align:center\">";
 		  $intBarCodeArrayCount = count($this->strBarCodeArray);
 		  switch ($this->lstLabelStock->SelectedValue) {
   		  case 1:
     		  // Labels per row for Avery 6577 (5/8" x 3")
-  		    $intNumberInTableRow = 2;
-  		    $intImageHeight = 40;
+  		    $intNumberInTableRow = 2; // Cells per row
+  		    $intImageHeight = 41; // Bar Code Image Height
+  		    $intCellWidth = 215; // Cell Width
+  		    $intBlankSpace = 59; // Blank Cell Width
     		  break;
   		  case 2:
     		  // Labels per row for Avery 6576 (1-1/4" x 1-3/4")
-  		    $intNumberInTableRow = 4;
-  		    $intImageHeight = 60;
+  		    $intNumberInTableRow = 4; // Cells per row
+  		    $intImageHeight = 60; // Bar Code Image Height
+  		    $intCellWidth = 125; // Cell Width
+  		    $intBlankSpace = 12; // Blank Cell Width
     		  break;
   		  default:
   		    throw new QCallerException('Label Stock Not Provided'); 
@@ -336,26 +339,29 @@
 		  while ($i < $this->intLabelsPerPage) {
 		    $strTable .= "<tr>";
 		    $j = 0;
+		    $arrTD = array();
 		    while ($j < $intNumberInTableRow) {
 		      // If Label Offset set
 		      if ($i < $this->lstLabelOffset->SelectedValue && $this->intCurrentBarCodeLabel == 0) {
-		        $strTable .= sprintf("<td><img src=\"../includes/php/tcpdf/images/_blank.png\" height=\"%s\" /></td>", $intImageHeight);
+		        $arrTD[] = sprintf("<td width=\"%spx\"><img src=\"../includes/php/tcpdf/images/_blank.png\" height=\"%s\" /></td>", $intCellWidth, $intImageHeight);
 		      }
 		      elseif ($this->intCurrentBarCodeLabel < $intBarCodeArrayCount) {
-		        $strTable .= sprintf("<td><img src=\"../includes/php/tcpdf/images/tmp/%s_%s.png\" height=\"%s\" border=\"0\" align=\"left\" /></td>", $_SESSION['intUserAccountId'], $this->intCurrentBarCodeLabel+1, $intImageHeight);
+		        $arrTD[] = sprintf("<td width=\"%spx\"><img src=\"../includes/php/tcpdf/images/tmp/%s_%s.png\" height=\"%s\" border=\"0\" align=\"left\" /></td>", $intCellWidth, $_SESSION['intUserAccountId'], $this->intCurrentBarCodeLabel+1, $intImageHeight);
 		        $image = ImageCreateFromPNG(sprintf("http://localhost/tracmor/includes/php/barcode.php?code=%s&encoding=128&scale=1",  $this->strBarCodeArray[$this->intCurrentBarCodeLabel++]));
 		        ImagePNG($image, sprintf("../includes/php/tcpdf/images/tmp/%s_%s.png", $_SESSION['intUserAccountId'], $this->intCurrentBarCodeLabel));
 		        imagedestroy($image);
 		      }
 		      else {
-		        if (!isset($arrImageSize))
+		        if (!isset($arrImageSize)) {
 		          $arrImageSize = getimagesize(sprintf("../includes/php/tcpdf/images/tmp/%s_%s.png", $_SESSION['intUserAccountId'], $this->intCurrentBarCodeLabel));
-		        $strTable .= sprintf("<td><img src=\"../includes/php/tcpdf/images/_blank.png\" height=\"%s\" width=\"%s\" /></td>", $intImageHeight, $arrImageSize[0]);
+		          $arrImageSize[0] = ceil($arrImageSize[0]*($intImageHeight/$arrImageSize[1]));
+		        }
+		        $arrTD[] = sprintf("<td width=\"%spx\"><img src=\"../includes/php/tcpdf/images/_blank.png\" width=\"%s\" height=\"%s\" /></td>", $intCellWidth, $arrImageSize[0], $intImageHeight);
 		      }
 		      $j++;
 		      $i++;
 		    }
-		    $strTable .= "</tr>";
+		    $strTable .= implode(sprintf("<td width=\"%spx\"></td>", $intBlankSpace), $arrTD)."</tr>";
 		  }
 		  
 		  $strTable .= "</table>";
@@ -401,9 +407,6 @@
               $pdf->setPrintHeader(false);
               $pdf->setPrintFooter(false);
               
-              // Set margins
-              $pdf->SetMargins(11.9, 13, 11.9);
-              
               // Disable auto page breaks
               $pdf->SetAutoPageBreak(false);
               
@@ -423,11 +426,15 @@
               switch ($this->lstLabelStock->SelectedValue) {
           		  case 1:
             		  // Labels per row for Avery 6577 (5/8" x 3")
-          		    $pdf->SetFontSize(10);
-            		  break;
+          		    $pdf->SetFontSize(3);
+          		    // Set margins
+                  $pdf->SetMargins(21, 23, 21);
+              	  break;
           		  case 2:
             		  // Labels per row for Avery 6576 (1-1/4" x 1-3/4")
-          		    $pdf->SetFontSize(33);
+          		    $pdf->SetFontSize(25);
+          		    // Set margins
+                  $pdf->SetMargins(10, 24, 10);
             		  break;
           		  default:
           		    throw new QCallerException('Label Stock Not Provided'); 
@@ -457,7 +464,7 @@
               $this->ctlSearchMenu->$arrDataGridObjectNameId[0]->chkSelectAll->Checked = false;
               
               // Open generated PDF in new window
-    		      QApplication::ExecuteJavaScript("window.open('../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_BarCodes.pdf','Bar Codes','resizeable=1,menubar=1,scrollbar=1,left=0,top=0,width=800,height=600');");
+    		      QApplication::ExecuteJavaScript("window.open('../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_BarCodes.pdf','Bar Codes','resizeable,menubar=1,scrollbar=1,left=0,top=0,width=800,height=600');");
             }
           }
           else {
