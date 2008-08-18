@@ -466,7 +466,7 @@
               $this->ctlSearchMenu->$arrDataGridObjectNameId[0]->chkSelectAll->Checked = false;
               
               // Open generated PDF in new window
-    		      QApplication::ExecuteJavaScript("window.open('../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_BarCodes.pdf','Bar Codes','resizeable,menubar=1,scrollbar=1,left=0,top=0,width=800,height=600');");
+    		      QApplication::ExecuteJavaScript("window.open('../includes/php/tcpdf/images/tmp/".$_SESSION['intUserAccountId']."_BarCodes.pdf','Barcodes','resizeable,menubar=1,scrollbar=1,left=0,top=0,width=800,height=600');");
             }
           }
           else {
