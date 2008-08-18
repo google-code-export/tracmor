@@ -2,9 +2,9 @@
 //============================================================+
 // File name   : tcpdf.php
 // Begin       : 2002-08-03
-// Last Update : 2008-08-13
+// Last Update : 2008-08-15
 // Author      : Nicola Asuni - info@tecnick.com - http://www.tcpdf.org
-// Version     : 4.0.019
+// Version     : 4.0.020
 // License     : GNU LGPL (http://www.gnu.org/copyleft/lesser.html)
 // 	----------------------------------------------------------------------------
 //  Copyright (C) 2002-2008  Nicola Asuni - Tecnick.com S.r.l.
@@ -117,7 +117,7 @@
  * @copyright 2004-2008 Nicola Asuni - Tecnick.com S.r.l (www.tecnick.com) Via Della Pace, 11 - 09044 - Quartucciu (CA) - ITALY - www.tecnick.com - info@tecnick.com
  * @link http://www.tcpdf.org
  * @license http://www.gnu.org/copyleft/lesser.html LGPL
- * @version 4.0.019
+ * @version 4.0.020
  */
 
 /**
@@ -147,14 +147,14 @@ if (!class_exists('TCPDF')) {
 	/**
 	 * define default PDF document producer
 	 */ 
-	define('PDF_PRODUCER','TCPDF 4.0.019 (http://www.tcpdf.org)');
+	define('PDF_PRODUCER','TCPDF 4.0.020 (http://www.tcpdf.org)');
 	
 	/**
 	* This is a PHP class for generating PDF documents without requiring external extensions.<br>
 	* TCPDF project (http://www.tcpdf.org) has been originally derived in 2002 from the Public Domain FPDF class by Olivier Plathey (http://www.fpdf.org), but now is almost entirely rewritten.<br>
 	* @name TCPDF
 	* @package com.tecnick.tcpdf
-	* @version 4.0.019
+	* @version 4.0.020
 	* @author Nicola Asuni - info@tecnick.com
 	* @link http://www.tcpdf.org
 	* @license http://www.gnu.org/copyleft/lesser.html LGPL
@@ -702,26 +702,26 @@ if (!class_exists('TCPDF')) {
 		 * @var Bold font style status.
 		 * @access protected
 		 */
-		protected $b;
+		var $b;
 		
 		/**
 		 * @var Underlined font style status.
 		 * @access protected
 		 */
-		protected $u;
+		var $u;
 		
 		/**
 		 * @var Italic font style status.
 		 * @access protected
 		 */
-		protected $i;
+		var $i;
 		
 		/**
 		 * @var Line through font style status.
 		 * @access protected
 		 * @since 2.8.000 (2008-03-19)
 		 */
-		protected $d;
+		var $d;
 		
 		/**
 		 * @var spacer for LI tags.
@@ -5434,12 +5434,11 @@ if (!class_exists('TCPDF')) {
 		 * <li>b : bold text</li>
 		 * <li>i : italic</li>
 		 * <li>u : underlined</li>
-		 * <li>lt : line-through</li></ul>
+		 * <li>d : line-through</li></ul>
 		 * @param boolean $enable
 		 * @access protected
 		 */
 		protected function setStyle($tag, $enable) {
-			//Modify style and select corresponding font
 			$this->$tag += ($enable ? 1 : -1);
 			$style = '';
 			foreach(array('b', 'i', 'u', 'd') as $s) {
@@ -8406,7 +8405,7 @@ if (!class_exists('TCPDF')) {
 				$this->_out(sprintf('%.3F %.3F %.3F %.3F %.3F %.3F cm', $scale_x, 0, 0, $scale_y, $x1*(1-$scale_x), $y2*(1-$scale_y)));
 			}
 			// handle pc/unix/mac line endings
-			$lines = split ("\r\n|[\r\n]", $data);
+			$lines = split("\r\n|[\r\n]", $data);
 			$u=0;
 			$cnt = count($lines);
 			for ($i=0; $i < $cnt; $i++) {
@@ -9670,6 +9669,14 @@ if (!class_exists('TCPDF')) {
 					$this->Ln('', $cell);
 					break;
 				}
+				case 'b': {
+					$this->setStyle('b', true);
+					break;
+				}
+				case 'i': {
+					$this->setStyle('i', true);
+					break;
+				}
 				case 'u': {
 					$this->setStyle('u', true);
 					break;
@@ -9948,6 +9955,14 @@ if (!class_exists('TCPDF')) {
 					}
 					//set row height
 					$this->lasth = $this->FontSize * $this->cell_height_ratio; 
+					break;
+				}
+				case 'b': {
+					$this->setStyle('b', false);
+					break;
+				}
+				case 'i': {
+					$this->setStyle('i', false);
 					break;
 				}
 				case 'u': {
