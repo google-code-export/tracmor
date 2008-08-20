@@ -6,48 +6,70 @@ $intEntityQtypeId = 1;
 
 switch ($intEntityQtypeId) {
 				case 1: 
+				  $strTableName = "asset";
+				  $strObjectId = "AssetId";
 					$strId = 'asset`.`asset_id';
 					$strHelperTable = '`asset_custom_field_helper`';
 					break;
 				case 2: 
+					$strTableName = "inventory_model";
+					$strObjectId = "InventoryModelId";
 					$strId = 'inventory_model`.`inventory_model_id';
-					$strHelperTable = '`inventory_custom_field_helper`';
+					$strHelperTable = '`inventory_model_custom_field_helper`';
 					break;
 				case 4: 
+					$strTableName = "asset_model";
+					$strObjectId = "AssetModelId";
 					$strId = 'asset_model`.`asset_model_id';
 					$strHelperTable = '`asset_model_custom_field_helper`';
 					break;
 				case 5: 
+					$strTableName = "manufacturer";
+					$strObjectId = "ManufacturerId";
 					$strId = 'manufacturer`.`manufacturer_id';
 					$strHelperTable = '`manufacturer_custom_field_helper`';
 					break;
 				case 6: 
+					$strTableName = "category";
+					$strObjectId = "CategoryId";
 					$strId = 'category`.`category_id';
 					$strHelperTable = '`category_custom_field_helper`';
 					break;
 				case 7: 
+					$strTableName = "company";
+					$strObjectId = "CompanyId";
 					$strId = 'company`.`company_id';
 					$strHelperTable = '`company_custom_field_helper`';
 					break;
 				case 8: 
+					$strTableName = "contact";
+					$strObjectId = "ContactId";
 					$strId = 'contact`.`contact_id';
 					$strHelperTable = '`contact_custom_field_helper`';
 					break;
 				case 9: 
+					$strTableName = "address";
+					$strObjectId = "AddressId";
 					$strId = 'address`.`address_id';
 					$strHelperTable = '`address_custom_field_helper`';
 					break;
 				case 10: 
+					$strTableName = "shipment";
+					$strObjectId = "ShipmentId";
 					$strId = 'shipment`.`shipment_id';
 					$strHelperTable = '`shipment_custom_field_helper`';
 					break;
 				case 11: 
+					$strTableName = "receipt";
+					$strObjectId = "ReceiptId";
 					$strId = 'receipt`.`receipt_id';
 					$strHelperTable = '`receipt_custom_field_helper`';
 					break;
+				default:
+				  die("Error: intEntityQtypeId is incorrect.");
 }
 
-$objEntityQtypeCustomFieldArray = EntityQtypeCustomField::LoadArrayByEntityQtypeId(1, QQ::Clause(QQ::Expand(QQN::EntityQtypeCustomField()->CustomField)));
+$objEntityQtypeCustomFieldArray = EntityQtypeCustomField::LoadArrayByEntityQtypeId($intEntityQtypeId, QQ::Clause(QQ::Expand(QQN::EntityQtypeCustomField()->CustomField)));
 
 if ($objEntityQtypeCustomFieldArray) {
 	foreach ($objEntityQtypeCustomFieldArray as $objEntityQtypeCustomField) {
@@ -72,33 +94,69 @@ if ($objEntityQtypeCustomFieldArray) {
 
 $strQuery = sprintf('
 				SELECT
-					`asset`.`asset_id` AS `asset_id`
+					`%s`.`%s_id` AS `%s_id`
 					%s
 				FROM
-					`asset` AS `asset`
+					`%s` AS `%s`
 					%s
 				WHERE
 				1=1
-			', $arrCustomFieldSql['strSelect'],
+			', $strTableName, $strTableName, $strTableName,
+        $arrCustomFieldSql['strSelect'],
+        $strTableName, $strTableName,
 				$arrCustomFieldSql['strFrom']);
 				
-			$objDatabase = QApplication::$Database[1];
-				
-			$objDbResult = $objDatabase->Query($strQuery);
+$objDatabase = QApplication::$Database[1];
+		
+$objDbResult = $objDatabase->Query($strQuery);
+	
+switch ($intEntityQtypeId) {
+  case 1:
+    $objArray = Asset::InstantiateDbResult($objDbResult);
+    break;
+  case 2:
+    $objArray = InventoryModel::InstantiateDbResult($objDbResult);
+    break;
+  case 4:
+    $objArray = AssetModel::InstantiateDbResult($objDbResult);
+    break;
+  case 5:
+    $objArray = Manufacturer::InstantiateDbResult($objDbResult);
+    break;
+  case 6:
+    $objArray = Category::InstantiateDbResult($objDbResult);
+    break;
+  case 7:
+    $objArray = Company::InstantiateDbResult($objDbResult);
+    break;
+  case 8:
+    $objArray = Contact::InstantiateDbResult($objDbResult);
+    break;
+  case 9:
+    $objArray = Address::InstantiateDbResult($objDbResult);
+    break;
+  case 10:
+    $objArray = Shipment::InstantiateDbResult($objDbResult);
+    break;
+  case 11:
+    $objArray = Receipt::InstantiateDbResult($objDbResult);
+    break;
+}
 			
-			$objAssetArray = Asset::InstantiateDbResult($objDbResult);
-			
-if ($objAssetArray) {
-	foreach ($objAssetArray as $objAsset) {
+if ($objArray) {
+	foreach ($objArray as $obj) {
 		$strInsertAssetSql = '';
 		if ($objEntityQtypeCustomFieldArray) {
 			foreach ($objEntityQtypeCustomFieldArray as $objEntityQtypeCustomField) {
-				$strInsertAssetSql .= ", '" . addslashes($objAsset->GetVirtualAttribute($objEntityQtypeCustomField->CustomFieldId)) . "'";
+				$strInsertAssetSql .= ", '" . addslashes($obj->GetVirtualAttribute($objEntityQtypeCustomField->CustomFieldId)) . "'";
 			}
 		}
-		$strQuery = sprintf('INSERT INTO %s (asset_id %s) VALUES (%s %s);', $arrCustomFieldSql['strInsertColumnHeader'], $strHelperTable, $objAsset->AssetId, $strInsertAssetSql);
+		$strQuery = sprintf('INSERT INTO %s (%s_id %s) VALUES (%s %s);', $strHelperTable, $strTableName, $arrCustomFieldSql['strInsertColumnHeader'], $obj->$strObjectId, $strInsertAssetSql);
 		echo ($strQuery . "<br />");
 	}
+}
+else {
+  echo "No any inserts.";
 }
 
 ?>
