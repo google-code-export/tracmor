@@ -222,6 +222,54 @@
 			return QType::Cast($strDbRow[0], QType::Integer);
 		}
 		
+		public static function CountBySearchHelper($intCategoryId = null, $intManufacturerId = null, $strDescription = null, $strAssetModelCode = null, $arrCustomFields = null, $strDateModified = null, $strDateModifiedFirst = null, $strDateModifiedLast = null, $blnAttachment = null, $objExpansionMap = null) {
+		
+			// Call to QueryHelper to Get the Database Object		
+			AssetModel::QueryHelper($objDatabase);
+			
+		  // Setup QueryExpansion
+			$objQueryExpansion = new QQueryExpansion();
+			if ($objExpansionMap) {
+				try {
+					AssetModel::ExpandQuery('asset_model', null, $objExpansionMap, $objQueryExpansion);
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+			}
+
+			$arrSearchSql = AssetModel::GenerateSearchSql($intCategoryId, $intManufacturerId, $strDescription, $strAssetModelCode, $arrCustomFields, $strDateModified, $strDateModifiedFirst, $strDateModifiedLast, $blnAttachment);
+			$arrCustomFieldSql = CustomField::GenerateHelperSql(EntityQtype::AssetModel);
+			$arrAttachmentSql = Attachment::GenerateSql(EntityQtype::AssetModel);
+
+			$strQuery = sprintf('
+				SELECT
+					COUNT(asset_model.asset_model_id) AS row_count
+				FROM
+					`asset_model` AS `asset_model`
+					%s
+					%s
+					%s
+				WHERE
+				  1=1
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+			', $objQueryExpansion->GetFromSql("", "\n					"), $arrAttachmentSql['strFrom'], $arrCustomFieldSql['strFrom'],
+			$arrSearchSql['strCategorySql'], $arrSearchSql['strManufacturerSql'], $arrSearchSql['strDescriptionSql'], $arrSearchSql['strAssetModelCodeSql'], $arrSearchSql['strCustomFieldsSql'], $arrSearchSql['strDateModifiedSql'], $arrSearchSql['strAttachmentSql'],
+			$arrSearchSql['strAuthorizationSql']);
+
+			//echo($strQuery); exit;
+			$objDbResult = $objDatabase->Query($strQuery);
+			$strDbRow = $objDbResult->FetchRow();
+			return QType::Cast($strDbRow[0], QType::Integer);
+		}
+		
 		public static function LoadArrayBySearch($intCategoryId = null, $intManufacturerId = null, $strDescription = null, $strAssetModelCode = null, $arrCustomFields = null, $strDateModified = null, $strDateModifiedFirst = null, $strDateModifiedLast = null, $blnAttachment = null, $strOrderBy = null, $strLimit = null, $objExpansionMap = null) {
 			
 			AssetModel::ArrayQueryHelper($strOrderBy, $strLimit, $strLimitPrefix, $strLimitSuffix, $strExpandSelect, $strExpandFrom, $objExpansionMap, $objDatabase);
@@ -288,6 +336,73 @@
 			return AssetModel::InstantiateDbResult($objDbResult);			
 		
 		}		
+		
+		public static function LoadArrayBySearchHelper($intCategoryId = null, $intManufacturerId = null, $strDescription = null, $strAssetModelCode = null, $arrCustomFields = null, $strDateModified = null, $strDateModifiedFirst = null, $strDateModifiedLast = null, $blnAttachment = null, $strOrderBy = null, $strLimit = null, $objExpansionMap = null) {
+			
+			AssetModel::ArrayQueryHelper($strOrderBy, $strLimit, $strLimitPrefix, $strLimitSuffix, $strExpandSelect, $strExpandFrom, $objExpansionMap, $objDatabase);
+
+			// Setup QueryExpansion
+			$objQueryExpansion = new QQueryExpansion();
+			if ($objExpansionMap) {
+				try {
+					AssetModel::ExpandQuery('asset_model', null, $objExpansionMap, $objQueryExpansion);
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+			}
+			
+			$arrSearchSql = AssetModel::GenerateSearchSql($intCategoryId, $intManufacturerId, $strDescription, $strAssetModelCode, $arrCustomFields, $strDateModified, $strDateModifiedFirst, $strDateModifiedLast, $blnAttachment);
+			$arrCustomFieldSql = CustomField::GenerateHelperSql(EntityQtype::AssetModel);
+			$arrAttachmentSql = Attachment::GenerateSql(EntityQtype::AssetModel);
+
+			$strQuery = sprintf('
+				SELECT
+					%s
+					COUNT( `asset`.`asset_id`) AS asset_count,
+					`asset_model`.`asset_model_id` AS `asset_model_id`,
+					`asset_model`.`category_id` AS `category_id`,
+					`asset_model`.`manufacturer_id` AS `manufacturer_id`,
+					`asset_model`.`asset_model_code` AS `asset_model_code`,
+					`asset_model`.`short_description` AS `short_description`,
+					`asset_model`.`long_description` AS `long_description`,
+					`asset_model`.`image_path` AS `image_path`,
+					`asset_model`.`created_by` AS `created_by`,
+					`asset_model`.`creation_date` AS `creation_date`,
+					`asset_model`.`modified_by` AS `modified_by`,
+					`asset_model`.`modified_date` AS `modified_date`
+					%s
+					%s
+					%s
+				FROM
+					`asset_model` AS `asset_model`
+					LEFT JOIN `asset` AS `asset` ON `asset_model`.`asset_model_id` = `asset`.`asset_model_id` AND `asset`.`location_id` != 2 AND `asset`.`location_id` != 5
+					%s
+					%s
+					%s
+				WHERE
+				1=1
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+			', $strLimitPrefix,
+				$objQueryExpansion->GetSelectSql(",\n					", ",\n					"), $arrCustomFieldSql['strSelect'], $arrAttachmentSql['strSelect'], 
+				$objQueryExpansion->GetFromSql("", "\n					"), $arrCustomFieldSql['strFrom'], $arrAttachmentSql['strFrom'],  
+				$arrSearchSql['strCategorySql'], $arrSearchSql['strManufacturerSql'], $arrSearchSql['strDescriptionSql'], $arrSearchSql['strAssetModelCodeSql'], $arrSearchSql['strDateModifiedSql'], $arrSearchSql['strAttachmentSql'], 
+				$arrSearchSql['strAuthorizationSql'], $arrAttachmentSql['strGroupBy'],  
+				$strOrderBy, $strLimitSuffix);
+				
+			$objDbResult = $objDatabase->Query($strQuery);				
+			return AssetModel::InstantiateDbResult($objDbResult);			
+		
+		}
 		
 	  protected static function GenerateSearchSql ($intCategoryId = null, $intManufacturerId = null, $strDescription = null, $strAssetModelCode = null, $arrCustomFields = null, $strDateModified = null, $strDateModifiedFirst = null, $strDateModifiedLast = null, $blnAttachment = null) {
 			

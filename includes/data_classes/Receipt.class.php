@@ -323,6 +323,76 @@
 			return QType::Cast($strDbRow[0], QType::Integer);
 		}
 		
+		/**
+     * Count the total companies based on the submitted search criteria
+     * using the receipt_custom_field_helper table
+     *
+     * @param string $strFromCompany
+     * @param string $strFromContact
+     * @param string $strReceiptNumber
+     * @param string $strAssetCode
+     * @param string $strInventoryModelCode
+     * @param int $intStatus
+     * @param string $strDateModified
+     * @param string $strDateModifiedFirst
+     * @param string $strDateModifiedLast
+     * @param array $objExpansionMap
+     * @return integer Count
+     */		
+		public static function CountBySearchHelper($strFromCompany = null, $strFromContact = null, $strReceiptNumber = null, $strAssetCode = null, $strInventoryModelCode = null, $intStatus = null, $strNote = null, $strDueDate = null, $strReceiptDate = null, $arrCustomFields = null, $strDateModified = null, $strDateModifiedFirst = null, $strDateModifiedLast = null, $blnAttachment = null, $objExpansionMap = null) {
+		
+			// Call to QueryHelper to Get the Database Object		
+			Receipt::QueryHelper($objDatabase);
+			
+		  // Setup QueryExpansion
+			$objQueryExpansion = new QQueryExpansion();
+			if ($objExpansionMap) {
+				try {
+					Receipt::ExpandQuery('receipt', null, $objExpansionMap, $objQueryExpansion);
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+			}
+			
+			$arrSearchSql = Receipt::GenerateSearchSql($strFromCompany, $strFromContact, $strReceiptNumber, $strAssetCode, $strInventoryModelCode, $intStatus, $strNote, $strDueDate, $strReceiptDate, $arrCustomFields, $strDateModified, $strDateModifiedFirst, $strDateModifiedLast, $blnAttachment);
+			$arrAttachmentSql = Attachment::GenerateSql(EntityQtype::Receipt);
+			$arrCustomFieldSql = CustomField::GenerateHelperSql(EntityQtype::Receipt);
+
+			$strQuery = sprintf('
+				SELECT
+					COUNT(DISTINCT receipt.receipt_id) AS row_count
+				FROM
+					`receipt` AS `receipt`
+					%s
+					%s
+					%s
+					%s
+					%s
+				WHERE
+				  1=1
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+			', $objQueryExpansion->GetFromSql("", "\n					"), $arrAttachmentSql['strFrom'],  $arrCustomFieldSql['strFrom'], $arrSearchSql['strAssetCodeFromSql'], $arrSearchSql['strInventoryModelCodeFromSql'],
+			$arrSearchSql['strFromCompanySql'], $arrSearchSql['strFromContactSql'], $arrSearchSql['strReceiptNumberSql'], $arrSearchSql['strAssetCodeSql'], $arrSearchSql['strInventoryModelCodeSql'], $arrSearchSql['strStatusSql'], $arrSearchSql['strNoteSql'], $arrSearchSql['strDueDateSql'], $arrSearchSql['strReceiptDateSql'], $arrSearchSql['strCustomFieldsSql'], $arrSearchSql['strDateModifiedSql'], $arrSearchSql['strAttachmentSql'],
+			$arrSearchSql['strAuthorizationSql']);
+			
+			$objDbResult = $objDatabase->Query($strQuery);
+			$strDbRow = $objDbResult->FetchRow();
+			return QType::Cast($strDbRow[0], QType::Integer);
+		}
+		
     /**
      * Load an array of Receipt objects
 		 * by Company, Contact, Receipt Number, Asset Code, InventoryModelCode, or Status
@@ -360,6 +430,104 @@
 			$arrSearchSql = Receipt::GenerateSearchSql($strFromCompany, $strFromContact, $strReceiptNumber, $strAssetCode, $strInventoryModelCode, $intStatus, $strNote, $strDueDate, $strReceiptDate, $arrCustomFields, $strDateModified, $strDateModifiedFirst, $strDateModifiedLast, $blnAttachment);
 			$arrAttachmentSql = Attachment::GenerateSql(EntityQtype::Receipt);
 			$arrCustomFieldSql = CustomField::GenerateSql(EntityQtype::Receipt);
+
+			$strQuery = sprintf('
+				SELECT
+					%s
+					DISTINCT
+					`receipt`.`receipt_id` AS `receipt_id`,
+					`receipt`.`transaction_id` AS `transaction_id`,
+					`receipt`.`from_company_id` AS `from_company_id`,
+					`receipt`.`from_contact_id` AS `from_contact_id`,
+					`receipt`.`to_contact_id` AS `to_contact_id`,
+					`receipt`.`to_address_id` AS `to_address_id`,
+					`receipt`.`receipt_number` AS `receipt_number`,
+					`receipt`.`due_date` AS `due_date`,
+					`receipt`.`receipt_date` AS `receipt_date`,
+					`receipt`.`received_flag` AS `received_flag`,
+					`receipt`.`created_by` AS `created_by`,
+					`receipt`.`creation_date` AS `creation_date`,
+					`receipt`.`modified_by` AS `modified_by`,
+					`receipt`.`modified_date` AS `modified_date`
+					%s
+					%s
+					%s
+				FROM
+					`receipt` AS `receipt`
+					%s
+					%s
+					%s
+					%s
+					%s
+				WHERE
+				1=1
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+			', $strLimitPrefix,
+				$objQueryExpansion->GetSelectSql(",\n					", ",\n					"), $arrCustomFieldSql['strSelect'], $arrAttachmentSql['strSelect'],
+				$objQueryExpansion->GetFromSql("", "\n					"), $arrCustomFieldSql['strFrom'], $arrAttachmentSql['strFrom'], $arrSearchSql['strAssetCodeFromSql'], $arrSearchSql['strInventoryModelCodeFromSql'],
+				$arrSearchSql['strFromCompanySql'], $arrSearchSql['strFromContactSql'], $arrSearchSql['strReceiptNumberSql'], $arrSearchSql['strAssetCodeSql'], $arrSearchSql['strInventoryModelCodeSql'], $arrSearchSql['strStatusSql'], $arrSearchSql['strNoteSql'], $arrSearchSql['strDueDateSql'], $arrSearchSql['strReceiptDateSql'], $arrSearchSql['strCustomFieldsSql'], $arrSearchSql['strDateModifiedSql'], $arrSearchSql['strAttachmentSql'],
+				$arrSearchSql['strAuthorizationSql'], $arrAttachmentSql['strGroupBy'],
+				$strOrderBy, $strLimitSuffix);
+				
+				//echo($strQuery); exit;
+
+			$objDbResult = $objDatabase->Query($strQuery);				
+			return Receipt::InstantiateDbResult($objDbResult);			
+		}
+		
+		/**
+     * Load an array of Receipt objects
+		 * by Company, Contact, Receipt Number, Asset Code, InventoryModelCode, or Status
+		 * using the receipt_custom_field_helper table
+     *
+     * @param string $strFromCompany
+     * @param string $strFromContact
+     * @param string $strReceiptNumber
+     * @param string $strAssetCode
+     * @param string $strInventoryModelCode
+     * @param int $intStatus
+     * @param string $strNote
+     * @param string $strDateModified
+     * @param string $strDateModifiedFirst
+     * @param string $strDateModifiedLast
+     * @param string $strOrderBy
+     * @param string $strLimit
+     * @param array $objExpansionMap map of referenced columns to be immediately expanded via early-binding
+     * @return Receipt[]
+     */
+		public static function LoadArrayBySearchHelper($strFromCompany = null, $strFromContact = null, $strReceiptNumber = null, $strAssetCode = null, $strInventoryModelCode = null, $intStatus = null, $strNote = null, $strDueDate = null, $strReceiptDate = null, $arrCustomFields = null, $strDateModified = null, $strDateModifiedFirst = null, $strDateModifiedLast = null, $blnAttachment = null, $strOrderBy = null, $strLimit = null, $objExpansionMap = null) {
+			
+			Receipt::ArrayQueryHelper($strOrderBy, $strLimit, $strLimitPrefix, $strLimitSuffix, $strExpandSelect, $strExpandFrom, $objExpansionMap, $objDatabase);
+			
+			// Setup QueryExpansion
+			$objQueryExpansion = new QQueryExpansion();
+			if ($objExpansionMap) {
+				try {
+					Receipt::ExpandQuery('receipt', null, $objExpansionMap, $objQueryExpansion);
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+			}
+					
+			$arrSearchSql = Receipt::GenerateSearchSql($strFromCompany, $strFromContact, $strReceiptNumber, $strAssetCode, $strInventoryModelCode, $intStatus, $strNote, $strDueDate, $strReceiptDate, $arrCustomFields, $strDateModified, $strDateModifiedFirst, $strDateModifiedLast, $blnAttachment);
+			$arrAttachmentSql = Attachment::GenerateSql(EntityQtype::Receipt);
+			$arrCustomFieldSql = CustomField::GenerateHelperSql(EntityQtype::Receipt);
 
 			$strQuery = sprintf('
 				SELECT

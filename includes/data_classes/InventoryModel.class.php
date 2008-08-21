@@ -214,6 +214,74 @@
 			
 		}
 		
+		/**
+     * Count the total inventories by the search parameters using the inventory_model_custom_field_helper table
+     *
+     * @param string $strInventoryModelCode
+     * @param int $intLocationId
+     * @param int $intInventoryModelId
+     * @param int $intCategoryId
+     * @param int $intManufacturerId
+     * @param string $strShortDescription
+     * @param array $arrCustomFields
+     * @param string $strDateModified
+     * @param string $strDateModifiedFirst
+     * @param string $strDateModifiedLast
+     * @param bool $blnAttachment
+     * @param array $objExpansionMap
+     * @return integer Count
+     */
+		public static function CountBySearchHelper($strInventoryModelCode = null, $intLocationId = null, $intInventoryModelId = null, $intCategoryId = null, $intManufacturerId = null, $strShortDescription = null, $arrCustomFields = null, $strDateModified = null, $strDateModifiedFirst = null, $strDateModifiedLast = null, $blnAttachment = null, $objExpansionMap = null) {
+		
+			// Call to QueryHelper to Get the Database Object		
+			InventoryModel::QueryHelper($objDatabase);
+			
+		  // Setup QueryExpansion
+			$objQueryExpansion = new QQueryExpansion();
+			if ($objExpansionMap) {
+				try {
+					InventoryModel::ExpandQuery('inventory_model', null, $objExpansionMap, $objQueryExpansion);
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+			}
+
+			$arrSearchSql = InventoryModel::GenerateSearchSql($strInventoryModelCode, $intLocationId, $intInventoryModelId, $intCategoryId, $intManufacturerId, $strShortDescription, $arrCustomFields, $strDateModified, $strDateModifiedFirst, $strDateModifiedLast, $blnAttachment);
+			$arrCustomFieldSql = CustomField::GenerateHelperSql(EntityQtype::Inventory);
+			$arrAttachmentSql = Attachment::GenerateSql(EntityQtype::Inventory);
+
+			$strQuery = sprintf('
+				SELECT
+					COUNT(DISTINCT inventory_model.inventory_model_id) AS row_count
+				FROM
+					`inventory_model` AS `inventory_model`
+					%s
+					%s
+					%s
+				WHERE
+				  1=1
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+			', $objQueryExpansion->GetFromSql("", "\n					"), $arrAttachmentSql['strFrom'], $arrCustomFieldSql['strFrom'],
+			$arrSearchSql['strInventoryModelCodeSql'], $arrSearchSql['strLocationSql'], $arrSearchSql['strInventoryModelSql'], $arrSearchSql['strCategorySql'], $arrSearchSql['strManufacturerSql'], $arrSearchSql['strShortDescriptionSql'], $arrSearchSql['strCustomFieldsSql'], $arrSearchSql['strDateModifiedSql'], $arrSearchSql['strAttachmentSql'], 
+			$arrSearchSql['strAuthorizationSql']);
+			
+			$objDbResult = $objDatabase->Query($strQuery);
+			
+			$strDbRow = $objDbResult->FetchRow();
+			return QType::Cast($strDbRow[0], QType::Integer);
+			
+		}
+		
     /**
      * Load an array of InventoryModel objects
 		 * by CategoryId, ManufacturerId Index(es)
@@ -299,6 +367,97 @@
 			$objDbResult = $objDatabase->Query($strQuery);				
 			return InventoryModel::InstantiateDbResult($objDbResult);			
 		
+		}
+		
+		/**
+     * Load an array of InventoryModel objects
+		 * by search parameters using the helper table
+     *
+     * @param string $strInventoryModelCode
+     * @param int $intLocationId
+     * @param int $intInventoryModelId
+     * @param int $intCategoryId
+     * @param int $intManufacturerId
+     * @param string $strShortDescription
+     * @param array $arrCustomFields
+     * @param string $strDateModified
+     * @param string $strDateModifiedFirst
+     * @param string $strDateModifiedLast
+     * @param bool $blnAttachment
+     * @param string $strOrderBy
+     * @param string $strLimit
+     * @param array $objExpansionMap
+     * @return InventoryModel[]
+     */
+		public static function LoadArrayBySearchHelper($strInventoryModelCode = null, $intLocationId = null, $intInventoryModelId = null, $intCategoryId = null, $intManufacturerId = null, $strShortDescription = null, $arrCustomFields = null, $strDateModified = null, $strDateModifiedFirst = null, $strDateModifiedLast = null, $blnAttachment = null, $strOrderBy = null, $strLimit = null, $objExpansionMap = null) {
+		  
+		  InventoryModel::ArrayQueryHelper($strOrderBy, $strLimit, $strLimitPrefix, $strLimitSuffix, $strExpandSelect, $strExpandFrom, $objExpansionMap, $objDatabase);
+			
+			// Setup QueryExpansion
+			$objQueryExpansion = new QQueryExpansion();
+			if ($objExpansionMap) {
+				try {
+					InventoryModel::ExpandQuery('inventory_model', null, $objExpansionMap, $objQueryExpansion);
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+			}
+					
+			$arrSearchSql = InventoryModel::GenerateSearchSql($strInventoryModelCode, $intLocationId, $intInventoryModelId, $intCategoryId, $intManufacturerId, $strShortDescription, $arrCustomFields, $strDateModified, $strDateModifiedFirst, $strDateModifiedLast, $blnAttachment);
+			$arrCustomFieldSql = CustomField::GenerateHelperSql(EntityQtype::Inventory);
+			$arrAttachmentSql = Attachment::GenerateSql(EntityQtype::Inventory);
+
+			$strQuery = sprintf('
+				SELECT
+					%s
+					SUM( `inventory_location` . `quantity` ) AS `inventory_model_quantity`,
+					`inventory_model`.`inventory_model_id` AS `inventory_model_id`,
+					`inventory_model`.`category_id` AS `category_id`,
+					`inventory_model`.`manufacturer_id` AS `manufacturer_id`,
+					`inventory_model`.`inventory_model_code` AS `inventory_model_code`,
+					`inventory_model`.`short_description` AS `short_description`,
+					`inventory_model`.`long_description` AS `long_description`,
+					`inventory_model`.`image_path` AS `image_path`,
+					`inventory_model`.`price` AS `price`,
+					`inventory_model`.`created_by` AS `created_by`,
+					`inventory_model`.`creation_date` AS `creation_date`,
+					`inventory_model`.`modified_by` AS `modified_by`,
+					`inventory_model`.`modified_date` AS `modified_date`
+					%s
+					%s
+					%s
+				FROM
+					`inventory_model` AS `inventory_model`
+					LEFT JOIN `inventory_location` AS `inventory_location` ON `inventory_model` . `inventory_model_id` = `inventory_location` . `inventory_model_id`
+					%s
+					%s
+					%s
+				WHERE
+				1=1
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+			', $strLimitPrefix,
+				$objQueryExpansion->GetSelectSql(",\n					", ",\n					"), $arrCustomFieldSql['strSelect'], $arrAttachmentSql['strSelect'], 
+				$objQueryExpansion->GetFromSql("", "\n					"), $arrCustomFieldSql['strFrom'], $arrAttachmentSql['strFrom'], 
+				$arrSearchSql['strInventoryModelCodeSql'], $arrSearchSql['strLocationSql'], $arrSearchSql['strInventoryModelSql'], $arrSearchSql['strCategorySql'], $arrSearchSql['strManufacturerSql'], $arrSearchSql['strShortDescriptionSql'], $arrSearchSql['strCustomFieldsSql'], $arrSearchSql['strDateModifiedSql'], $arrSearchSql['strAttachmentSql'],
+				$arrSearchSql['strAuthorizationSql'], $arrAttachmentSql['strGroupBy'],
+				$strOrderBy, $strLimitSuffix);
+				
+			$objDbResult = $objDatabase->Query($strQuery);
+			
+			return InventoryModel::InstantiateDbResult($objDbResult);
 		}
 		
 		public static function LoadAllWithQuantity($strOrderBy = null, $strLimit = null, $objExpansionMap = null) {
