@@ -168,6 +168,68 @@
 			
 		}
 		
+		/**
+     * Count the total companies based on the submitted search criteria using the company_custom_field_helper table
+     *
+     * @param int $strShortDescription
+     * @param int $strCity
+     * @param string $intStateProvinceId
+     * @param string $intCountryId
+     * @param string $strDateModified
+     * @param string $strDateModifiedFirst
+     * @param string $strDateModifiedLast
+     * @param array $objExpansionMap
+     * @return integer Count
+     */
+		public static function CountBySearchHelper($strShortDescription = null, $strCity = null, $intStateProvinceId = null, $intCountryId = null, $arrCustomFields = null, $strDateModified = null, $strDateModifiedFirst = null, $strDateModifiedLast = null, $blnAttachment = null, $objExpansionMap = null) {
+		
+			// Call to QueryHelper to Get the Database Object		
+			Company::QueryHelper($objDatabase);
+			
+		  // Setup QueryExpansion
+			$objQueryExpansion = new QQueryExpansion();
+			if ($objExpansionMap) {
+				try {
+					Company::ExpandQuery('company', null, $objExpansionMap, $objQueryExpansion);
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+			}
+			
+			// Generate the search SQL used
+			$arrSearchSql = Company::GenerateSearchSql($strShortDescription, $strCity, $intStateProvinceId, $intCountryId, $arrCustomFields, $strDateModified, $strDateModifiedFirst, $strDateModifiedLast, $blnAttachment);
+			$arrAttachmentSql = Attachment::GenerateSql(EntityQtype::Company);
+			$arrCustomFieldSql = CustomField::GenerateHelperSql(EntityQtype::Company);
+			
+			$strQuery = sprintf('
+				SELECT
+					COUNT(company.company_id) AS row_count
+				FROM
+					`company` AS `company`
+					%s
+					%s
+					%s
+				WHERE
+				  1=1
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+			', $objQueryExpansion->GetFromSql("", "\n					"), $arrCustomFieldSql['strFrom'], $arrAttachmentSql['strFrom'],
+			$arrSearchSql['strShortDescriptionSql'], $arrSearchSql['strCitySql'], $arrSearchSql['strStateProvinceSql'], $arrSearchSql['strCountrySql'], $arrSearchSql['strCustomFieldsSql'], $arrSearchSql['strDateModifiedSql'], $arrSearchSql['strAttachmentSql'],
+			$arrSearchSql['strAuthorizationSql']);
+
+			$objDbResult = $objDatabase->Query($strQuery);
+			$strDbRow = $objDbResult->FetchRow();
+			return QType::Cast($strDbRow[0], QType::Integer);
+			
+		}
+		
     /**
      * Load an array of Company objects
 		 * by ShortDescription, City, StateProvince, or Country
@@ -202,7 +264,92 @@
 			// Generate an array of SQL strings to be used in the search query
 			$arrSearchSql = Company::GenerateSearchSql($strShortDescription, $strCity, $intStateProvinceId, $intCountryId, $arrCustomFields, $strDateModified, $strDateModifiedFirst, $strDateModifiedLast, $blnAttachment);
 			$arrAttachmentSql = Attachment::GenerateSql(EntityQtype::Company);
-			$arrCustomFieldSql = CustomField::GenerateSql(EntityQtype::Company);
+			$arrCustomFieldSql = CustomField::GenerateHelperSql(EntityQtype::Company);
+
+			$strQuery = sprintf('
+				SELECT
+					%s
+					`company`.`company_id` AS `company_id`,
+					`company`.`address_id` AS `address_id`,
+					`company`.`short_description` AS `short_description`,
+					`company`.`website` AS `website`,
+					`company`.`telephone` AS `telephone`,
+					`company`.`fax` AS `fax`,
+					`company`.`email` AS `email`,
+					`company`.`long_description` AS `long_description`,
+					`company`.`created_by` AS `created_by`,
+					`company`.`creation_date` AS `creation_date`,
+					`company`.`modified_by` AS `modified_by`,
+					`company`.`modified_date` AS `modified_date`
+					%s
+					%s
+					%s
+				FROM
+					`company` AS `company`
+					%s
+					%s
+					%s
+				WHERE
+				1=1
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+			', $strLimitPrefix,
+				$objQueryExpansion->GetSelectSql(",\n					", ",\n					"), $arrCustomFieldSql['strSelect'], $arrAttachmentSql['strSelect'],
+				$objQueryExpansion->GetFromSql("", "\n					"), $arrCustomFieldSql['strFrom'], $arrAttachmentSql['strFrom'],
+				$arrSearchSql['strShortDescriptionSql'], $arrSearchSql['strCitySql'], $arrSearchSql['strStateProvinceSql'], $arrSearchSql['strCountrySql'], $arrSearchSql['strCustomFieldsSql'], $arrSearchSql['strDateModifiedSql'], $arrSearchSql['strAttachmentSql'],
+				$arrSearchSql['strAuthorizationSql'], $arrAttachmentSql['strGroupBy'],
+				$strOrderBy, $strLimitSuffix);
+
+			$objDbResult = $objDatabase->Query($strQuery);				
+			return Company::InstantiateDbResult($objDbResult);			
+		
+		}
+		
+		/**
+     * Load an array of Company objects
+		 * by ShortDescription, City, StateProvince, or Country
+		 * using the company_custom_field_helper table
+     *
+     * @param string $strShortDescription
+     * @param string $strCity
+     * @param integer $intStateProvinceId
+     * @param integer $intCountryId
+     * @param string $strDateModified
+     * @param string $strDateModifiedFirst
+     * @param string $strDateModifiedLast
+     * @param string $strOrderBy
+     * @param string $strLimit
+     * @param array $objExpansionMap map of referenced columns to be immediately expanded via early-binding
+     * @return Company[]
+     */
+		public static function LoadArrayBySearchHelper($strShortDescription = null, $strCity = null, $intStateProvinceId = null, $intCountryId = null, $arrCustomFields = null, $strDateModified = null, $strDateModifiedFirst = null, $strDateModifiedLast = null, $blnAttachment = null, $strOrderBy = null, $strLimit = null, $objExpansionMap = null) {
+			
+			Company::ArrayQueryHelper($strOrderBy, $strLimit, $strLimitPrefix, $strLimitSuffix, $strExpandSelect, $strExpandFrom, $objExpansionMap, $objDatabase);
+			
+			// Setup QueryExpansion
+			$objQueryExpansion = new QQueryExpansion();
+			if ($objExpansionMap) {
+				try {
+					Company::ExpandQuery('company', null, $objExpansionMap, $objQueryExpansion);
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+			}
+			
+			// Generate an array of SQL strings to be used in the search query
+			$arrSearchSql = Company::GenerateSearchSql($strShortDescription, $strCity, $intStateProvinceId, $intCountryId, $arrCustomFields, $strDateModified, $strDateModifiedFirst, $strDateModifiedLast, $blnAttachment);
+			$arrAttachmentSql = Attachment::GenerateSql(EntityQtype::Company);
+			$arrCustomFieldSql = CustomField::GenerateHelperSql(EntityQtype::Company);
 
 			$strQuery = sprintf('
 				SELECT

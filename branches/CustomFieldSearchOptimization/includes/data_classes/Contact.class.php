@@ -126,6 +126,65 @@
 			return QType::Cast($strDbRow[0], QType::Integer);
 		}
 		
+		/**
+     * Count the total companies based on the submitted search criteria
+     * using the contact_custom_field_helper table
+     *
+     * @param string $strFirstName
+     * @param string $strLastName
+     * @param string $strCompany
+     * @param string $strDateModified
+     * @param string $strDateModifiedFirst
+     * @param string $strDateModifiedLast
+     * @param array $objExpansionMap
+     * @return integer Count
+     */
+		public static function CountBySearchHelper($strFirstName = null, $strLastName = null, $strCompany = null, $arrCustomFields = null, $strDateModified = null, $strDateModifiedFirst = null, $strDateModifiedLast = null, $blnAttachment = null, $objExpansionMap = null) {
+		
+			// Call to QueryHelper to Get the Database Object		
+			Contact::QueryHelper($objDatabase);
+			
+		  // Setup QueryExpansion
+			$objQueryExpansion = new QQueryExpansion();
+			if ($objExpansionMap) {
+				try {
+					Contact::ExpandQuery('contact', null, $objExpansionMap, $objQueryExpansion);
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+			}
+			
+			$arrSearchSql = Contact::GenerateSearchSql($strFirstName, $strLastName, $strCompany, $arrCustomFields, $strDateModified, $strDateModifiedFirst, $strDateModifiedLast, $blnAttachment);
+			$arrAttachmentSql = Attachment::GenerateSql(EntityQtype::Contact);
+			$arrCustomFieldSql = CustomField::GenerateHelperSql(EntityQtype::Contact);
+
+			$strQuery = sprintf('
+				SELECT
+					COUNT(contact.contact_id) AS row_count
+				FROM
+					`contact` AS `contact`
+					%s
+					%s
+					%s
+				WHERE
+				  1=1
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+				  %s
+			', $objQueryExpansion->GetFromSql("", "\n					"), $arrCustomFieldSql['strFrom'], $arrAttachmentSql['strFrom'],
+			$arrSearchSql['strFirstNameSql'], $arrSearchSql['strLastNameSql'], $arrSearchSql['strCompanySql'], $arrSearchSql['strCustomFieldsSql'], $arrSearchSql['strDateModifiedSql'], $arrSearchSql['strAttachmentSql'],
+			$arrSearchSql['strAuthorizationSql']);
+			
+			$objDbResult = $objDatabase->Query($strQuery);
+			$strDbRow = $objDbResult->FetchRow();
+			return QType::Cast($strDbRow[0], QType::Integer);
+		}
+		
     /**
      * Load an array of Contact objects
 		 * by FirstName, LastName, or Company ShortDescription
@@ -159,6 +218,93 @@
 			$arrSearchSql = Contact::GenerateSearchSql($strFirstName, $strLastName, $strCompany, $arrCustomFields, $strDateModified, $strDateModifiedFirst, $strDateModifiedLast, $blnAttachment);
 			$arrAttachmentSql = Attachment::GenerateSql(EntityQtype::Contact);
 			$arrCustomFieldSql = CustomField::GenerateSql(EntityQtype::Contact);
+
+			$strQuery = sprintf('
+				SELECT
+					%s
+					`contact`.`contact_id` AS `contact_id`,
+					`contact`.`address_id` AS `address_id`,
+					`contact`.`company_id` AS `company_id`,
+					`contact`.`first_name` AS `first_name`,
+					`contact`.`last_name` AS `last_name`,
+					`contact`.`title` AS `title`,
+					`contact`.`email` AS `email`,
+					`contact`.`phone_office` AS `phone_office`,
+					`contact`.`phone_home` AS `phone_home`,
+					`contact`.`phone_mobile` AS `phone_mobile`,
+					`contact`.`fax` AS `fax`,
+					`contact`.`description` AS `description`,
+					`contact`.`created_by` AS `created_by`,
+					`contact`.`creation_date` AS `creation_date`,
+					`contact`.`modified_by` AS `modified_by`,
+					`contact`.`modified_date` AS `modified_date`
+					%s
+					%s
+					%s
+				FROM
+					`contact` AS `contact`
+					%s
+					%s
+					%s
+				WHERE
+				1=1
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+				%s
+			', $strLimitPrefix,
+				$objQueryExpansion->GetSelectSql(",\n					", ",\n					"), $arrCustomFieldSql['strSelect'], $arrAttachmentSql['strSelect'],
+				$objQueryExpansion->GetFromSql("", "\n					"), $arrCustomFieldSql['strFrom'], $arrAttachmentSql['strFrom'],
+				$arrSearchSql['strFirstNameSql'], $arrSearchSql['strLastNameSql'], $arrSearchSql['strCompanySql'], $arrSearchSql['strCustomFieldsSql'], $arrSearchSql['strDateModifiedSql'], $arrSearchSql['strAttachmentSql'],
+				$arrSearchSql['strAuthorizationSql'], $arrAttachmentSql['strGroupBy'],
+				$strOrderBy, $strLimitSuffix);
+				
+				//echo($strQuery); exit;
+
+			$objDbResult = $objDatabase->Query($strQuery);				
+			return Contact::InstantiateDbResult($objDbResult);			
+		}
+		
+		/**
+     * Load an array of Contact objects
+		 * by FirstName, LastName, or Company ShortDescription
+		 * using the contact_custom_field_helper table
+     *
+     * @param string $strFirstName
+     * @param string $strLastName
+     * @param string $strCompany
+     * @param string $strDateModified
+     * @param string $strDateModifiedFirst
+     * @param string $strDateModifiedLast
+     * @param string $strOrderBy
+     * @param string $strLimit
+     * @param array $objExpansionMap map of referenced columns to be immediately expanded via early-binding
+     * @return Contact[]
+     */
+		public static function LoadArrayBySearchHelper($strFirstName = null, $strLastName = null, $strCompany = null, $arrCustomFields = null, $strDateModified = null, $strDateModifiedFirst = null, $strDateModifiedLast = null, $blnAttachment = null, $strOrderBy = null, $strLimit = null, $objExpansionMap = null) {
+			
+			Contact::ArrayQueryHelper($strOrderBy, $strLimit, $strLimitPrefix, $strLimitSuffix, $strExpandSelect, $strExpandFrom, $objExpansionMap, $objDatabase);
+			
+			// Setup QueryExpansion
+			$objQueryExpansion = new QQueryExpansion();
+			if ($objExpansionMap) {
+				try {
+					Contact::ExpandQuery('contact', null, $objExpansionMap, $objQueryExpansion);
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+			}
+					
+			$arrSearchSql = Contact::GenerateSearchSql($strFirstName, $strLastName, $strCompany, $arrCustomFields, $strDateModified, $strDateModifiedFirst, $strDateModifiedLast, $blnAttachment);
+			$arrAttachmentSql = Attachment::GenerateSql(EntityQtype::Contact);
+			$arrCustomFieldSql = CustomField::GenerateHelperSql(EntityQtype::Contact);
 
 			$strQuery = sprintf('
 				SELECT

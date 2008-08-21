@@ -240,7 +240,7 @@
 				case 2:
 					$strPrimaryKey = 'inventory_model_id';
 					$strId = 'inventory_model`.`inventory_model_id';
-					$strHelperTable = '`inventory_custom_field_helper`';
+					$strHelperTable = '`inventory_model_custom_field_helper`';
 					break;
 				case 4: 
 					$strPrimaryKey = 'asset_model_id';
