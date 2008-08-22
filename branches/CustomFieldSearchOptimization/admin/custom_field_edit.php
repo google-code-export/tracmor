@@ -694,13 +694,20 @@
 			
 			// Insert the new EntityQtypeCustomFields
 			if ($this->lstCustomFieldQtype->SelectedItems) {
-				foreach ($this->lstEntityQtype->SelectedItems as $objEntityQtypeItem) {
+			  foreach ($this->lstEntityQtype->SelectedItems as $objEntityQtypeItem) {
 					// If the field doesn't already exist, then it needs to be created
 					if (!($objEntityQtypeCustomField = EntityQtypeCustomField::LoadByEntityQtypeIdCustomFieldId($objEntityQtypeItem->Value, $this->objCustomField->CustomFieldId))) {
 						$objEntityQtypeCustomField = new EntityQtypeCustomField();
 						$objEntityQtypeCustomField->CustomFieldId = $this->objCustomField->CustomFieldId;
 						$objEntityQtypeCustomField->EntityQtypeId = $objEntityQtypeItem->Value;
 						$objEntityQtypeCustomField->Save();
+						
+						// If the helper table exists for that EntityQtype then create new column in the helper table
+						if ($strHelperTable = $this->GetHelperTableByEntityQtypeId($objEntityQtypeItem->Value)) {
+						  $objDatabase = CustomField::GetDatabase();
+						  $strQuery = sprintf("ALTER TABLE %s ADD `cfv_%s` TEXT DEFAULT NULL;", $strHelperTable,  $this->objCustomField->CustomFieldId);
+						  $objDatabase->NonQuery($strQuery);
+						}
 						
 						//// Insert the new EntityQtypeCustomField to the RoleEntityQTypeCustomFieldAuthorization table, to all the roles, with authorized_flag set to true, one for View Auth and another for Edit Auth
 						foreach(Role::LoadAll() as $objRole){
@@ -726,6 +733,41 @@
 			}
 		}
 		
+		protected function GetHelperTableByEntityQtypeId($intEntityQtypeId = null) {
+		  switch ($intEntityQtypeId) {
+			  case 1: 
+      	  $strHelperTable = '`asset_custom_field_helper`';
+      		break;
+      	case 2: 
+      		$strHelperTable = '`inventory_model_custom_field_helper`';
+      		break;
+      	case 4: 
+      		$strHelperTable = '`asset_model_custom_field_helper`';
+      		break;
+      	case 5: 
+      		$strHelperTable = '`manufacturer_custom_field_helper`';
+      		break;
+      	case 6: 
+      		$strHelperTable = '`category_custom_field_helper`';
+      		break;
+      	case 7: 
+      		$strHelperTable = '`company_custom_field_helper`';
+      		break;
+      	case 8: 
+      		$strHelperTable = '`contact_custom_field_helper`';
+      		break;
+      	case 10: 
+      		$strHelperTable = '`shipment_custom_field_helper`';
+      		break;
+      	case 11: 
+      		$strHelperTable = '`receipt_custom_field_helper`';
+      		break;
+      	default:
+      	  $strHelperTable = "";
+				}
+			return $strHelperTable;
+		}
+		
 
 		protected function DeleteEntityQtypeCustomFields(){
 			$objEntityQtypeCustomFieldArray = EntityQtypeCustomField::LoadArrayByCustomFieldId($this->objCustomField->CustomFieldId);
@@ -736,6 +778,13 @@
 						$objRoleEntityCustomAuthArray=RoleEntityQtypeCustomFieldAuthorization::LoadArrayByEntityQtypeCustomFieldId($objEntityQtypeCustomField->EntityQtypeCustomFieldId);
 						if($objRoleEntityCustomAuthArray)foreach($objRoleEntityCustomAuthArray as $objRoleEntityCustomAuth){
 							$objRoleEntityCustomAuth->Delete();
+						}
+						
+						// If the helper table exists for that EntityQtype delete the columns in the helper table
+						if ($strHelperTable = $this->GetHelperTableByEntityQtypeId($objEntityQtypeCustomField->EntityQtypeId)) {
+						  $objDatabase = CustomField::GetDatabase();
+						  $strQuery = sprintf("ALTER TABLE %s DROP `cfv_%s`;", $strHelperTable,  $objEntityQtypeCustomField->CustomFieldId);
+						  $objDatabase->NonQuery($strQuery);
 						}
 						
 						// Delete the EntityQtypeCustomField last
