@@ -70,18 +70,6 @@ ALTER TABLE contact_custom_field_helper
   )
 ON Delete CASCADE ON Update NO ACTION;
 
-CREATE TABLE address_custom_field_helper (
-  address_id INTEGER UNSIGNED NOT NULL,
-  	PRIMARY KEY ( address_id), 
-  	INDEX address_custom_field_helper_fkindex1 ( address_id ))
-TYPE = INNODB;
-
-ALTER TABLE address_custom_field_helper
-  ADD CONSTRAINT FOREIGN KEY( address_id) references address (
-    address_id
-  )
-ON Delete CASCADE ON Update NO ACTION;
-
 CREATE TABLE shipment_custom_field_helper (
   shipment_id INTEGER UNSIGNED NOT NULL,
   	PRIMARY KEY ( shipment_id), 
