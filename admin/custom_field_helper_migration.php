@@ -47,12 +47,6 @@ switch ($intEntityQtypeId) {
 					$strId = 'contact`.`contact_id';
 					$strHelperTable = '`contact_custom_field_helper`';
 					break;
-				case 9: 
-					$strTableName = "address";
-					$strObjectId = "AddressId";
-					$strId = 'address`.`address_id';
-					$strHelperTable = '`address_custom_field_helper`';
-					break;
 				case 10: 
 					$strTableName = "shipment";
 					$strObjectId = "ShipmentId";
@@ -66,7 +60,7 @@ switch ($intEntityQtypeId) {
 					$strHelperTable = '`receipt_custom_field_helper`';
 					break;
 				default:
-				  die("Error: intEntityQtypeId is incorrect.");
+				  throw new Exception('Not a valid EntityQtypeId.');
 }
 
 $objEntityQtypeCustomFieldArray = EntityQtypeCustomField::LoadArrayByEntityQtypeId($intEntityQtypeId, QQ::Clause(QQ::Expand(QQN::EntityQtypeCustomField()->CustomField)));
@@ -131,9 +125,6 @@ switch ($intEntityQtypeId) {
     break;
   case 8:
     $objArray = Contact::InstantiateDbResult($objDbResult);
-    break;
-  case 9:
-    $objArray = Address::InstantiateDbResult($objDbResult);
     break;
   case 10:
     $objArray = Shipment::InstantiateDbResult($objDbResult);
