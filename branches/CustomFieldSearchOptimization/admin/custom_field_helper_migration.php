@@ -2,7 +2,7 @@
 
 require_once('../includes/prepend.inc.php');
 
-$intEntityQtypeId = 1;
+$intEntityQtypeId = 2;
 
 switch ($intEntityQtypeId) {
 				case 1: 
@@ -147,7 +147,7 @@ if ($objArray) {
 	}
 }
 else {
-  echo "No any inserts.";
+  echo "There are no SQL statements.";
 }
 
 ?>
