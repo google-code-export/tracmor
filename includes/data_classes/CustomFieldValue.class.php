@@ -50,6 +50,7 @@
 		}
 
 		// This adds the created by and creation date before saving a new asset
+		// And also updates the data into helper tables if short_description have been modified
 		public function Save($blnForceInsert = false, $blnForceUpdate = false) {
 			if ((!$this->__blnRestored) || ($blnForceInsert)) {
 				$this->CreatedBy = QApplication::$objUserAccount->UserAccountId;
@@ -57,8 +58,88 @@
 			}
 			else {
 				$this->ModifiedBy = QApplication::$objUserAccount->UserAccountId;
+				
+				// Load the CustomFieldValue object before modifing 
+				$objOldCustomFieldValue = CustomFieldValue::LoadByCustomFieldValueId($this->CustomFieldValueId);
+				// If short_description have been modified
+				if ($this->ShortDescription != $objOldCustomFieldValue->ShortDescription) {
+  				if ($objCustomField = CustomField::LoadByCustomFieldId($this->CustomFieldId)) {
+  				  $objDatabase = CustomFieldValue::GetDatabase();
+  				  $objCustomFieldSelectionArray = CustomFieldSelection::LoadArrayByCustomFieldValueId($this->CustomFieldValueId);
+  				  foreach ($objCustomFieldSelectionArray as $objCustomFieldSelection) {
+  				    // If helper table exists
+  				    if ($strHelperTableArray = $this->GetHelperTableByEntityQtypeId($objCustomFieldSelection->EntityQtypeId)) {
+  				      $strHelperTable = $strHelperTableArray[0];
+  				      $strTableName = $strHelperTableArray[1];
+      				  
+  				      // Update the data into helper table
+      				  $strQuery = sprintf("UPDATE %s SET `cfv_%s`='%s' where `%s_id`='%s';", $strHelperTable,  $objCustomField->CustomFieldId, $this->ShortDescription, $strTableName, $objCustomFieldSelection->EntityId);
+        			  $objDatabase->NonQuery($strQuery);
+      				}
+  				  }
+  				}
+				}
 			}
 			parent::Save($blnForceInsert, $blnForceUpdate);
+		}
+		
+		/*
+		// This also delete the data from helper tables
+		public function Delete() {
+		  $objCondition = QQ::Equal(QQN::CustomFieldSelection()->CustomFieldValueId, $this->CustomFieldValueId);
+			$objClauses = QQ::Clause(QQ::Expand(QQN::CustomFieldSelection()->CustomFieldValue));
+			// Select all CustomFieldSelections (and expanded CustomFieldValues) by CustomFieldValueId
+			$objCustomFieldSelectionArray = CustomFieldSelection::QueryArray($objCondition, $objClauses);
+			$intRowsToDeleteArray = array();
+			foreach ($objCustomFieldSelectionArray as $objCustomFieldSelection) {
+			  
+			}
+		  parent::Delete();
+		}
+		*/
+		
+		protected function GetHelperTableByEntityQtypeId($intEntityQtypeId) {
+		  switch ($intEntityQtypeId) {
+    			  case 1: 
+    				  $strTableName = "asset";
+    					$strHelperTable = '`asset_custom_field_helper`';
+    					break;
+    				case 2: 
+    					$strTableName = "inventory_model";
+    					$strHelperTable = '`inventory_model_custom_field_helper`';
+    					break;
+    				case 4: 
+    					$strTableName = "asset_model";
+    					$strHelperTable = '`asset_model_custom_field_helper`';
+    					break;
+    				case 5: 
+    					$strTableName = "manufacturer";
+    					$strHelperTable = '`manufacturer_custom_field_helper`';
+    					break;
+    				case 6: 
+    					$strTableName = "category";
+    					$strHelperTable = '`category_custom_field_helper`';
+    					break;
+    				case 7: 
+    					$strTableName = "company";
+    					$strHelperTable = '`company_custom_field_helper`';
+    					break;
+    				case 8: 
+    					$strTableName = "contact";
+    					$strHelperTable = '`contact_custom_field_helper`';
+    					break;
+    				case 10: 
+    					$strTableName = "shipment";
+    					$strHelperTable = '`shipment_custom_field_helper`';
+    					break;
+    				case 11: 
+    					$strTableName = "receipt";
+    					$strHelperTable = '`receipt_custom_field_helper`';
+    					break;
+          	default:
+          	  return false;
+  				}
+		return array($strHelperTable, $strTableName);
 		}
 	}
 ?>
