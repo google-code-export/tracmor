@@ -100,5 +100,64 @@
 			return CustomFieldSelection::InstantiateDbRow($objDbResult->GetNextRow());
 
 		}
+		
+		// This inserts/updates the data into helper tables
+		public function Save($blnForceInsert = false, $blnForceUpdate = false) {
+		  $objCustomFieldValue = CustomFieldValue::LoadByCustomFieldValueId($this->CustomFieldValueId);
+		  if ($objCustomField = CustomField::LoadByCustomFieldId($objCustomFieldValue->CustomFieldId)) {
+			  switch ($this->EntityQtypeId) {
+  			  case 1: 
+  				  $strTableName = "asset";
+  					$strHelperTable = '`asset_custom_field_helper`';
+  					break;
+  				case 2: 
+  					$strTableName = "inventory_model";
+  					$strHelperTable = '`inventory_model_custom_field_helper`';
+  					break;
+  				case 4: 
+  					$strTableName = "asset_model";
+  					$strHelperTable = '`asset_model_custom_field_helper`';
+  					break;
+  				case 5: 
+  					$strTableName = "manufacturer";
+  					$strHelperTable = '`manufacturer_custom_field_helper`';
+  					break;
+  				case 6: 
+  					$strTableName = "category";
+  					$strHelperTable = '`category_custom_field_helper`';
+  					break;
+  				case 7: 
+  					$strTableName = "company";
+  					$strHelperTable = '`company_custom_field_helper`';
+  					break;
+  				case 8: 
+  					$strTableName = "contact";
+  					$strHelperTable = '`contact_custom_field_helper`';
+  					break;
+  				case 10: 
+  					$strTableName = "shipment";
+  					$strHelperTable = '`shipment_custom_field_helper`';
+  					break;
+  				case 11: 
+  					$strTableName = "receipt";
+  					$strHelperTable = '`receipt_custom_field_helper`';
+  					break;
+        	default:
+        	  $strHelperTable = "";
+				}
+				// If helper table exists
+				if ($strHelperTable) {
+  				$objDatabase = CustomField::GetDatabase();
+				  if ((!$this->__blnRestored) || ($blnForceInsert)) {
+  			    $strQuery = sprintf("INSERT INTO %s (`%s_id`, `cfv_%s`) VALUES ('%s', '%s');", $strHelperTable,  $strTableName, $objCustomField->CustomFieldId, $this->EntityId, $objCustomFieldValue->ShortDescription);
+    			}
+    			else {
+   			    $strQuery = sprintf("UPDATE %s SET `cfv_%s`='%s' where `%s_id`='%s';", $strHelperTable,  $objCustomField->CustomFieldId, $objCustomFieldValue->ShortDescription, $strTableName, $this->EntityId);
+    			}
+  			  $objDatabase->NonQuery($strQuery);
+				}
+			}
+			parent::Save($blnForceInsert, $blnForceUpdate);
+		}
 	}
 ?>
