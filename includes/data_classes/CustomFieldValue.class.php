@@ -73,7 +73,7 @@
   				      $strTableName = $strHelperTableArray[1];
       				  
   				      // Update the data into helper table
-      				  $strQuery = sprintf("UPDATE %s SET `cfv_%s`='%s' where `%s_id`='%s';", $strHelperTable,  $objCustomField->CustomFieldId, $this->ShortDescription, $strTableName, $objCustomFieldSelection->EntityId);
+      				  $strQuery = sprintf("UPDATE %s SET `cfv_%s`='%s' WHERE `%s_id`='%s';", $strHelperTable, $objCustomField->CustomFieldId, $this->ShortDescription, $strTableName, $objCustomFieldSelection->EntityId);
         			  $objDatabase->NonQuery($strQuery);
       				}
   				  }
@@ -83,7 +83,6 @@
 			parent::Save($blnForceInsert, $blnForceUpdate);
 		}
 		
-		/*
 		// This also delete the data from helper tables
 		public function Delete() {
 		  $objCondition = QQ::Equal(QQN::CustomFieldSelection()->CustomFieldValueId, $this->CustomFieldValueId);
@@ -91,55 +90,67 @@
 			// Select all CustomFieldSelections (and expanded CustomFieldValues) by CustomFieldValueId
 			$objCustomFieldSelectionArray = CustomFieldSelection::QueryArray($objCondition, $objClauses);
 			$intRowsToDeleteArray = array();
+			// Create an array switched by helper tables (to minimize number of queries)
 			foreach ($objCustomFieldSelectionArray as $objCustomFieldSelection) {
-			  
+			  if ($this->GetHelperTableByEntityQtypeId($objCustomFieldSelection->EntityQtypeId)) {
+			    $intRowsToDeleteArray[$objCustomFieldSelection->EntityQtypeId][] = $objCustomFieldSelection->EntityId;
+			  }
+			}
+			$objDatabase = CustomFieldValue::GetDatabase();
+			// For each helper table
+			foreach (array_keys($intRowsToDeleteArray) as $intEntityQtypeId) {
+				$strHelperTableArray = $this->GetHelperTableByEntityQtypeId($intEntityQtypeId);
+				$strHelperTable = $strHelperTableArray[0];
+  			$strTableName = $strHelperTableArray[1];
+				
+				$strQuery = sprintf("UPDATE %s SET `cfv_%s`='' WHERE `%s_id` IN (%s);", $strHelperTable, $objCustomFieldSelection->CustomFieldValue->CustomFieldId, $strTableName, implode(', ', $intRowsToDeleteArray[$intEntityQtypeId]));
+        $objDatabase->NonQuery($strQuery);
 			}
 		  parent::Delete();
 		}
-		*/
 		
-		protected function GetHelperTableByEntityQtypeId($intEntityQtypeId) {
+		public function GetHelperTableByEntityQtypeId($intEntityQtypeId) {
 		  switch ($intEntityQtypeId) {
-    			  case 1: 
-    				  $strTableName = "asset";
-    					$strHelperTable = '`asset_custom_field_helper`';
-    					break;
-    				case 2: 
-    					$strTableName = "inventory_model";
-    					$strHelperTable = '`inventory_model_custom_field_helper`';
-    					break;
-    				case 4: 
-    					$strTableName = "asset_model";
-    					$strHelperTable = '`asset_model_custom_field_helper`';
-    					break;
-    				case 5: 
-    					$strTableName = "manufacturer";
-    					$strHelperTable = '`manufacturer_custom_field_helper`';
-    					break;
-    				case 6: 
-    					$strTableName = "category";
-    					$strHelperTable = '`category_custom_field_helper`';
-    					break;
-    				case 7: 
-    					$strTableName = "company";
-    					$strHelperTable = '`company_custom_field_helper`';
-    					break;
-    				case 8: 
-    					$strTableName = "contact";
-    					$strHelperTable = '`contact_custom_field_helper`';
-    					break;
-    				case 10: 
-    					$strTableName = "shipment";
-    					$strHelperTable = '`shipment_custom_field_helper`';
-    					break;
-    				case 11: 
-    					$strTableName = "receipt";
-    					$strHelperTable = '`receipt_custom_field_helper`';
-    					break;
-          	default:
-          	  return false;
-  				}
-		return array($strHelperTable, $strTableName);
+    	  case 1: 
+    		  $strTableName = "asset";
+    			$strHelperTable = '`asset_custom_field_helper`';
+    			break;
+    		case 2: 
+    			$strTableName = "inventory_model";
+    			$strHelperTable = '`inventory_model_custom_field_helper`';
+    			break;
+    		case 4: 
+    			$strTableName = "asset_model";
+    			$strHelperTable = '`asset_model_custom_field_helper`';
+    			break;
+    		case 5: 
+    			$strTableName = "manufacturer";
+    			$strHelperTable = '`manufacturer_custom_field_helper`';
+    			break;
+    		case 6: 
+    			$strTableName = "category";
+    			$strHelperTable = '`category_custom_field_helper`';
+    			break;
+    		case 7: 
+    			$strTableName = "company";
+    			$strHelperTable = '`company_custom_field_helper`';
+    			break;
+    		case 8: 
+    			$strTableName = "contact";
+    			$strHelperTable = '`contact_custom_field_helper`';
+    			break;
+    		case 10: 
+    			$strTableName = "shipment";
+    			$strHelperTable = '`shipment_custom_field_helper`';
+    			break;
+    		case 11: 
+    			$strTableName = "receipt";
+    			$strHelperTable = '`receipt_custom_field_helper`';
+    			break;
+        default:
+       	  return false;
+      }
+		  return array($strHelperTable, $strTableName);
 		}
 	}
 ?>
