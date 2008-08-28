@@ -66,6 +66,13 @@
 				$this->ModifiedBy = QApplication::$objUserAccount->UserAccountId;
 			}
 			parent::Save($blnForceInsert, $blnForceUpdate);
+			
+			// If we have no errors then will add the data to the helper table
+			if ((!$this->__blnRestored) || ($blnForceInsert)) {
+			  $objDatabase = Category::GetDatabase();
+				$strQuery = sprintf('INSERT INTO `category_custom_field_helper` (`category_id`) VALUES (%s);', $this->CategoryId);
+				$objDatabase->NonQuery($strQuery);
+			}
 		}
 		
 		/**

@@ -66,6 +66,13 @@
 				$this->ModifiedBy = QApplication::$objUserAccount->UserAccountId;
 			}
 			parent::Save($blnForceInsert, $blnForceUpdate);
+			
+			// If we have no errors then will add the data to the helper table
+			if ((!$this->__blnRestored) || ($blnForceInsert)) {
+			  $objDatabase = Manufacturer::GetDatabase();
+				$strQuery = sprintf('INSERT INTO `manufacturer_custom_field_helper` (`manufacturer_id`) VALUES (%s);', $this->ManufacturerId);
+				$objDatabase->NonQuery($strQuery);
+			}
 		}
 		
 		public static function LoadAllWithCustomFields($strOrderBy = null, $strLimit = null, $objExpansionMap = null) {

@@ -251,6 +251,13 @@
 				$this->ModifiedBy = QApplication::$objUserAccount->UserAccountId;
 			}
 			parent::Save($blnForceInsert, $blnForceUpdate);
+			
+			// If we have no errors then will add the data to the helper table
+			if ((!$this->__blnRestored) || ($blnForceInsert)) {
+			  $objDatabase = Receipt::GetDatabase();
+				$strQuery = sprintf('INSERT INTO `receipt_custom_field_helper` (`receipt_id`) VALUES (%s);', $this->ReceiptId);
+				$objDatabase->NonQuery($strQuery);
+			}
 		}
 		
 		
