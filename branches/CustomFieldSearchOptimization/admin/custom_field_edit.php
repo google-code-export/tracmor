@@ -749,7 +749,7 @@
     				    $txtDefaultValue = CustomFieldValue::LoadByCustomFieldValueId($this->objCustomField->DefaultCustomFieldValueId);
     				  }
     				  $objDatabase = CustomField::GetDatabase();
-  					  $strQuery = sprintf("UPDATE %s SET `cfv_%s`='%s' where `cfv_%s` is NULL;", $strHelperTable,  $this->objCustomField->CustomFieldId, $txtDefaultValue, $this->objCustomField->CustomFieldId);
+  					  $strQuery = sprintf("UPDATE %s SET `cfv_%s`='%s' WHERE `cfv_%s` is NULL;", $strHelperTable,  $this->objCustomField->CustomFieldId, $txtDefaultValue, $this->objCustomField->CustomFieldId);
     				  $objDatabase->NonQuery($strQuery);
     				}
           }
