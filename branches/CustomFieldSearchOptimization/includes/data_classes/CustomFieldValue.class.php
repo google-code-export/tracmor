@@ -55,12 +55,14 @@
 			if ((!$this->__blnRestored) || ($blnForceInsert)) {
 				$this->CreatedBy = QApplication::$objUserAccount->UserAccountId;
 				$this->CreationDate = new QDateTime(QDateTime::Now);
+				parent::Save($blnForceInsert, $blnForceUpdate);
 			}
 			else {
 				$this->ModifiedBy = QApplication::$objUserAccount->UserAccountId;
 				
 				// Load the CustomFieldValue object before modifing 
 				$objOldCustomFieldValue = CustomFieldValue::LoadByCustomFieldValueId($this->CustomFieldValueId);
+				parent::Save($blnForceInsert, $blnForceUpdate);				
 				// If short_description have been modified
 				if ($this->ShortDescription != $objOldCustomFieldValue->ShortDescription) {
   				if ($objCustomField = CustomField::LoadByCustomFieldId($this->CustomFieldId)) {
@@ -80,7 +82,6 @@
   				}
 				}
 			}
-			parent::Save($blnForceInsert, $blnForceUpdate);
 		}
 		
 		// This also delete the data from helper tables
