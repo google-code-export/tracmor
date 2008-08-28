@@ -103,6 +103,8 @@
 		
 		// This inserts/updates the data into helper tables
 		public function Save($blnForceInsert = false, $blnForceUpdate = false) {
+		  parent::Save($blnForceInsert, $blnForceUpdate);
+		  
 		  $objCustomFieldValue = CustomFieldValue::LoadByCustomFieldValueId($this->CustomFieldValueId);
 		  if ($objCustomField = CustomField::LoadByCustomFieldId($objCustomFieldValue->CustomFieldId)) {
 			  // If helper table exists
@@ -115,7 +117,6 @@
   			  $objDatabase->NonQuery($strQuery);
 				}
 			}
-			parent::Save($blnForceInsert, $blnForceUpdate);
 		}
 		
 		// This also delete the data from helper tables
