@@ -124,6 +124,13 @@
 				$this->ModifiedBy = QApplication::$objUserAccount->UserAccountId;
 			}
 			parent::Save($blnForceInsert, $blnForceUpdate);
+			
+			// If we have no errors then will add the data to the helper table
+			if ((!$this->__blnRestored) || ($blnForceInsert)) {
+			  $objDatabase = Asset::GetDatabase();
+				$strQuery = sprintf('INSERT INTO `asset_custom_field_helper` (`asset_id`) VALUES (%s);', $this->AssetId);
+				$objDatabase->NonQuery($strQuery);
+			}
 		}
 		
 		/**

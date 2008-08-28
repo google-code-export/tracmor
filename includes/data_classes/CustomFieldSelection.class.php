@@ -109,13 +109,9 @@
 				if ($strHelperTableArray = CustomFieldValue::GetHelperTableByEntityQtypeId($this->EntityQtypeId)) {
   				$strHelperTable = $strHelperTableArray[0];
     		  $strTableName = $strHelperTableArray[1];
-				  $objDatabase = CustomField::GetDatabase();
-				  if ((!$this->__blnRestored) || ($blnForceInsert)) {
-  			    $strQuery = sprintf("INSERT INTO %s (`%s_id`, `cfv_%s`) VALUES ('%s', '%s');", $strHelperTable,  $strTableName, $objCustomField->CustomFieldId, $this->EntityId, $objCustomFieldValue->ShortDescription);
-    			}
-    			else {
-   			    $strQuery = sprintf("UPDATE %s SET `cfv_%s`='%s' where `%s_id`='%s';", $strHelperTable, $objCustomField->CustomFieldId, $objCustomFieldValue->ShortDescription, $strTableName, $this->EntityId);
-    			}
+				  
+    		  $objDatabase = CustomField::GetDatabase();
+				  $strQuery = sprintf("UPDATE %s SET `cfv_%s`='%s' where `%s_id`='%s';", $strHelperTable, $objCustomField->CustomFieldId, $objCustomFieldValue->ShortDescription, $strTableName, $this->EntityId);
   			  $objDatabase->NonQuery($strQuery);
 				}
 			}

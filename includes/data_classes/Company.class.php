@@ -104,6 +104,13 @@
 				$this->ModifiedBy = QApplication::$objUserAccount->UserAccountId;
 			}
 			parent::Save($blnForceInsert, $blnForceUpdate);
+			
+			// If we have no errors then will add the data to the helper table
+			if ((!$this->__blnRestored) || ($blnForceInsert)) {
+			  $objDatabase = Company::GetDatabase();
+				$strQuery = sprintf('INSERT INTO `company_custom_field_helper` (`company_id`) VALUES (%s);', $this->CompanyId);
+				$objDatabase->NonQuery($strQuery);
+			}
 		}
 		
     /**

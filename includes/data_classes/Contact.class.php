@@ -66,6 +66,13 @@
 				$this->ModifiedBy = QApplication::$objUserAccount->UserAccountId;
 			}
 			parent::Save($blnForceInsert, $blnForceUpdate);
+			
+			// If we have no errors then will add the data to the helper table
+			if ((!$this->__blnRestored) || ($blnForceInsert)) {
+			  $objDatabase = Contact::GetDatabase();
+				$strQuery = sprintf('INSERT INTO `contact_custom_field_helper` (`contact_id`) VALUES (%s);', $this->ContactId);
+				$objDatabase->NonQuery($strQuery);
+			}
 		}
 		
     /**
