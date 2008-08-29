@@ -62,6 +62,7 @@ switch ($intEntityQtypeId) {
 				default:
 				  throw new Exception('Not a valid EntityQtypeId.');
 }
+$blnNoAlterTable = false;
 
 $objEntityQtypeCustomFieldArray = EntityQtypeCustomField::LoadArrayByEntityQtypeId($intEntityQtypeId, QQ::Clause(QQ::Expand(QQN::EntityQtypeCustomField()->CustomField)));
 
@@ -69,6 +70,9 @@ if ($objEntityQtypeCustomFieldArray) {
 	foreach ($objEntityQtypeCustomFieldArray as $objEntityQtypeCustomField) {
 		echo 'ALTER TABLE ' . $strHelperTable . ' ADD cfv_' . $objEntityQtypeCustomField->CustomFieldId . " TEXT DEFAULT NULL;<br />";
 	}
+}
+else {
+  $blnNoAlterTable = true;
 }
 
 $arrCustomFieldSql = array();
@@ -146,7 +150,7 @@ if ($objArray) {
 		echo ($strQuery . "<br />");
 	}
 }
-else {
+elseif ($blnNoAlterTable) {
   echo "There are no SQL statements.";
 }
 

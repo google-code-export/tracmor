@@ -686,8 +686,9 @@
 							$objRoleEntityCustomAuth->Delete();
 						}
 						
-						// If the helper table exists for that EntityQtype then create new column in the helper table
-						if ($strHelperTable = $this->GetHelperTableByEntityQtypeId($objEntityQtypeCustomField->EntityQtypeId)) {
+						// If the helper table exists for that EntityQtype then will delete the column in the helper table
+						if ($strHelperTableArray = CustomFieldValue::GetHelperTableByEntityQtypeId($objEntityQtypeCustomField->EntityQtypeId)) {
+						  $strHelperTable = $strHelperTableArray[0];
 						  $objDatabase = CustomField::GetDatabase();
 						  $strQuery = sprintf("ALTER TABLE %s DROP `cfv_%s`;", $strHelperTable,  $this->objCustomField->CustomFieldId);
 						  $objDatabase->NonQuery($strQuery);
@@ -710,7 +711,8 @@
 						$objEntityQtypeCustomField->Save();
 						
 						// If the helper table exists for that EntityQtype then create new column in the helper table
-						if ($strHelperTable = $this->GetHelperTableByEntityQtypeId($objEntityQtypeItem->Value)) {
+						if ($strHelperTableArray = CustomFieldValue::GetHelperTableByEntityQtypeId($objEntityQtypeItem->Value)) {
+						  $strHelperTable = $strHelperTableArray[0];
 						  $objDatabase = CustomField::GetDatabase();
 						  $strQuery = sprintf("ALTER TABLE %s ADD `cfv_%s` TEXT DEFAULT NULL;", $strHelperTable,  $this->objCustomField->CustomFieldId);
 						  $objDatabase->NonQuery($strQuery);
@@ -739,7 +741,8 @@
 					// If this field is a required field
           if ($this->objCustomField->RequiredFlag) {
             // Add the DefaultValue into the helper table
-  					if ($strHelperTable = $this->GetHelperTableByEntityQtypeId($objEntityQtypeItem->Value)) {
+  					if ($strHelperTableArray = CustomFieldValue::GetHelperTableByEntityQtypeId($objEntityQtypeItem->Value)) {
+  					  $strHelperTable = $strHelperTableArray[0];
               // If the custom field is text or textarea
   					  if ($this->objCustomField->CustomFieldQtypeId != 2) {
     				    $txtDefaultValue = $this->txtDefaultValue->Text;
@@ -757,42 +760,6 @@
 			}
 		}
 		
-		protected function GetHelperTableByEntityQtypeId($intEntityQtypeId = null) {
-		  switch ($intEntityQtypeId) {
-			  case 1: 
-      	  $strHelperTable = '`asset_custom_field_helper`';
-      		break;
-      	case 2: 
-      		$strHelperTable = '`inventory_model_custom_field_helper`';
-      		break;
-      	case 4: 
-      		$strHelperTable = '`asset_model_custom_field_helper`';
-      		break;
-      	case 5: 
-      		$strHelperTable = '`manufacturer_custom_field_helper`';
-      		break;
-      	case 6: 
-      		$strHelperTable = '`category_custom_field_helper`';
-      		break;
-      	case 7: 
-      		$strHelperTable = '`company_custom_field_helper`';
-      		break;
-      	case 8: 
-      		$strHelperTable = '`contact_custom_field_helper`';
-      		break;
-      	case 10: 
-      		$strHelperTable = '`shipment_custom_field_helper`';
-      		break;
-      	case 11: 
-      		$strHelperTable = '`receipt_custom_field_helper`';
-      		break;
-      	default:
-      	  $strHelperTable = "";
-				}
-			return $strHelperTable;
-		}
-		
-
 		protected function DeleteEntityQtypeCustomFields(){
 			$objEntityQtypeCustomFieldArray = EntityQtypeCustomField::LoadArrayByCustomFieldId($this->objCustomField->CustomFieldId);
 			if ($objEntityQtypeCustomFieldArray) {
@@ -805,14 +772,15 @@
 						}
 						
 						// If the helper table exists for that EntityQtype delete the columns in the helper table
-						if ($strHelperTable = $this->GetHelperTableByEntityQtypeId($objEntityQtypeCustomField->EntityQtypeId)) {
+						if ($strHelperTableArray = CustomFieldValue::GetHelperTableByEntityQtypeId($objEntityQtypeCustomField->EntityQtypeId)) {
+						  $strHelperTable = $strHelperTableArray[0];
 						  $objDatabase = CustomField::GetDatabase();
 						  $strQuery = sprintf("ALTER TABLE %s DROP `cfv_%s`;", $strHelperTable,  $objEntityQtypeCustomField->CustomFieldId);
 						  $objDatabase->NonQuery($strQuery);
 						}
 						
 						// Delete the EntityQtypeCustomField last
-						//$objEntityQtypeCustomField->Delete();
+						$objEntityQtypeCustomField->Delete();
 				}
 			}
 		}

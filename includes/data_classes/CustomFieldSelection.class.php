@@ -105,8 +105,8 @@
 		public function Save($blnForceInsert = false, $blnForceUpdate = false) {
 		  parent::Save($blnForceInsert, $blnForceUpdate);
 		  
-		  $objCustomFieldValue = CustomFieldValue::LoadByCustomFieldValueId($this->CustomFieldValueId);
-		  if ($objCustomField = CustomField::LoadByCustomFieldId($objCustomFieldValue->CustomFieldId)) {
+		  $objCustomFieldValue = $this->CustomFieldValue;
+		  if ($objCustomField = $objCustomFieldValue->CustomField) {
 			  // If helper table exists
 				if ($strHelperTableArray = CustomFieldValue::GetHelperTableByEntityQtypeId($this->EntityQtypeId)) {
   				$strHelperTable = $strHelperTableArray[0];
@@ -119,9 +119,10 @@
 			}
 		}
 		
-		// This also delete the data from helper tables
+		// This also deletes the data from helper tables
 		public function Delete() {
 			$objCustomFieldValue = CustomFieldValue::Load($this->CustomFieldValueId);
+			parent::Delete();
 			$objDatabase = CustomFieldSelection::GetDatabase();
 			// If the helper table exists
 			if ($objCustomFieldValue && $strHelperTableArray = CustomFieldValue::GetHelperTableByEntityQtypeId($this->EntityQtypeId)) {
@@ -131,7 +132,6 @@
   			$strQuery = sprintf("UPDATE %s SET `cfv_%s`='' WHERE `%s_id`='%s';", $strHelperTable, $objCustomFieldValue->CustomFieldId, $strTableName, $this->EntityId);
         $objDatabase->NonQuery($strQuery);
 			}
-      parent::Delete();
 		}
 	}
 ?>
