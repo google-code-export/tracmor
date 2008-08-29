@@ -50,7 +50,7 @@
 		}
 
 		// This adds the created by and creation date before saving a new asset
-		// And also updates the data into helper tables if short_description have been modified
+		// And also updates the data into helper tables if short_description has been modified
 		public function Save($blnForceInsert = false, $blnForceUpdate = false) {
 			if ((!$this->__blnRestored) || ($blnForceInsert)) {
 				$this->CreatedBy = QApplication::$objUserAccount->UserAccountId;
@@ -65,7 +65,7 @@
 				parent::Save($blnForceInsert, $blnForceUpdate);				
 				// If short_description have been modified
 				if ($this->ShortDescription != $objOldCustomFieldValue->ShortDescription) {
-  				if ($objCustomField = CustomField::LoadByCustomFieldId($this->CustomFieldId)) {
+  				if ($objCustomField = $this->CustomField) {
   				  $objDatabase = CustomFieldValue::GetDatabase();
   				  $objCustomFieldSelectionArray = CustomFieldSelection::LoadArrayByCustomFieldValueId($this->CustomFieldValueId);
   				  foreach ($objCustomFieldSelectionArray as $objCustomFieldSelection) {
@@ -84,12 +84,13 @@
 			}
 		}
 		
-		// This also delete the data from helper tables
+		// This also deletes the data from helper tables
 		public function Delete() {
 		  $objCondition = QQ::Equal(QQN::CustomFieldSelection()->CustomFieldValueId, $this->CustomFieldValueId);
 			$objClauses = QQ::Clause(QQ::Expand(QQN::CustomFieldSelection()->CustomFieldValue));
 			// Select all CustomFieldSelections (and expanded CustomFieldValues) by CustomFieldValueId
 			$objCustomFieldSelectionArray = CustomFieldSelection::QueryArray($objCondition, $objClauses);
+			parent::Delete();
 			$intRowsToDeleteArray = array();
 			// Create an array switched by helper tables (to minimize number of queries)
 			foreach ($objCustomFieldSelectionArray as $objCustomFieldSelection) {
@@ -107,7 +108,6 @@
 				$strQuery = sprintf("UPDATE %s SET `cfv_%s`='' WHERE `%s_id` IN (%s);", $strHelperTable, $objCustomFieldSelection->CustomFieldValue->CustomFieldId, $strTableName, implode(', ', $intRowsToDeleteArray[$intEntityQtypeId]));
         $objDatabase->NonQuery($strQuery);
 			}
-		  parent::Delete();
 		}
 		
 		public function GetHelperTableByEntityQtypeId($intEntityQtypeId) {
