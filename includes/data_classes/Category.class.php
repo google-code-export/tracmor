@@ -1,14 +1,14 @@
 <?php
 /*
- * Copyright (c)  2006, Universal Diagnostic Solutions, Inc. 
+ * Copyright (c)  2006, Universal Diagnostic Solutions, Inc.
  *
- * This file is part of Tracmor.  
+ * This file is part of Tracmor.
  *
  * Tracmor is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version. 
- *	
+ * (at your option) any later version.
+ *
  * Tracmor is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -26,19 +26,19 @@
 	/**
 	 * The Category class defined here contains any
 	 * customized code for the Category class in the
-	 * Object Relational Model.  It represents the "category" table 
+	 * Object Relational Model.  It represents the "category" table
 	 * in the database, and extends from the code generated abstract CategoryGen
 	 * class, which contains all the basic CRUD-type functionality as well as
 	 * basic methods to handle relationships and index-based loading.
-	 * 
+	 *
 	 * @package My Application
 	 * @subpackage DataObjects
-	 * 
+	 *
 	 */
 	class Category extends CategoryGen {
-		
+
 		public $objCustomFieldArray;
-		
+
 		/**
 		 * Default "to string" handler
 		 * Allows pages to _p()/echo()/print() this object, and to define the default
@@ -51,30 +51,29 @@
 		public function __toString() {
 			return sprintf($this->strShortDescription);
 		}
-		
+
 		public function __toStringWithLink() {
 			return sprintf('<a href="category_edit.php?intCategoryId=%s">%s</a>', $this->intCategoryId, $this->__toString());
 		}
-		
+
 		// This adds the created by and creation date before saving a new category
 		public function Save($blnForceInsert = false, $blnForceUpdate = false) {
 			if ((!$this->__blnRestored) || ($blnForceInsert)) {
 				$this->CreatedBy = QApplication::$objUserAccount->UserAccountId;
 				$this->CreationDate = new QDateTime(QDateTime::Now);
+				parent::Save($blnForceInsert, $blnForceUpdate);
+
+				// If we have no errors then will add the data to the helper table
+  			$objDatabase = Category::GetDatabase();
+  			$strQuery = sprintf('INSERT INTO `category_custom_field_helper` (`category_id`) VALUES (%s);', $this->CategoryId);
+  			$objDatabase->NonQuery($strQuery);
 			}
 			else {
 				$this->ModifiedBy = QApplication::$objUserAccount->UserAccountId;
-			}
-			parent::Save($blnForceInsert, $blnForceUpdate);
-			
-			// If we have no errors then will add the data to the helper table
-			if ((!$this->__blnRestored) || ($blnForceInsert)) {
-			  $objDatabase = Category::GetDatabase();
-				$strQuery = sprintf('INSERT INTO `category_custom_field_helper` (`category_id`) VALUES (%s);', $this->CategoryId);
-				$objDatabase->NonQuery($strQuery);
+				parent::Save($blnForceInsert, $blnForceUpdate);
 			}
 		}
-		
+
 		/**
 		 * Load all Categories according to asset flag
 		 * If both variables are true, returns categories that are Asset OR Inventory, or both
@@ -102,7 +101,7 @@
 			else {
 				$sqlWhere = "`category`.`asset_flag` = 0 AND `category`.`inventory_flag` = 0";
 			}
-			
+
 			// Setup the SQL Query
 			$strQuery = sprintf('
 				SELECT
@@ -142,7 +141,7 @@
 		public static function CountAllWithFlags($blnAssetFlag = true, $blnInventoryFlag = true) {
 			// Call to QueryHelper to Get the Database Object
 			Category::QueryHelper($objDatabase);
-			
+
 			if ($blnAssetFlag) {
 				$sqlAssetWhere = "`category`.`asset_flag` = 1";
 			}
@@ -154,7 +153,7 @@
 			}
 			else {
 				$sqlInventoryWhere .= " AND `category`.`inventory_flag` = 0";
-			}			
+			}
 
 			// Setup the SQL Query
 			$strQuery = sprintf('
@@ -171,11 +170,11 @@
 			$strDbRow = $objDbResult->FetchRow();
 			return QType::Cast($strDbRow[0], QType::Integer);
 		}
-		
+
 		public static function LoadAllWithCustomFields($strOrderBy = null, $strLimit = null, $objExpansionMap = null) {
-			
+
 			Category::ArrayQueryHelper($strOrderBy, $strLimit, $strLimitPrefix, $strLimitSuffix, $strExpandSelect, $strExpandFrom, $objExpansionMap, $objDatabase);
-			
+
 			// Setup QueryExpansion
 			$objQueryExpansion = new QQueryExpansion();
 			if ($objExpansionMap) {
@@ -186,7 +185,7 @@
 					throw $objExc;
 				}
 			}
-					
+
 			$arrCustomFieldSql = CustomField::GenerateSql(6);
 
 			$strQuery = sprintf('
@@ -213,21 +212,21 @@
 				%s
 				%s
 			', $strLimitPrefix,
-				$objQueryExpansion->GetSelectSql(",\n					", ",\n					"), $arrCustomFieldSql['strSelect'], 
-				$objQueryExpansion->GetFromSql("", "\n					"), $arrCustomFieldSql['strFrom'], 
+				$objQueryExpansion->GetSelectSql(",\n					", ",\n					"), $arrCustomFieldSql['strSelect'],
+				$objQueryExpansion->GetFromSql("", "\n					"), $arrCustomFieldSql['strFrom'],
 				$strOrderBy, $strLimitSuffix);
-				
+
 				//echo($strQuery); exit;
 
-			$objDbResult = $objDatabase->Query($strQuery);				
-			return Category::InstantiateDbResult($objDbResult);			
-		
+			$objDbResult = $objDatabase->Query($strQuery);
+			return Category::InstantiateDbResult($objDbResult);
+
 		}
 
 		public static function LoadAllWithCustomFieldsHelper($strOrderBy = null, $strLimit = null, $objExpansionMap = null) {
-			
+
 			Category::ArrayQueryHelper($strOrderBy, $strLimit, $strLimitPrefix, $strLimitSuffix, $strExpandSelect, $strExpandFrom, $objExpansionMap, $objDatabase);
-			
+
 			// Setup QueryExpansion
 			$objQueryExpansion = new QQueryExpansion();
 			if ($objExpansionMap) {
@@ -238,7 +237,7 @@
 					throw $objExc;
 				}
 			}
-					
+
 			$arrCustomFieldSql = CustomField::GenerateHelperSql(6);
 
 			$strQuery = sprintf('
@@ -265,15 +264,15 @@
 				%s
 				%s
 			', $strLimitPrefix,
-				$objQueryExpansion->GetSelectSql(",\n					", ",\n					"), $arrCustomFieldSql['strSelect'], 
-				$objQueryExpansion->GetFromSql("", "\n					"), $arrCustomFieldSql['strFrom'], 
+				$objQueryExpansion->GetSelectSql(",\n					", ",\n					"), $arrCustomFieldSql['strSelect'],
+				$objQueryExpansion->GetFromSql("", "\n					"), $arrCustomFieldSql['strFrom'],
 				$strOrderBy, $strLimitSuffix);
-				
+
 				//echo($strQuery); exit;
 
-			$objDbResult = $objDatabase->Query($strQuery);				
-			return Category::InstantiateDbResult($objDbResult);			
-		
-		}	
+			$objDbResult = $objDatabase->Query($strQuery);
+			return Category::InstantiateDbResult($objDbResult);
+
+		}
 	}
 ?>
