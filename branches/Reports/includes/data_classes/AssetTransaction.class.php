@@ -1,14 +1,14 @@
 <?php
 /*
- * Copyright (c)  2006, Universal Diagnostic Solutions, Inc. 
+ * Copyright (c)  2006, Universal Diagnostic Solutions, Inc.
  *
- * This file is part of Tracmor.  
+ * This file is part of Tracmor.
  *
  * Tracmor is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version. 
- *	
+ * (at your option) any later version.
+ *
  * Tracmor is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -26,14 +26,14 @@
 	/**
 	 * The AssetTransaction class defined here contains any
 	 * customized code for the AssetTransaction class in the
-	 * Object Relational Model.  It represents the "asset_transaction" table 
+	 * Object Relational Model.  It represents the "asset_transaction" table
 	 * in the database, and extends from the code generated abstract AssetTransactionGen
 	 * class, which contains all the basic CRUD-type functionality as well as
 	 * basic methods to handle relationships and index-based loading.
-	 * 
+	 *
 	 * @package My Application
 	 * @subpackage DataObjects
-	 * 
+	 *
 	 */
 	class AssetTransaction extends AssetTransactionGen {
 		/**
@@ -48,7 +48,7 @@
 		public function __toString() {
 			return sprintf('AssetTransaction Object %s',  $this->intAssetTransactionId);
 		}
-		
+
 		/**
 		 * Returns the HTML needed for the shipment asset transaction datagrid to show icons marking transactions with scheduled returns or exchanges
 		 * It will return an empty string if it does not meet any of the specifications above.
@@ -61,37 +61,37 @@
 				$lblExchangeImage = new QLabelExt($objControl);
 				$lblExchangeImage->HtmlEntities = false;
 				$lblExchangeImage->Text = sprintf('<img src="%s/icons/receipt_datagrid.png" style="vertical-align:middle;">', __IMAGE_ASSETS__);
-				
+
 				if ($this->NewAsset instanceof Asset && $this->NewAsset->AssetCode) {
 					$strAssetCode = $this->NewAsset->AssetCode;
 				}
 				else {
 					$strAssetCode = 'Auto Generated';
 				}
-				
+
 				$objHoverTip = new QHoverTip($lblExchangeImage);
 				$objHoverTip->Text = sprintf('Exchange Scheduled: %s', $strAssetCode);
 				$lblExchangeImage->HoverTip = $objHoverTip;
 				$strToReturn = $lblExchangeImage->Render(false);
 			}
-			
+
 			elseif ($this->blnScheduleReceiptFlag && !$this->blnNewAssetFlag) {
 				$lblReturnImage = new QLabelExt($objControl);
 				$lblReturnImage->HtmlEntities = false;
 				$lblReturnImage->Text = sprintf('<img src="%s/icons/receipt_datagrid.png" style="vertical-align:middle;">', __IMAGE_ASSETS__);
-				
+
 				$objHoverTip = new QHoverTip($lblReturnImage);
 				$objHoverTip->Text = 'Return Scheduled';
 				$lblReturnImage->HoverTip = $objHoverTip;
-				$strToReturn = $lblReturnImage->Render(false);		
-			}	
+				$strToReturn = $lblReturnImage->Render(false);
+			}
 			else {
 				$strToReturn = '';
 			}
 
 			return $strToReturn;
-		}		
-		
+		}
+
 		/**
 		 * Returns a string denoting status of AssetTransaction
 		 *
@@ -106,10 +106,10 @@
 			}
 			return sprintf('%s', $strToReturn);
 		}
-		
+
 		/**
 		 * Returns the SourceLocation of an AssetTransaction if it exists
-		 * This was created in case an AssetTransaction does not have a SourceLocation - it would generate an error in a datagrid 
+		 * This was created in case an AssetTransaction does not have a SourceLocation - it would generate an error in a datagrid
 		 *
 		 * @return string SourceLocation Short Description
 		 */
@@ -122,7 +122,7 @@
 			}
 			return sprintf('%s', $strToReturn);
 		}
-		
+
 		/**
 		 * Returns the DestinationLocation of an AssetTransaction if it exists
 		 * This was created because Pending Receipts do not have a Destination Location
@@ -137,8 +137,8 @@
 				$strToReturn = null;
 			}
 			return sprintf('%s', $strToReturn);
-		}				
-		
+		}
+
 		/**
 		 * Returns a boolean value - false if DestinationLocation is empty, true if it is not
 		 * AssetTransactions with an empty DestinationLocation are Pending Receipts
@@ -153,7 +153,7 @@
 				return false;
 			}
 		}
-		
+
 		// This adds the created by and creation date before saving a new AssetTransaction
 		public function Save($blnForceInsert = false, $blnForceUpdate = false) {
 			if ((!$this->__blnRestored) || ($blnForceInsert)) {
@@ -165,14 +165,14 @@
 			}
 			parent::Save($blnForceInsert, $blnForceUpdate);
 		}
-		
+
 		/**
 		 * Return a boolean if there is a pending transaction
 		 * @param integer $intAssetId
 		 * @return bool
 		 */
 		public static function PendingTransaction($intAssetId) {
-			
+
 			if ($objPendingShipment = AssetTransaction::PendingShipment($intAssetId) || $objPendingReceipt = AssetTransaction::PendingReceipt($intAssetId)) {
 				return true;
 			}
@@ -180,7 +180,7 @@
 				return false;
 			}
 		}
-		
+
 		/**
 		 * Load a Pending Receipt AssetTransaction
 		 * Checks for any AssetTransaction where the source_location_id is 5 (to be received) and the destination is NULL (still pending)
@@ -213,7 +213,7 @@
 			$objDbResult = $objDatabase->Query($strQuery);
 			return AssetTransaction::InstantiateDbRow($objDbResult->GetNextRow());
 		}
-		
+
 		/**
 		 * Load a Pending Shipment AssetTransaction
 		 * Checks for any AssetTransaction where the source_location_id > 5 (any custom created location) and the destination is NULL (still pending)
@@ -246,17 +246,17 @@
 			$objDbResult = $objDatabase->Query($strQuery);
 			return AssetTransaction::InstantiateDbRow($objDbResult->GetNextRow());
 		}
-		
+
 		/**
 		 * Determine if a transaction has been conducted after the current AssetTransaction
 		 * @return object AssetTransaction
 		 */
 		public function NewerTransaction() {
-			
+
 			$objNewerAssetTransaction = AssetTransaction::QuerySingle(QQ::AndCondition(QQ::Equal(QQN::AssetTransaction()->AssetId, $this->AssetId), QQ::GreaterOrEqual(QQN::AssetTransaction()->CreationDate, $this->CreationDate), QQ::NotEqual(QQN::AssetTransaction()->AssetTransactionId, $this->AssetTransactionId)));
 			return $objNewerAssetTransaction;
 		}
-		
+
 		/**
 		 * Count AssetTransactions
 		 * by AssetId Index(es), but only those transactions that are Shipments or Receipts
@@ -286,8 +286,48 @@
 					)
 				);
 			}
-			
+
 			return $arrToReturn;
+		}
+
+		public function LoadArrayBySearch($objExpansionMap = null) {
+		  // Setup QueryExpansion
+			$objQueryExpansion = new QQueryExpansion();
+			if ($objExpansionMap) {
+				try {
+					AssetTransaction::ExpandQuery('asset_transaction', null, $objExpansionMap, $objQueryExpansion);
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+			}
+			$strQuery = sprintf('
+        SELECT
+        	`asset_transaction`.`asset_transaction_id` AS `asset_transaction_id`,
+        	`asset_transaction`.`asset_id` AS `asset_id`,
+        	`asset_transaction`.`transaction_id` AS `transaction_id`,
+        	`asset_transaction`.`parent_asset_transaction_id` AS `parent_asset_transaction_id`,
+        	`asset_transaction`.`source_location_id` AS `source_location_id`,
+        	`asset_transaction`.`destination_location_id` AS `destination_location_id`,
+        	`asset_transaction`.`new_asset_flag` AS `new_asset_flag`,
+        	`asset_transaction`.`new_asset_id` AS `new_asset_id`,
+        	`asset_transaction`.`schedule_receipt_flag` AS `schedule_receipt_flag`,
+        	`asset_transaction`.`schedule_receipt_due_date` AS `schedule_receipt_due_date`,
+        	`asset_transaction`.`created_by` AS `created_by`,
+        	`asset_transaction`.`creation_date` AS `creation_date`,
+        	`asset_transaction`.`modified_by` AS `modified_by`,
+        	`asset_transaction`.`modified_date` AS `modified_date`%s
+        FROM
+        	`asset_transaction` AS `asset_transaction`
+        	%s
+        WHERE
+          1=1
+      ', $objQueryExpansion->GetSelectSql(",\n					", ",\n					"),
+      $objQueryExpansion->GetFromSql("", "\n					"));
+      $objDatabase = AssetTransaction::GetDatabase();
+      $objDbResult = $objDatabase->Query($strQuery);
+
+			return AssetTransaction::InstantiateDbResult($objDbResult);
 		}
 	}
 ?>
