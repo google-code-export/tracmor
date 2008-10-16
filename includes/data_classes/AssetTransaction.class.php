@@ -290,7 +290,7 @@
 			return $arrToReturn;
 		}
 
-		public function LoadArrayBySearch($objExpansionMap = null) {
+		public function LoadArrayBySearch($blnReturnStrQuery = true, $objExpansionMap = null) {
 		  // Setup QueryExpansion
 			$objQueryExpansion = new QQueryExpansion();
 			if ($objExpansionMap) {
@@ -301,6 +301,7 @@
 					throw $objExc;
 				}
 			}
+			$arrCustomFieldSql = CustomField::GenerateSql(EntityQtype::Asset);
 			$strQuery = sprintf('
         SELECT
         	`asset_transaction`.`asset_transaction_id` AS `asset_transaction_id`,
@@ -316,18 +317,29 @@
         	`asset_transaction`.`created_by` AS `created_by`,
         	`asset_transaction`.`creation_date` AS `creation_date`,
         	`asset_transaction`.`modified_by` AS `modified_by`,
-        	`asset_transaction`.`modified_date` AS `modified_date`%s
+        	`asset_transaction`.`modified_date` AS `modified_date`
+        	%s
+        	%s
         FROM
         	`asset_transaction` AS `asset_transaction`
         	%s
+        	%s
         WHERE
           1=1
-      ', $objQueryExpansion->GetSelectSql(",\n					", ",\n					"),
-      $objQueryExpansion->GetFromSql("", "\n					"));
-      $objDatabase = AssetTransaction::GetDatabase();
-      $objDbResult = $objDatabase->Query($strQuery);
+        ORDER BY
+          `transaction_id`,
+          `asset_transaction__asset_id__asset_code`
+      ', $objQueryExpansion->GetSelectSql(",\n					", ",\n					"), $arrCustomFieldSql['strSelect'],
+      $objQueryExpansion->GetFromSql("", "\n					"), str_replace("`asset`.`asset_id`", " `asset_transaction__asset_id`.`asset_id`", $arrCustomFieldSql['strFrom']));
 
-			return AssetTransaction::InstantiateDbResult($objDbResult);
+      if ($blnReturnStrQuery) {
+			  return $strQuery;
+			}
+			else {
+			  $objDatabase = AssetTransaction::GetDatabase();
+        $objDbResult = $objDatabase->Query($strQuery);
+        return AssetTransaction::InstantiateDbResult($objDbResult);
+			}
 		}
 	}
 ?>

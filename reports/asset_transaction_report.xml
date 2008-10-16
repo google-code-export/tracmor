@@ -24,17 +24,14 @@
 		</HEADER>
 		<FOOTER>
 			<ROW>
-				<COL ALIGN="RIGHT" COLSPAN="50" TYPE="EXPRESSION" CELLCLASS="FOOTER"></COL>
+				<COL ALIGN="RIGHT" COLSPAN="50" TYPE="EXPRESSION" CELLCLASS="FOOTER">"Total Asset Transactions: ".$this->getRowCount()</COL>
+			</ROW>
+			<ROW>
+				<COL ALIGN="RIGHT" COLSPAN="50" TYPE="EXPRESSION" CELLCLASS="FOOTER">"Total Transactions: "</COL>
 			</ROW>
 		</FOOTER>
 	</PAGE>
 	<GROUPS>
-    <GROUP NAME="maingroup">
-       <FIELDS>
-          <ROW>
-             <COL TYPE="FIELD">asset_id</COL>
-          </ROW>
-       </FIELDS>
-    </GROUP>
+    <REPLACE_WITH_GROUP_INFO/>
 	</GROUPS>
 </REPORT>

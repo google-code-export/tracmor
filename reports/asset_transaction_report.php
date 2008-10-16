@@ -240,7 +240,7 @@
   	  protected function Form_Exit() {
   	  // Output database profiling - it shows you the queries made to create this page
   	  // This will not work on pages with the AJAX Pagination
-       //QApplication::$Database[1]->OutputProfiling();
+       QApplication::$Database[1]->OutputProfiling();
   	  }
 
   	// Create and Setup the Header Composite Control
@@ -487,13 +487,16 @@
 	  protected function btnGenerate_Click() {
 	  	$this->blnGenerate = true;
 			// Enable Profiling
-      //QApplication::$Database[1]->EnableProfiling();
+      QApplication::$Database[1]->EnableProfiling();
       //AssetTransaction::ArrayQueryHelper($strOrderBy, $strLimit, $strLimitPrefix, $strLimitSuffix, $strExpandSelect, $strExpandFrom, $objExpansionMap, $objDatabase);
       // Expand the Asset object to include the AssetModel, Category, Manufacturer, and Location Objects
       $objExpansionMap[AssetTransaction::ExpandAsset][Asset::ExpandAssetModel][AssetModel::ExpandCategory] = true;
       $objExpansionMap[AssetTransaction::ExpandAsset][Asset::ExpandAssetModel][AssetModel::ExpandManufacturer] = true;
       $objExpansionMap[AssetTransaction::ExpandSourceLocation] = true;
       $objExpansionMap[AssetTransaction::ExpandDestinationLocation] = true;
+      $objExpansionMap[AssetTransaction::ExpandTransaction][Transaction::ExpandTransactionType] = true;
+      $objExpansionMap[AssetTransaction::ExpandCreatedByObject] = true;
+      $objExpansionMap[AssetTransaction::ExpandModifiedByObject] = true;
 
       //AssetTransaction::LoadArrayBySearch($objExpansionMap);
       /*$this->dtgAsset->TotalItemCount = Asset::CountBySearch($strAssetCode, $intLocationId, $intAssetModelId, $intCategoryId, $intManufacturerId, $blnOffsite, $strAssetModelCode, $intReservedBy, $intCheckedOutBy, $strShortDescription, $arrCustomFields, $strDateModified, $strDateModifiedFirst, $strDateModifiedLast, $blnAttachment, $objExpansionMap);
@@ -509,38 +512,53 @@
         $oRpt = new PHPReportMaker();
 
         //some data to show in the report
-        $sSql = 'select * from asset where 1=1 order by asset_id,asset_code limit 0,10';
+        $sSql = AssetTransaction::LoadArrayBySearch(true, $objExpansionMap);
+        //$sSql = 'select * from asset where 1=1 order by asset_id,asset_code limit 0,10';
 
-               //phpreport could be pass in other more elegant way
-        $oGroups = "<GROUP EXPRESSION='asset_id'>".
-"<HEADER>".
-"<ROW><COL CELLCLASS='HEADER' TEXTCLASS='BOLD' TYPE='EXPRESSION' COLSPAN='50'>\$this->getValue('asset_id')</COL></ROW>".
-"</HEADER>".
-"<FIELDS>".
-"<ROW>".
-"<COL TYPE='FIELD' CELLCLASSEVEN='EVEN' CELLCLASSODD='ODD' SUPPRESS='TRUE'>asset_code</COL>".
-//"<COL TYPE='FIELD' CELLCLASSEVEN='EVEN' CELLCLASSODD='ODD'>type</COL>".
-//"<COL TYPE='FIELD' CELLCLASSEVEN='EVEN' CELLCLASSODD='ODD'>item</COL>".
-//"<COL TYPE='FIELD' CELLCLASSEVEN='EVEN' CELLCLASSODD='ODD'
-//NUMBERFORMATEX='2'
-//ALIGN='RIGHT'>value</COL>".
-"</ROW>".
-"</FIELDS>".
-"<FOOTER>".
-"<ROW>".
-"<COL CELLCLASS='FOOTER' ALIGN='RIGHT' COLSPAN='3'>total</COL>".
-"<COL TYPE='EXPRESSION' CELLCLASS='FOOTER' TEXTCLASS='BOLD' NUMBERFORMATEX='2'>\$this->getSum('value')</COL>".
-"</ROW>".
-"</FOOTER>".
-"</GROUP>";
+        $strXmlColNameByCustomField = "";
+        $strXmlFieldByCustomField = "";
+        $intCustomFieldCount = 0;
+        foreach ($this->chkCustomFieldArray as $chkCustomField) {
+          if ($chkCustomField->Checked) {
+            $strXmlColNameByCustomField .= "<COL>".$chkCustomField->Text."</COL>";
+            $strXmlFieldByCustomField .= "<COL TYPE='FIELD'>__".$chkCustomField->ActionParameter."</COL>";
+            $intCustomFieldCount++;
+          }
+        }
+
+        $oGroups = "
+        <GROUP NAME='transaction_id' EXPRESSION='transaction_id'>
+          <HEADER>
+            <ROW>
+              <COL ALIGN='LEFT'>Transaction:</COL>
+              <COL ALIGN='LEFT' TYPE='EXPRESSION' COLSPAN='".(3 + $intCustomFieldCount)."'><LINK TYPE='EXPRESSION'>'". __SUBDIRECTORY__ ."/common/transaction_edit.php?intTransactionId='.\$this->getValue('transaction_id')</LINK>\$this->getValue('asset_transaction__transaction_id__transaction_type_id__short_description').' by '.(\$this->getValue('modified_by')?\$this->getValue('asset_transaction__modified_by__first_name').' '.\$this->getValue('asset_transaction__modified_by__last_name').' on '.\$this->getValue('modified_date'):\$this->getValue('asset_transaction__created_by__first_name').' '.\$this->getValue('asset_transaction__created_by__last_name').' on '.\$this->getValue('creation_date'))</COL>
+            </ROW>
+            <ROW>
+              <COL>Asset Code:</COL>
+              <COL>Asset Model:</COL>
+              <COL>From:</COL>
+              <COL>To:</COL>
+              $strXmlColNameByCustomField
+            </ROW>
+          </HEADER>
+          <FIELDS>
+            <ROW>
+              <COL TYPE='FIELD'>asset_transaction__asset_id__asset_code</COL>
+              <COL TYPE='FIELD'>asset_transaction__asset_id__asset_model_id__asset_model_code</COL>
+              <COL TYPE='FIELD'>asset_transaction__source_location_id__short_description</COL>
+              <COL TYPE='FIELD'>asset_transaction__destination_location_id__short_description</COL>
+              $strXmlFieldByCustomField
+            </ROW>
+          </FIELDS>
+        </GROUP>";
         $oRpt->setSQL($sSql);
         $oRpt->setUser('root');
         $oRpt->setPassword('');
         $oRpt->setConnection('localhost');
         $oRpt->setDatabaseInterface('mysql');
         $oRpt->setDatabase('tracmor');
-        //$oRpt->createFromTemplate('Asset Transaction Report', __DOCROOT__ . __SUBDIRECTORY__ . '/reports/asset_transaction_report.xml',null,null,$oGroups);
-        $oRpt->setXML(__DOCROOT__ . __SUBDIRECTORY__ . '/reports/asset_transaction_report.xml');
+        $oRpt->createFromTemplate('Asset Transaction Report', __DOCROOT__ . __SUBDIRECTORY__ . '/reports/asset_transaction_report.xml',null,null,$oGroups);
+        //$oRpt->setXML(__DOCROOT__ . __SUBDIRECTORY__ . '/reports/asset_transaction_report.xml');
                //the head of the final html will be write by the Qform
         $oRpt->setBody(false);
 
