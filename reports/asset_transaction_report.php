@@ -495,7 +495,7 @@
       $objExpansionMap[AssetTransaction::ExpandSourceLocation] = true;
       $objExpansionMap[AssetTransaction::ExpandDestinationLocation] = true;
 
-      AssetTransaction::LoadArrayBySearch($objExpansionMap);
+      //AssetTransaction::LoadArrayBySearch($objExpansionMap);
       /*$this->dtgAsset->TotalItemCount = Asset::CountBySearch($strAssetCode, $intLocationId, $intAssetModelId, $intCategoryId, $intManufacturerId, $blnOffsite, $strAssetModelCode, $intReservedBy, $intCheckedOutBy, $strShortDescription, $arrCustomFields, $strDateModified, $strDateModifiedFirst, $strDateModifiedLast, $blnAttachment, $objExpansionMap);
 			if ($this->dtgAsset->TotalItemCount == 0) {
 				$this->dtgAsset->ShowHeader = false;
@@ -512,24 +512,24 @@
         $sSql = 'select * from asset where 1=1 order by asset_id,asset_code limit 0,10';
 
                //phpreport could be pass in other more elegant way
-        $oGroups = "<GROUP EXPRESSION=’asset_id’>".
+        $oGroups = "<GROUP EXPRESSION='asset_id'>".
 "<HEADER>".
-"<ROW><COL CELLCLASS=’HEADER’ TEXTCLASS=’BOLD’ TYPE=’EXPRESSION’ COLSPAN=’50’>\$this->getValue(’asset_id’)</COL></ROW>".
+"<ROW><COL CELLCLASS='HEADER' TEXTCLASS='BOLD' TYPE='EXPRESSION' COLSPAN='50'>\$this->getValue('asset_id')</COL></ROW>".
 "</HEADER>".
 "<FIELDS>".
 "<ROW>".
-"<COL TYPE=’FIELD’ CELLCLASSEVEN=’EVEN’ CELLCLASSODD=’ODD’ SUPPRESS=’TRUE’>asset_code</COL>".
-//"<COL TYPE=’FIELD’ CELLCLASSEVEN=’EVEN’ CELLCLASSODD=’ODD’>type</COL>".
-//"<COL TYPE=’FIELD’ CELLCLASSEVEN=’EVEN’ CELLCLASSODD=’ODD’>item</COL>".
-//"<COL TYPE=’FIELD’ CELLCLASSEVEN=’EVEN’ CELLCLASSODD=’ODD’
-//NUMBERFORMATEX=’2’
-//ALIGN=’RIGHT’>value</COL>".
+"<COL TYPE='FIELD' CELLCLASSEVEN='EVEN' CELLCLASSODD='ODD' SUPPRESS='TRUE'>asset_code</COL>".
+//"<COL TYPE='FIELD' CELLCLASSEVEN='EVEN' CELLCLASSODD='ODD'>type</COL>".
+//"<COL TYPE='FIELD' CELLCLASSEVEN='EVEN' CELLCLASSODD='ODD'>item</COL>".
+//"<COL TYPE='FIELD' CELLCLASSEVEN='EVEN' CELLCLASSODD='ODD'
+//NUMBERFORMATEX='2'
+//ALIGN='RIGHT'>value</COL>".
 "</ROW>".
 "</FIELDS>".
 "<FOOTER>".
 "<ROW>".
-"<COL CELLCLASS=’FOOTER’ ALIGN=’RIGHT’ COLSPAN=’3’>total</COL>".
-"<COL TYPE=’EXPRESSION’ CELLCLASS=’FOOTER’ TEXTCLASS=’BOLD’ NUMBERFORMATEX=’2’>\$this->getSum(’value’)</COL>".
+"<COL CELLCLASS='FOOTER' ALIGN='RIGHT' COLSPAN='3'>total</COL>".
+"<COL TYPE='EXPRESSION' CELLCLASS='FOOTER' TEXTCLASS='BOLD' NUMBERFORMATEX='2'>\$this->getSum('value')</COL>".
 "</ROW>".
 "</FOOTER>".
 "</GROUP>";
@@ -539,7 +539,7 @@
         $oRpt->setConnection('localhost');
         $oRpt->setDatabaseInterface('mysql');
         $oRpt->setDatabase('tracmor');
-        $oRpt->createFromTemplate('Asset Transaction Report', __DOCROOT__ . __SUBDIRECTORY__ . '/reports/asset_transaction_report.xml',null,null,$oGroups);
+        //$oRpt->createFromTemplate('Asset Transaction Report', __DOCROOT__ . __SUBDIRECTORY__ . '/reports/asset_transaction_report.xml',null,null,$oGroups);
         $oRpt->setXML(__DOCROOT__ . __SUBDIRECTORY__ . '/reports/asset_transaction_report.xml');
                //the head of the final html will be write by the Qform
         $oRpt->setBody(false);
