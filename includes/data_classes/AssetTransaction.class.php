@@ -327,6 +327,8 @@
         WHERE
           1=1
         ORDER BY
+          `asset_transaction__transaction_id__modified_date`,
+          `asset_transaction__transaction_id__creation_date`,
           `transaction_id`,
           `asset_transaction__asset_id__asset_code`
       ', $objQueryExpansion->GetSelectSql(",\n					", ",\n					"), $arrCustomFieldSql['strSelect'],

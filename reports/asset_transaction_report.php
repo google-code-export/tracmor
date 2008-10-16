@@ -495,8 +495,8 @@
       $objExpansionMap[AssetTransaction::ExpandSourceLocation] = true;
       $objExpansionMap[AssetTransaction::ExpandDestinationLocation] = true;
       $objExpansionMap[AssetTransaction::ExpandTransaction][Transaction::ExpandTransactionType] = true;
-      $objExpansionMap[AssetTransaction::ExpandCreatedByObject] = true;
-      $objExpansionMap[AssetTransaction::ExpandModifiedByObject] = true;
+      $objExpansionMap[AssetTransaction::ExpandTransaction][Transaction::ExpandCreatedByObject ] = true;
+      $objExpansionMap[AssetTransaction::ExpandTransaction][Transaction::ExpandModifiedByObject] = true;
 
       //AssetTransaction::LoadArrayBySearch($objExpansionMap);
       /*$this->dtgAsset->TotalItemCount = Asset::CountBySearch($strAssetCode, $intLocationId, $intAssetModelId, $intCategoryId, $intManufacturerId, $blnOffsite, $strAssetModelCode, $intReservedBy, $intCheckedOutBy, $strShortDescription, $arrCustomFields, $strDateModified, $strDateModifiedFirst, $strDateModifiedLast, $blnAttachment, $objExpansionMap);
@@ -531,7 +531,7 @@
           <HEADER>
             <ROW>
               <COL ALIGN='LEFT'>Transaction:</COL>
-              <COL ALIGN='LEFT' TYPE='EXPRESSION' COLSPAN='".(3 + $intCustomFieldCount)."'><LINK TYPE='EXPRESSION'>'". __SUBDIRECTORY__ ."/common/transaction_edit.php?intTransactionId='.\$this->getValue('transaction_id')</LINK>\$this->getValue('asset_transaction__transaction_id__transaction_type_id__short_description').' by '.(\$this->getValue('modified_by')?\$this->getValue('asset_transaction__modified_by__first_name').' '.\$this->getValue('asset_transaction__modified_by__last_name').' on '.\$this->getValue('modified_date'):\$this->getValue('asset_transaction__created_by__first_name').' '.\$this->getValue('asset_transaction__created_by__last_name').' on '.\$this->getValue('creation_date'))</COL>
+              <COL ALIGN='LEFT' TYPE='EXPRESSION' COLSPAN='".(3 + $intCustomFieldCount)."'><LINK TYPE='EXPRESSION'>'". __SUBDIRECTORY__ ."/common/transaction_edit.php?intTransactionId='.\$this->getValue('transaction_id')</LINK>\$this->getValue('asset_transaction__transaction_id__transaction_type_id__short_description').' by '.(\$this->getValue('asset_transaction__transaction_id__modified_by')?\$this->getValue('asset_transaction__transaction_id__modified_by__first_name').' '.\$this->getValue('asset_transaction__transaction_id__modified_by__last_name').' on '.\$this->getValue('asset_transaction__transaction_id__modified_date'):\$this->getValue('asset_transaction__transaction_id__created_by__first_name').' '.\$this->getValue('asset_transaction__transaction_id__created_by__last_name').' on '.\$this->getValue('asset_transaction__transaction_id__creation_date'))</COL>
             </ROW>
             <ROW>
               <COL>Asset Code:</COL>
