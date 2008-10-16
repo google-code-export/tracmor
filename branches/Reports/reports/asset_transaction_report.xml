@@ -29,6 +29,12 @@
 		</FOOTER>
 	</PAGE>
 	<GROUPS>
-		<REPLACE_WITH_GROUP_INFO/>
+    <GROUP NAME="maingroup">
+       <FIELDS>
+          <ROW>
+             <COL TYPE="FIELD">asset_id</COL>
+          </ROW>
+       </FIELDS>
+    </GROUP>
 	</GROUPS>
 </REPORT>
