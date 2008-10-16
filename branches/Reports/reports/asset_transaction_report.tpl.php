@@ -117,13 +117,8 @@
 			  	<?php //$this->ctlAdvanced->Render(); ?>
 			  </td>
 			</tr>
-			<tr>
-			 <td colspan="3">
-			   <?php $this->lblReport->Render(); ?>
-			 </td>
-			</tr>
 	 </table>
-
+    <?php $this->lblReport->Render(); ?>
 		<?php //$this->dtgAsset->Render() ?>
 		<br />
 
