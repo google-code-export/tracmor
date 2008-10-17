@@ -237,11 +237,11 @@
 			$this->blnGenerate = false;
     }*/
 
-  	  protected function Form_Exit() {
+  	  //protected function Form_Exit() {
   	  // Output database profiling - it shows you the queries made to create this page
   	  // This will not work on pages with the AJAX Pagination
-       QApplication::$Database[1]->OutputProfiling();
-  	  }
+      // QApplication::$Database[1]->OutputProfiling();
+  	  //}
 
   	// Create and Setup the Header Composite Control
   	protected function ctlHeaderMenu_Create() {
@@ -290,13 +290,15 @@
 	  protected function lstUserCheckedOutReserved_Create() {
 	    $this->lstUser = new QListBox($this);
 	    $this->lstUser->Name = 'User';
-	    $this->lstUser->AddItem('- ALL -', null);
+	    $this->lstUser->AddItem('- Select One -', null);
 	    $this->lstCheckedOutBy = new QListBox($this);
 	    $this->lstCheckedOutBy->Name = 'Checked Out By';
-	    $this->lstCheckedOutBy->AddItem('- ALL -', null);
+	    $this->lstCheckedOutBy->AddItem('- Select One -', null);
+	    $this->lstCheckedOutBy->AddItem('- Any -', 'any');
 	    $this->lstReservedBy = new QListBox($this);
 	    $this->lstReservedBy->Name = 'Reserved By';
-	    $this->lstReservedBy->AddItem('- ALL -', null);
+	    $this->lstReservedBy->AddItem('- Select One -', null);
+	    $this->lstReservedBy->AddItem('- Any -', 'any');
 	    foreach (UserAccount::LoadAll(QQ::Clause(QQ::OrderBy(QQN::UserAccount()->Username))) as $objUserAccount) {
         $this->lstUser->AddItem($objUserAccount->Username, $objUserAccount->UserAccountId);
         $this->lstCheckedOutBy->AddItem($objUserAccount->Username, $objUserAccount->UserAccountId);
@@ -487,7 +489,7 @@
 	  protected function btnGenerate_Click() {
 	  	$this->blnGenerate = true;
 			// Enable Profiling
-      QApplication::$Database[1]->EnableProfiling();
+      //QApplication::$Database[1]->EnableProfiling();
       //AssetTransaction::ArrayQueryHelper($strOrderBy, $strLimit, $strLimitPrefix, $strLimitSuffix, $strExpandSelect, $strExpandFrom, $objExpansionMap, $objDatabase);
       // Expand the Asset object to include the AssetModel, Category, Manufacturer, and Location Objects
       $objExpansionMap[AssetTransaction::ExpandAsset][Asset::ExpandAssetModel][AssetModel::ExpandCategory] = true;
@@ -512,7 +514,7 @@
         $oRpt = new PHPReportMaker();
 
         //some data to show in the report
-        $sSql = AssetTransaction::LoadArrayBySearch(true, $objExpansionMap);
+        echo $sSql = AssetTransaction::LoadArrayBySearch(true, $this->txtShortDescription->Text, $this->txtAssetCode->Text, $this->txtAssetModelCode->Text, $this->lstUser->SelectedValue, $this->lstCheckedOutBy->SelectedValue, $this->lstReservedBy->SelectedValue, $this->lstCategory->SelectedValue, $this->lstManufacturer->SelectedValue, $this->lstSortByDate->SelectedValue, $this->lstTransactionDate->SelectedValue, $this->dtpTransactionDateFirst->DateTime, $this->dtpTransactionDateLast->DateTime, $objExpansionMap);
         //$sSql = 'select * from asset where 1=1 order by asset_id,asset_code limit 0,10';
 
         $strXmlColNameByCustomField = "";
