@@ -290,7 +290,7 @@
 			return $arrToReturn;
 		}
 
-		public function LoadArrayBySearch($blnReturnStrQuery = true, $objExpansionMap = null) {
+		public function LoadArrayBySearch($blnReturnStrQuery = true, $strAssetModel = null, $strAssetCode = null, $strAssetModelCode = null, $strUser = null, $intCheckedOutBy = null, $intReservedBy = null, $strCategory = null, $strManufacturer = null, $strSortByDate = "ASC", $strDateModified = null, $strDateModifiedFirst = null, $strDateModifiedLast = null, $objExpansionMap = null) {
 		  // Setup QueryExpansion
 			$objQueryExpansion = new QQueryExpansion();
 			if ($objExpansionMap) {
@@ -301,6 +301,63 @@
 					throw $objExc;
 				}
 			}
+
+			if ($strAssetModel) {
+			  $strAssetModel = "AND `asset_transaction__asset_id__asset_model_id`.`short_description` LIKE '%".$strAssetModel."%'\n";
+			}
+			if ($strAssetCode) {
+			  $strAssetCode = "AND `asset_transaction__asset_id`.`asset_code` LIKE '%".$strAssetCode."%'\n";
+			}
+			if ($strAssetModelCode) {
+			  $strAssetModelCode = "AND `asset_transaction__asset_id__asset_model_id`.`asset_model_code` LIKE '%".$strAssetModelCode."%'\n";
+			}
+			if ($strUser) {
+			  $strUser = sprintf("AND (`asset_transaction__transaction_id__created_by`.`user_account_id` = '%s' OR `asset_transaction__transaction_id__modified_by`.`user_account_id` = '%s')\n", $strUser, $strUser);
+			}
+			$strCheckedOutBy = "";
+			if ($intCheckedOutBy) {
+			  $strCheckedOutBy = sprintf("AND `asset_transaction__asset_id`.`checked_out_flag` = true\n");
+				if ($intCheckedOutBy != 'any') {
+					$strCheckedOutBy .= sprintf("AND `asset_transaction`.`created_by` = '%s'\n", $intCheckedOutBy);
+				}
+			}
+			$strReservedBy = "";
+			if ($intReservedBy) {
+			  $strReservedBy = sprintf("AND `asset_transaction__asset_id`.`reserved_flag` = true\n");
+				if ($intReservedBy != 'any') {
+					$strReservedBy .= sprintf("AND `asset_transaction`.`created_by` = '%s'\n", $intReservedBy);
+				}
+			}
+			if ($strCategory) {
+			  $strCategory = sprintf("AND `asset_transaction__asset_id__asset_model_id`.`category_id` = '%s'\n", $strCategory);
+			}
+			if ($strManufacturer) {
+			  $strManufacturer = sprintf("AND `asset_transaction__asset_id__asset_model_id`.`manufacturer_id` = '%s'\n", $strManufacturer);
+			}
+			$arrSearchSql['strDateModifiedSql'] = null;
+			if ($strDateModified) {
+				if ($strDateModified == "before" && $strDateModifiedFirst instanceof QDateTime) {
+					$strDateModifiedFirst = QApplication::$Database[1]->SqlVariable($strDateModifiedFirst->Timestamp, false);
+					$arrSearchSql['strDateModifiedSql'] = sprintf("AND (UNIX_TIMESTAMP(`asset_transaction`.`modified_date`) < %s OR UNIX_TIMESTAMP(`asset_transaction`.`creation_date`) < %s)\n", $strDateModifiedFirst, $strDateModifiedFirst);
+				}
+				elseif ($strDateModified == "after" && $strDateModifiedFirst instanceof QDateTime) {
+					$strDateModifiedFirst = QApplication::$Database[1]->SqlVariable($strDateModifiedFirst->Timestamp, false);
+					$arrSearchSql['strDateModifiedSql'] = sprintf("AND (UNIX_TIMESTAMP(`asset_transaction`.`modified_date`) > %s OR UNIX_TIMESTAMP(`asset_transaction`.`creation_date`) > %s)\n", $strDateModifiedFirst, $strDateModifiedFirst);
+				}
+				elseif ($strDateModified == "between" && $strDateModifiedFirst instanceof QDateTime && $strDateModifiedLast instanceof QDateTime) {
+					$strDateModifiedFirst = QApplication::$Database[1]->SqlVariable($strDateModifiedFirst->Timestamp, false);
+					// Added 86399 (23 hrs., 59 mins., 59 secs) because the After variable needs to include the date given
+					// When only a date is given, conversion to a timestamp assumes 12:00am
+					$strDateModifiedLast = QApplication::$Database[1]->SqlVariable($strDateModifiedLast->Timestamp, false) + 86399;
+					$arrSearchSql['strDateModifiedSql'] = sprintf("AND (UNIX_TIMESTAMP(`asset_transaction`.`modified_date`) > %s AND UNIX_TIMESTAMP(`asset_transaction`.`modified_date`) < %s", $strDateModifiedFirst, $strDateModifiedLast);
+					$arrSearchSql['strDateModifiedSql'] .= sprintf(" OR UNIX_TIMESTAMP(`asset_transaction`.`creation_date`) > %s AND UNIX_TIMESTAMP(`asset_transaction`.`creation_date`))\n", $strDateModifiedFirst, $strDateModifiedLast);
+				}
+			}
+			$strSortByDate = sprintf("
+        `asset_transaction__transaction_id__modified_date` %s,
+        `asset_transaction__transaction_id__creation_date` %s,
+			", $strSortByDate, $strSortByDate);
+
 			$arrCustomFieldSql = CustomField::GenerateSql(EntityQtype::Asset);
 			$strQuery = sprintf('
         SELECT
@@ -326,13 +383,23 @@
         	%s
         WHERE
           1=1
+          %s
+          %s
+          %s
+          %s
+          %s
+          %s
+          %s
+          %s
+          %s
         ORDER BY
-          `asset_transaction__transaction_id__modified_date`,
-          `asset_transaction__transaction_id__creation_date`,
+          %s
           `transaction_id`,
           `asset_transaction__asset_id__asset_code`
       ', $objQueryExpansion->GetSelectSql(",\n					", ",\n					"), $arrCustomFieldSql['strSelect'],
-      $objQueryExpansion->GetFromSql("", "\n					"), str_replace("`asset`.`asset_id`", " `asset_transaction__asset_id`.`asset_id`", $arrCustomFieldSql['strFrom']));
+        $objQueryExpansion->GetFromSql("", "\n					"), str_replace("`asset`.`asset_id`", " `asset_transaction__asset_id`.`asset_id`", $arrCustomFieldSql['strFrom']),
+        $strAssetModel, $strAssetCode, $strAssetModelCode, $strUser, $strCheckedOutBy, $strReservedBy, $strCategory, $strManufacturer, $arrSearchSql['strDateModifiedSql'],
+        $strSortByDate);
 
       if ($blnReturnStrQuery) {
 			  return $strQuery;
