@@ -514,7 +514,7 @@
         $oRpt = new PHPReportMaker();
 
         //some data to show in the report
-        echo $sSql = AssetTransaction::LoadArrayBySearch(true, $this->txtShortDescription->Text, $this->txtAssetCode->Text, $this->txtAssetModelCode->Text, $this->lstUser->SelectedValue, $this->lstCheckedOutBy->SelectedValue, $this->lstReservedBy->SelectedValue, $this->lstCategory->SelectedValue, $this->lstManufacturer->SelectedValue, $this->lstSortByDate->SelectedValue, $this->lstTransactionDate->SelectedValue, $this->dtpTransactionDateFirst->DateTime, $this->dtpTransactionDateLast->DateTime, $objExpansionMap);
+        $sSql = AssetTransaction::LoadArrayBySearch(true, $this->txtShortDescription->Text, $this->txtAssetCode->Text, $this->txtAssetModelCode->Text, $this->lstUser->SelectedValue, $this->lstCheckedOutBy->SelectedValue, $this->lstReservedBy->SelectedValue, $this->lstCategory->SelectedValue, $this->lstManufacturer->SelectedValue, $this->lstSortByDate->SelectedValue, $this->lstTransactionDate->SelectedValue, $this->dtpTransactionDateFirst->DateTime, $this->dtpTransactionDateLast->DateTime, $objExpansionMap);
         //$sSql = 'select * from asset where 1=1 order by asset_id,asset_code limit 0,10';
 
         $strXmlColNameByCustomField = "";
@@ -545,8 +545,8 @@
           </HEADER>
           <FIELDS>
             <ROW>
-              <COL TYPE='FIELD'>asset_transaction__asset_id__asset_code</COL>
-              <COL TYPE='FIELD'>asset_transaction__asset_id__asset_model_id__asset_model_code</COL>
+              <COL TYPE='FIELD'><LINK TYPE='EXPRESSION'>'". __SUBDIRECTORY__ ."/assets/asset_edit.php?intAssetId='.\$this->getValue('asset_transaction__asset_id__asset_id')</LINK>asset_transaction__asset_id__asset_code</COL>
+              <COL TYPE='FIELD'><LINK TYPE='EXPRESSION'>'". __SUBDIRECTORY__ ."/assets/asset_model_edit.php?intAssetModelId='.\$this->getValue('asset_transaction__asset_id__asset_model_id__asset_model_id')</LINK>asset_transaction__asset_id__asset_model_id__asset_model_code</COL>
               <COL TYPE='FIELD'>asset_transaction__source_location_id__short_description</COL>
               <COL TYPE='FIELD'>asset_transaction__destination_location_id__short_description</COL>
               $strXmlFieldByCustomField
