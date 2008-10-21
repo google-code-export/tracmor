@@ -1,0 +1,1 @@
+UPDATE `shortcut` SET `short_description`='Asset Transaction Reports', `link`='../reports/asset_transaction_report.php' WHERE `shortcut_id`='22';

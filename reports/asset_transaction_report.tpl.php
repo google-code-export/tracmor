@@ -106,7 +106,7 @@
 			   <?php $this->lstSortByDate->RenderWithNameLeft("Width=100"); ?>
 			  </td>
 			  <td style="vertical-align:top;padding-right:8;" align="right" noWrap>
-      	  <?php $this->btnGenerate->Render() ?>&nbsp;<?php $this->btnClear->Render() ?>
+      	  <?php $this->btnGenerate->Render() ?>
       	</td>
 			</tr>
 			<tr>
