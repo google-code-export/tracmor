@@ -78,7 +78,6 @@
 		// Buttons
 		protected $btnGenerate;
 		protected $blnGenerate;
-		protected $btnClear;
 
 		// Advanced Label/Link
 		protected $lblAdvanced;
@@ -105,66 +104,7 @@
 
 			$this->ctlHeaderMenu_Create();
 			$this->ctlShortcutMenu_Create();
-			$this->ctlSearchMenu_Create();
 
-/*			$this->dtgAsset = new QDataGrid($this);
-			$this->dtgAsset->Name = 'asset_list';
-  		$this->dtgAsset->CellPadding = 5;
-  		$this->dtgAsset->CellSpacing = 0;
-  		$this->dtgAsset->CssClass = "datagrid";
-
-      // Disable AJAX for the datagrid
-      $this->dtgAsset->UseAjax = false;
-
-      // Allow for column toggling
-      $this->dtgAsset->ShowColumnToggle = true;
-
-      // Allow for CSV Export
-      $this->dtgAsset->ShowExportCsv = true;
-
-      // Enable Pagination, and set to 20 items per page
-      $objPaginator = new QPaginator($this->dtgAsset);
-      $this->dtgAsset->Paginator = $objPaginator;
-      $this->dtgAsset->ItemsPerPage = 20;
-
-      $this->dtgAsset->AddColumn(new QDataGridColumnExt('<img src=../images/icons/attachment_gray.gif border=0 title=Attachments alt=Attachments>', '<?= Attachment::toStringIcon($_ITEM->GetVirtualAttribute(\'attachment_count\')); ?>', 'SortByCommand="__attachment_count ASC"', 'ReverseSortByCommand="__attachment_count DESC"', 'CssClass="dtg_column"', 'HtmlEntities="false"'));
-      $this->dtgAsset->AddColumn(new QDataGridColumnExt('Asset Code', '<?= $_ITEM->__toStringWithLink("bluelink") ?> <?= $_ITEM->ToStringHoverTips($_CONTROL) ?>', 'SortByCommand="asset_code ASC"', 'ReverseSortByCommand="asset_code DESC"', 'CssClass="dtg_column"', 'HtmlEntities="false"'));
-      $this->dtgAsset->AddColumn(new QDataGridColumnExt('Asset Model', '<?= $_ITEM->AssetModel->__toStringWithLink("bluelink") ?>', 'SortByCommand="asset__asset_model_id__short_description ASC"', 'ReverseSortByCommand="asset__asset_model_id__short_description DESC"', 'CssClass="dtg_column"', 'HtmlEntities="false"'));
-      $this->dtgAsset->AddColumn(new QDataGridColumnExt('Category', '<?= $_ITEM->AssetModel->Category->__toString() ?>', 'SortByCommand="asset__asset_model_id__category_id__short_description ASC"', 'ReverseSortByCommand="asset__asset_model_id__category_id__short_description DESC"', 'CssClass="dtg_column"'));
-      $this->dtgAsset->AddColumn(new QDataGridColumnExt('Manufacturer', '<?= $_ITEM->AssetModel->Manufacturer->__toString() ?>', 'SortByCommand="asset__asset_model_id__manufacturer_id__short_description ASC"', 'ReverseSortByCommand="asset__asset_model_id__manufacturer_id__short_description DESC"', 'CssClass="dtg_column"'));
-      $this->dtgAsset->AddColumn(new QDataGridColumnExt('Location', '<?= $_ITEM->Location->__toString() ?>', 'SortByCommand="asset__location_id__short_description ASC"', 'ReverseSortByCommand="asset__location_id__short_description DESC"', 'CssClass="dtg_column"'));
-      $this->dtgAsset->AddColumn(new QDataGridColumnExt('Asset Model Code', '<?=$_ITEM->AssetModel->AssetModelCode ?>', 'SortByCommand="asset__asset_model_id__asset_model_code"', 'ReverseSortByCommand="asset__asset_model_id__asset_model_code DESC"', 'CssClass="dtg_column"', 'Display="false"'));
-
-      // Add the custom field columns with Display set to false. These can be shown by using the column toggle menu.
-      $objCustomFieldArray = CustomField::LoadObjCustomFieldArray(1, false);
-      if ($objCustomFieldArray) {
-      	foreach ($objCustomFieldArray as $objCustomField) {
-      		//Only add the custom field column if the role has authorization to view it.
-      		if($objCustomField->objRoleAuthView && $objCustomField->objRoleAuthView->AuthorizedFlag){
-      			$this->dtgAsset->AddColumn(new QDataGridColumnExt($objCustomField->ShortDescription, '<?= $_ITEM->GetVirtualAttribute(\''.$objCustomField->CustomFieldId.'\') ?>', 'SortByCommand="__'.$objCustomField->CustomFieldId.' ASC"', 'ReverseSortByCommand="__'.$objCustomField->CustomFieldId.' DESC"','HtmlEntities="false"', 'CssClass="dtg_column"', 'Display="false"'));
-      		}
-      	}
-      }
-
-      // Column to originally sort by (Asset Model)
-      $this->dtgAsset->SortColumnIndex = 2;
-      $this->dtgAsset->SortDirection = 0;
-
-      $objStyle = $this->dtgAsset->RowStyle;
-      $objStyle->ForeColor = '#000000';
-      $objStyle->BackColor = '#FFFFFF';
-      $objStyle->FontSize = 12;
-
-      $objStyle = $this->dtgAsset->AlternateRowStyle;
-      $objStyle->BackColor = '#EFEFEF';
-
-      $objStyle = $this->dtgAsset->HeaderRowStyle;
-      $objStyle->ForeColor = '#000000';
-      $objStyle->BackColor = '#EFEFEF';
-      $objStyle->CssClass = 'dtg_header';
-
-      $this->dtgAsset->SetDataBinder('dtgAsset_Bind');
-*/
       $this->lstCategory_Create();
       $this->lstManufacturer_Create();
       $this->lstUserCheckedOutReserved_Create();
@@ -178,64 +118,17 @@
       $this->chkTransactionType_Create();
       $this->lblAssetModelId_Create();
       $this->btnGenerate_Create();
-      $this->btnClear_Create();
       $this->customFields_Create();
       //the report code will be render in a Qlabel
       $this->lblReport = new QLabel($this);
       //if don't put this you will see HTML code instead of a report
       $this->lblReport->HtmlEntities = false;
-      //$this->ctlAdvanced_Create();
-      //$this->lblAdvanced_Create();
-
 
 			if (QApplication::QueryString('intAssetModelId')) {
 				$this->lblAssetModelId->Text = QApplication::QueryString('intAssetModelId');
 				$this->blnGenerate = true;
 			}
   	}
-
-		/*protected function dtgAsset_Bind() {
-
-			// If the Generate button has been pressed or the AssetModelId was sent in the query string from the asset models page
-			if ($this->blnGenerate) {
-				$this->assignGenerateValues();
-			}
-
-			$strAssetCode = $this->strAssetCode;
-			$intLocationId = $this->intLocationId;
-			$intAssetModelId = $this->intAssetModelId;
-			$intCategoryId = $this->intCategoryId;
-			$intManufacturerId = $this->intManufacturerId;
-			$blnOffsite = $this->blnOffsite;
-			$strAssetModelCode = $this->strAssetModelCode;
-			$intReservedBy = $this->intReservedBy;
-			$intCheckedOutBy = $this->intCheckedOutBy;
-			$strShortDescription = $this->strShortDescription;
-			$strDateModifiedFirst = $this->strDateModifiedFirst;
-			$strDateModifiedLast = $this->strDateModifiedLast;
-			$strDateModified = $this->strDateModified;
-			$blnAttachment = $this->blnAttachment;
-			$arrCustomFields = $this->arrCustomFields;
-
-			// Enable Profiling
-      //QApplication::$Database[1]->EnableProfiling();
-
-
-      // Expand the Asset object to include the AssetModel, Category, Manufacturer, and Location Objects
-      $objExpansionMap[Asset::ExpandAssetModel][AssetModel::ExpandCategory] = true;
-      $objExpansionMap[Asset::ExpandAssetModel][AssetModel::ExpandManufacturer] = true;
-      $objExpansionMap[Asset::ExpandLocation] = true;
-
-			$this->dtgAsset->TotalItemCount = Asset::CountBySearch($strAssetCode, $intLocationId, $intAssetModelId, $intCategoryId, $intManufacturerId, $blnOffsite, $strAssetModelCode, $intReservedBy, $intCheckedOutBy, $strShortDescription, $arrCustomFields, $strDateModified, $strDateModifiedFirst, $strDateModifiedLast, $blnAttachment, $objExpansionMap);
-			if ($this->dtgAsset->TotalItemCount == 0) {
-				$this->dtgAsset->ShowHeader = false;
-			}
-			else {
-				$this->dtgAsset->DataSource = Asset::LoadArrayBySearch($strAssetCode, $intLocationId, $intAssetModelId, $intCategoryId, $intManufacturerId, $blnOffsite, $strAssetModelCode, $intReservedBy, $intCheckedOutBy, $strShortDescription, $arrCustomFields, $strDateModified, $strDateModifiedFirst, $strDateModifiedLast, $blnAttachment, $this->dtgAsset->SortInfo, $this->dtgAsset->LimitInfo, $objExpansionMap);
-				$this->dtgAsset->ShowHeader = true;
-			}
-			$this->blnGenerate = false;
-    }*/
 
   	  //protected function Form_Exit() {
   	  // Output database profiling - it shows you the queries made to create this page
@@ -252,18 +145,6 @@
   	protected function ctlShortcutMenu_Create() {
   		$this->ctlShortcutMenu = new QShortcutMenu($this);
   	}
-
-  	// Create and Setup the Asset Search Composite Control
-  	protected function ctlSearchMenu_Create() {
-  		//$this->ctlSearchMenu = new QAssetSearchComposite($this, null, false);
-  	}
-
-  	protected function ctlAdvanced_Create() {
-  		//$this->ctlAdvanced = new QAdvancedSearchComposite($this, 1);
-  		//$this->ctlAdvanced->Display = false;
-  	}
-
-
 
 		/*************************
 		 *	CREATE INPUT METHODS
@@ -294,11 +175,11 @@
 	    $this->lstCheckedOutBy = new QListBox($this);
 	    $this->lstCheckedOutBy->Name = 'Checked Out By';
 	    $this->lstCheckedOutBy->AddItem('- Select One -', null);
-	    $this->lstCheckedOutBy->AddItem('- Any -', 'any');
+	    //$this->lstCheckedOutBy->AddItem('- Any -', 'any');
 	    $this->lstReservedBy = new QListBox($this);
 	    $this->lstReservedBy->Name = 'Reserved By';
 	    $this->lstReservedBy->AddItem('- Select One -', null);
-	    $this->lstReservedBy->AddItem('- Any -', 'any');
+	    //$this->lstReservedBy->AddItem('- Any -', 'any');
 	    foreach (UserAccount::LoadAll(QQ::Clause(QQ::OrderBy(QQN::UserAccount()->Username))) as $objUserAccount) {
         $this->lstUser->AddItem($objUserAccount->Username, $objUserAccount->UserAccountId);
         $this->lstCheckedOutBy->AddItem($objUserAccount->Username, $objUserAccount->UserAccountId);
@@ -417,16 +298,7 @@
 			$this->btnGenerate->AddAction(new QEnterKeyEvent(), new QTerminateAction());
 	  }
 
-	  protected function btnClear_Create() {
-	  	$this->btnClear = new QButton($this);
-			$this->btnClear->Name = 'clear';
-			$this->btnClear->Text = 'Clear';
-			$this->btnClear->AddAction(new QClickEvent(), new QServerAction('btnClear_Click'));
-			$this->btnClear->AddAction(new QEnterKeyEvent(), new QServerAction('btnGenerate_Click'));
-			$this->btnClear->AddAction(new QEnterKeyEvent(), new QTerminateAction());
-	  }
-
-	  public function lstTransactionDate_Select($strFormId, $strControlId, $strParameter) {
+	 public function lstTransactionDate_Select($strFormId, $strControlId, $strParameter) {
   		$value = $this->lstTransactionDate->SelectedValue;
   		if ($value == null) {
   			$this->dtpTransactionDateFirst->Enabled = false;
@@ -456,41 +328,10 @@
 	  	$this->lblAdvanced->SetCustomStyle('cursor', 'pointer');
 	  }
 
-/* THIS WAS ALREADY COMMENTED OUT BEFORE MOVING THIS TO A COMPOSITE CONTROL
-    // This method (declared as public) will help with the checkbox column rendering
-    public function chkSelected_Render(Asset $objAsset) {
-        // In order to keep track whether or not an Asset's Checkbox has been rendered,
-        // we will use explicitly defined control ids.
-        $strControlId = 'chkSelected' . $objAsset->AssetId;
-
-        // Let's see if the Checkbox exists already
-        $chkSelected = $this->GetControl($strControlId);
-
-        if (!$chkSelected) {
-            // Define the Checkbox -- it's parent is the Datagrid (b/c the datagrid is the one calling
-            // this method which is responsible for rendering the checkbox.  Also, we must
-            // explicitly specify the control ID
-            $chkSelected = new QCheckBox($this->dtgAsset, $strControlId);
-            $chkSelected->Text = '';
-
-            // We'll use Control Parameters to help us identify the Person ID being copied
-            $chkSelected->ActionParameter = $objAsset->AssetId;
-
-            // Let's assign a server action on click
-            // $chkSelected->AddAction(new QClickEvent(), new QServerAction('chkSelected_Click'));
-        }
-
-        // Render the checkbox.  We want to *return* the contents of the rendered Checkbox,
-        // not display it.  (The datagrid is responsible for the rendering of this column).
-        // Therefore, we must specify "false" for the optional blnDisplayOutput parameter.
-        return $chkSelected->Render(false);
-    }	  */
-
 	  protected function btnGenerate_Click() {
 	  	$this->blnGenerate = true;
 			// Enable Profiling
       //QApplication::$Database[1]->EnableProfiling();
-      //AssetTransaction::ArrayQueryHelper($strOrderBy, $strLimit, $strLimitPrefix, $strLimitSuffix, $strExpandSelect, $strExpandFrom, $objExpansionMap, $objDatabase);
       // Expand the Asset object to include the AssetModel, Category, Manufacturer, and Location Objects
       $objExpansionMap[AssetTransaction::ExpandAsset][Asset::ExpandAssetModel][AssetModel::ExpandCategory] = true;
       $objExpansionMap[AssetTransaction::ExpandAsset][Asset::ExpandAssetModel][AssetModel::ExpandManufacturer] = true;
@@ -500,35 +341,40 @@
       $objExpansionMap[AssetTransaction::ExpandTransaction][Transaction::ExpandCreatedByObject ] = true;
       $objExpansionMap[AssetTransaction::ExpandTransaction][Transaction::ExpandModifiedByObject] = true;
 
-      //AssetTransaction::LoadArrayBySearch($objExpansionMap);
-      /*$this->dtgAsset->TotalItemCount = Asset::CountBySearch($strAssetCode, $intLocationId, $intAssetModelId, $intCategoryId, $intManufacturerId, $blnOffsite, $strAssetModelCode, $intReservedBy, $intCheckedOutBy, $strShortDescription, $arrCustomFields, $strDateModified, $strDateModifiedFirst, $strDateModifiedLast, $blnAttachment, $objExpansionMap);
-			if ($this->dtgAsset->TotalItemCount == 0) {
-				$this->dtgAsset->ShowHeader = false;
-			}
-			else {
-				$this->dtgAsset->DataSource = Asset::LoadArrayBySearch($strAssetCode, $intLocationId, $intAssetModelId, $intCategoryId, $intManufacturerId, $blnOffsite, $strAssetModelCode, $intReservedBy, $intCheckedOutBy, $strShortDescription, $arrCustomFields, $strDateModified, $strDateModifiedFirst, $strDateModifiedLast, $blnAttachment, $this->dtgAsset->SortInfo, $this->dtgAsset->LimitInfo, $objExpansionMap);
-				$this->dtgAsset->ShowHeader = true;
-			}*/
+      $arrTransactionTypes = array();
+      if ($this->chkMove->Checked) {
+        $arrTransactionTypes[] = 1;
+      }
+      if ($this->chkCheckIn->Checked) {
+        $arrTransactionTypes[] = 2;
+      }
+      if ($this->chkCheckOut->Checked) {
+        $arrTransactionTypes[] = 3;
+      }
+      if ($this->chkReserve->Checked) {
+        $arrTransactionTypes[] = 8;
+      }
+      if ($this->chkUnreserve->Checked) {
+        $arrTransactionTypes[] = 9;
+      }
 
-        //begins the report process
-        $oRpt = new PHPReportMaker();
-
-        //some data to show in the report
-        $sSql = AssetTransaction::LoadArrayBySearch(true, $this->txtShortDescription->Text, $this->txtAssetCode->Text, $this->txtAssetModelCode->Text, $this->lstUser->SelectedValue, $this->lstCheckedOutBy->SelectedValue, $this->lstReservedBy->SelectedValue, $this->lstCategory->SelectedValue, $this->lstManufacturer->SelectedValue, $this->lstSortByDate->SelectedValue, $this->lstTransactionDate->SelectedValue, $this->dtpTransactionDateFirst->DateTime, $this->dtpTransactionDateLast->DateTime, $objExpansionMap);
-        //$sSql = 'select * from asset where 1=1 order by asset_id,asset_code limit 0,10';
-
-        $strXmlColNameByCustomField = "";
-        $strXmlFieldByCustomField = "";
-        $intCustomFieldCount = 0;
-        foreach ($this->chkCustomFieldArray as $chkCustomField) {
-          if ($chkCustomField->Checked) {
-            $strXmlColNameByCustomField .= "<COL>".$chkCustomField->Text."</COL>";
-            $strXmlFieldByCustomField .= "<COL TYPE='FIELD'>__".$chkCustomField->ActionParameter."</COL>";
-            $intCustomFieldCount++;
-          }
+      // begins the report process
+      $oRpt = new PHPReportMaker();
+      // Total Transactions Count
+      $oRpt->putEnvObj("TotalTransactions", AssetTransaction::CountBySearch($this->txtShortDescription->Text, $this->txtAssetCode->Text, $this->txtAssetModelCode->Text, $this->lstUser->SelectedValue, $this->lstCheckedOutBy->SelectedValue, $this->lstReservedBy->SelectedValue, $this->lstCategory->SelectedValue, $this->lstManufacturer->SelectedValue, $this->lstSortByDate->SelectedValue, $this->lstTransactionDate->SelectedValue, $this->dtpTransactionDateFirst->DateTime, $this->dtpTransactionDateLast->DateTime, $arrTransactionTypes, $objExpansionMap));
+      //some data to show in the report
+      $sSql = AssetTransaction::LoadArrayBySearch(true, $this->txtShortDescription->Text, $this->txtAssetCode->Text, $this->txtAssetModelCode->Text, $this->lstUser->SelectedValue, $this->lstCheckedOutBy->SelectedValue, $this->lstReservedBy->SelectedValue, $this->lstCategory->SelectedValue, $this->lstManufacturer->SelectedValue, $this->lstSortByDate->SelectedValue, $this->lstTransactionDate->SelectedValue, $this->dtpTransactionDateFirst->DateTime, $this->dtpTransactionDateLast->DateTime, $arrTransactionTypes, $objExpansionMap);
+      $strXmlColNameByCustomField = "";
+      $strXmlFieldByCustomField = "";
+      $intCustomFieldCount = 0;
+      foreach ($this->chkCustomFieldArray as $chkCustomField) {
+        if ($chkCustomField->Checked) {
+          $strXmlColNameByCustomField .= "<COL>".$chkCustomField->Text."</COL>";
+          $strXmlFieldByCustomField .= "<COL TYPE='FIELD'>__".$chkCustomField->ActionParameter."</COL>";
+          $intCustomFieldCount++;
         }
-
-        $oGroups = "
+      }
+      $oGroups = "
         <GROUP NAME='transaction_id' EXPRESSION='transaction_id'>
           <HEADER>
             <ROW>
@@ -553,65 +399,26 @@
             </ROW>
           </FIELDS>
         </GROUP>";
-        $oRpt->setSQL($sSql);
-        $oRpt->setUser('root');
-        $oRpt->setPassword('');
-        $oRpt->setConnection('localhost');
-        $oRpt->setDatabaseInterface('mysql');
-        $oRpt->setDatabase('tracmor');
-        $oRpt->createFromTemplate('Asset Transaction Report', __DOCROOT__ . __SUBDIRECTORY__ . '/reports/asset_transaction_report.xml',null,null,$oGroups);
-        //$oRpt->setXML(__DOCROOT__ . __SUBDIRECTORY__ . '/reports/asset_transaction_report.xml');
-               //the head of the final html will be write by the Qform
-        $oRpt->setBody(false);
-
-               //star the output buffer
-        ob_start();
-
-               //process the report
-        $oRpt->run();
-
-               //put the output buffer content in the Qlabel
-        $this->lblReport->Text = ob_get_contents();
-
-               //clean the output buffer
-        ob_end_clean();
-
+      $oRpt->setSQL($sSql);
+      $oRpt->setUser('root');
+      $oRpt->setPassword('');
+      $oRpt->setConnection('localhost');
+      $oRpt->setDatabaseInterface('mysql');
+      $oRpt->setDatabase('tracmor');
+      $oRpt->createFromTemplate('Asset Transaction Report', __DOCROOT__ . __SUBDIRECTORY__ . '/reports/asset_transaction_report.xml',null,null,$oGroups);
+      $oRpt->setNoDataMsg("No data was found, check your query");
+      //$oRpt->setXML(__DOCROOT__ . __SUBDIRECTORY__ . '/reports/asset_transaction_report.xml');
+      //the head of the final html will be write by the Qform
+      $oRpt->setBody(false);
+      //star the output buffer
+      ob_start();
+      //process the report
+      $oRpt->run();
+      //put the output buffer content in the Qlabel
+      $this->lblReport->Text = ob_get_contents();
+      //clean the output buffer
+      ob_end_clean();
       $this->blnGenerate = false;
-	  }
-
-	  protected function btnClear_Click() {
-	  	if ($this->intAssetModelId) {
-	  		QApplication::Redirect('asset_list.php');
-	  	}
-	  	else {
-	  		// Set controls to null
-		  	$this->lstCategory->SelectedIndex = 0;
-		  	$this->lstManufacturer->SelectedIndex = 0;
-		  	$this->txtShortDescription->Text = '';
-		  	$this->txtAssetCode->Text = '';
-		  	$this->ctlAdvanced->ClearControls();
-
-		  	// Set Search variables to null
-		  	$this->intCategoryId = null;
-		  	$this->intManufacturerId = null;
-		  	$this->intAssetModelId = null;
-		  	$this->strShortDescription = null;
-		  	$this->strAssetCode = null;
-		  	$this->blnOffsite = false;
-		  	$this->strAssetModelCode = null;
-		  	$this->intReservedBy = null;
-		  	$this->intCheckedOutBy = null;
-		  	$this->strDateModified = null;
-		  	$this->strDateModifiedFirst = null;
-		  	$this->strDateModifiedLast = null;
-		  	if ($this->arrCustomFields) {
-		  		foreach ($this->arrCustomFields as $field) {
-		  			$field['value'] = null;
-		  		}
-		  	}
-		  	$this->dtgAsset->SortColumnIndex = 1;
-		  	$this->blnGenerate = false;
-	  	}
 	  }
 
 	  protected function lblAdvanced_Click() {

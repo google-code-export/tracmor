@@ -27,7 +27,7 @@
 				<COL ALIGN="RIGHT" COLSPAN="50" TYPE="EXPRESSION" CELLCLASS="FOOTER">"Total Asset Transactions: ".$this->getRowCount()</COL>
 			</ROW>
 			<ROW>
-				<COL ALIGN="RIGHT" COLSPAN="50" TYPE="EXPRESSION" CELLCLASS="FOOTER">"Total Transactions: "</COL>
+				<COL ALIGN="RIGHT" COLSPAN="50" TYPE="EXPRESSION" CELLCLASS="FOOTER">"Total Transactions: ".$this->getEnvObj("TotalTransactions")</COL>
 			</ROW>
 		</FOOTER>
 	</PAGE>
