@@ -48,9 +48,6 @@
 		// Shortcut Menu
 		protected $ctlShortcutMenu;
 
-		// Search Menu
-		public $ctlSearchMenu;
-
 		// Basic Inputs
 		protected $lstCategory;
 		protected $lstManufacturer;
@@ -78,13 +75,7 @@
 		// Buttons
 		protected $btnGenerate;
 		protected $blnGenerate;
-
-		// Advanced Label/Link
-		protected $lblAdvanced;
-		// Boolean that toggles Advanced Search display
-		protected $blnAdvanced;
-		// Advanced Search Composite control
-		protected $ctlAdvanced;
+		protected $btnClear;
 
 		// Search Values
 		protected $intAssetModelId;
@@ -92,7 +83,6 @@
 		protected $strAssetCode;
 		protected $intCategoryId;
 		protected $intManufacturerId;
-		protected $blnOffsite;
 		protected $strAssetModelCode;
 		protected $intReservedBy;
 		protected $intCheckedOutBy;
@@ -118,10 +108,11 @@
       $this->chkTransactionType_Create();
       $this->lblAssetModelId_Create();
       $this->btnGenerate_Create();
+      $this->btnClear_Create();
       $this->customFields_Create();
-      //the report code will be render in a Qlabel
+      // The report code will be render in a Qlabel
       $this->lblReport = new QLabel($this);
-      //if don't put this you will see HTML code instead of a report
+      // If don't put this you will see HTML code instead of a report
       $this->lblReport->HtmlEntities = false;
 
 			if (QApplication::QueryString('intAssetModelId')) {
@@ -272,7 +263,8 @@
   	}
 
   	protected function customFields_Create() {
-      $this->pnlCustomFields = new QPanel($this);
+      // Create QPanel with AutoRenderChildren to add cutom fields dynamically
+  	  $this->pnlCustomFields = new QPanel($this);
   		$this->pnlCustomFields->AutoRenderChildren = true;
   		// Load all custom fields and their values into an array objCustomFieldArray->CustomFieldSelection->CustomFieldValue
   		$this->arrCustomFields = CustomField::LoadObjCustomFieldArray(1, false, null);
@@ -285,7 +277,7 @@
   		}
   	}
 
-	  /**************************
+  	/**************************
 	   *	CREATE BUTTON METHODS
 	  **************************/
 
@@ -298,7 +290,120 @@
 			$this->btnGenerate->AddAction(new QEnterKeyEvent(), new QTerminateAction());
 	  }
 
-	 public function lstTransactionDate_Select($strFormId, $strControlId, $strParameter) {
+	  protected function btnClear_Create() {
+	  	$this->btnClear = new QButton($this);
+			$this->btnClear->Name = 'clear';
+			$this->btnClear->Text = 'Clear';
+			$this->btnClear->AddAction(new QClickEvent(), new QServerAction('btnClear_Click'));
+			$this->btnClear->AddAction(new QEnterKeyEvent(), new QServerAction('btnClear_Click'));
+			$this->btnClear->AddAction(new QEnterKeyEvent(), new QTerminateAction());
+	  }
+
+	  protected function btnClear_Click() {
+      // Reload the page fresh.
+      QApplication::Redirect('asset_transaction_report.php');
+	  }
+
+	  protected function btnGenerate_Click() {
+	  	$this->blnGenerate = true;
+
+	  	// Expand the Asset object to include the AssetModel, Category, Manufacturer, and Location Objects
+      $objExpansionMap[AssetTransaction::ExpandAsset][Asset::ExpandAssetModel][AssetModel::ExpandCategory] = true;
+      $objExpansionMap[AssetTransaction::ExpandAsset][Asset::ExpandAssetModel][AssetModel::ExpandManufacturer] = true;
+      $objExpansionMap[AssetTransaction::ExpandSourceLocation] = true;
+      $objExpansionMap[AssetTransaction::ExpandDestinationLocation] = true;
+      $objExpansionMap[AssetTransaction::ExpandTransaction][Transaction::ExpandTransactionType] = true;
+      $objExpansionMap[AssetTransaction::ExpandTransaction][Transaction::ExpandCreatedByObject ] = true;
+      $objExpansionMap[AssetTransaction::ExpandTransaction][Transaction::ExpandModifiedByObject] = true;
+
+      $arrTransactionTypes = array();
+      // Create an array of checked transaction types
+      if ($this->chkMove->Checked) {
+        $arrTransactionTypes[] = 1;
+      }
+      if ($this->chkCheckIn->Checked) {
+        $arrTransactionTypes[] = 2;
+      }
+      if ($this->chkCheckOut->Checked) {
+        $arrTransactionTypes[] = 3;
+      }
+      if ($this->chkReserve->Checked) {
+        $arrTransactionTypes[] = 8;
+      }
+      if ($this->chkUnreserve->Checked) {
+        $arrTransactionTypes[] = 9;
+      }
+
+      // If checked at least one transaction type
+      if (count($arrTransactionTypes)) {
+        $this->lblReport->Warning = "";
+        // begins the report process
+        $oRpt = new PHPReportMaker();
+        // Total Transactions Count
+        $oRpt->putEnvObj("TotalTransactions", AssetTransaction::CountTransactionsBySearch($this->txtShortDescription->Text, $this->txtAssetCode->Text, $this->txtAssetModelCode->Text, $this->lstUser->SelectedValue, $this->lstCheckedOutBy->SelectedValue, $this->lstReservedBy->SelectedValue, $this->lstCategory->SelectedValue, $this->lstManufacturer->SelectedValue, $this->lstTransactionDate->SelectedValue, $this->dtpTransactionDateFirst->DateTime, $this->dtpTransactionDateLast->DateTime, $arrTransactionTypes, $objExpansionMap));
+        //some data to show in the report
+        $sSql = AssetTransaction::LoadArrayBySearch(true, $this->txtShortDescription->Text, $this->txtAssetCode->Text, $this->txtAssetModelCode->Text, $this->lstUser->SelectedValue, $this->lstCheckedOutBy->SelectedValue, $this->lstReservedBy->SelectedValue, $this->lstCategory->SelectedValue, $this->lstManufacturer->SelectedValue, $this->lstSortByDate->SelectedValue, $this->lstTransactionDate->SelectedValue, $this->dtpTransactionDateFirst->DateTime, $this->dtpTransactionDateLast->DateTime, $arrTransactionTypes, $objExpansionMap);
+        $strXmlColNameByCustomField = "";
+        $strXmlFieldByCustomField = "";
+        $intCustomFieldCount = 0;
+        foreach ($this->chkCustomFieldArray as $chkCustomField) {
+          if ($chkCustomField->Checked) {
+            $strXmlColNameByCustomField .= "<COL>".$chkCustomField->Text."</COL>";
+            $strXmlFieldByCustomField .= "<COL TYPE='FIELD'>__".$chkCustomField->ActionParameter."</COL>";
+            $intCustomFieldCount++;
+          }
+        }
+        $oGroups = "
+          <GROUP NAME='transaction_id' EXPRESSION='transaction_id'>
+            <HEADER>
+              <ROW>
+                <COL ALIGN='LEFT'>Transaction:</COL>
+                <COL ALIGN='LEFT' TYPE='EXPRESSION' COLSPAN='".(3 + $intCustomFieldCount)."'><LINK TYPE='EXPRESSION'>'". __SUBDIRECTORY__ ."/common/transaction_edit.php?intTransactionId='.\$this->getValue('transaction_id')</LINK>\$this->getValue('asset_transaction__transaction_id__transaction_type_id__short_description').' by '.(\$this->getValue('asset_transaction__transaction_id__modified_by')?\$this->getValue('asset_transaction__transaction_id__modified_by__first_name').' '.\$this->getValue('asset_transaction__transaction_id__modified_by__last_name').' on '.\$this->getValue('asset_transaction__transaction_id__modified_date'):\$this->getValue('asset_transaction__transaction_id__created_by__first_name').' '.\$this->getValue('asset_transaction__transaction_id__created_by__last_name').' on '.\$this->getValue('asset_transaction__transaction_id__creation_date'))</COL>
+              </ROW>
+              <ROW>
+                <COL>Asset Code:</COL>
+                <COL>Asset Model:</COL>
+                <COL>From:</COL>
+                <COL>To:</COL>
+                $strXmlColNameByCustomField
+              </ROW>
+            </HEADER>
+            <FIELDS>
+              <ROW>
+                <COL TYPE='FIELD'><LINK TYPE='EXPRESSION'>'". __SUBDIRECTORY__ ."/assets/asset_edit.php?intAssetId='.\$this->getValue('asset_transaction__asset_id__asset_id')</LINK>asset_transaction__asset_id__asset_code</COL>
+                <COL TYPE='FIELD'><LINK TYPE='EXPRESSION'>'". __SUBDIRECTORY__ ."/assets/asset_model_edit.php?intAssetModelId='.\$this->getValue('asset_transaction__asset_id__asset_model_id__asset_model_id')</LINK>asset_transaction__asset_id__asset_model_id__asset_model_code</COL>
+                <COL TYPE='FIELD'>asset_transaction__source_location_id__short_description</COL>
+                <COL TYPE='FIELD'>asset_transaction__destination_location_id__short_description</COL>
+                $strXmlFieldByCustomField
+              </ROW>
+            </FIELDS>
+          </GROUP>";
+        $oRpt->setSQL($sSql);
+        $oRpt->setUser('root');
+        $oRpt->setPassword('');
+        $oRpt->setConnection('localhost');
+        $oRpt->setDatabaseInterface('mysql');
+        $oRpt->setDatabase('tracmor');
+        $oRpt->createFromTemplate('Asset Transaction Report', __DOCROOT__ . __SUBDIRECTORY__ . '/reports/asset_transaction_report.xml',null,null,$oGroups);
+        $oRpt->setNoDataMsg("No data was found, check your query");
+        // The head of the final html will be write by the Qform
+        $oRpt->setBody(false);
+        // Start the output buffer
+        ob_start();
+        // Process the report
+        $oRpt->run();
+        // Put the output buffer content in the Qlabel
+        $this->lblReport->Text = ob_get_contents();
+        // Clean the output buffer
+        ob_end_clean();
+      }
+      else {
+        $this->lblReport->Warning = "You must check at least one transaction type";
+      }
+      $this->blnGenerate = false;
+	  }
+
+	  public function lstTransactionDate_Select() {
   		$value = $this->lstTransactionDate->SelectedValue;
   		if ($value == null) {
   			$this->dtpTransactionDateFirst->Enabled = false;
@@ -317,154 +422,9 @@
   			$this->dtpTransactionDateLast->Enabled = true;
   		}
   	}
-
-	  protected function lblAdvanced_Create() {
-	  	$this->lblAdvanced = new QLabel($this);
-	  	$this->lblAdvanced->Name = 'Advanced';
-	  	$this->lblAdvanced->Text = 'Advanced Search';
-	  	$this->lblAdvanced->AddAction(new QClickEvent(), new QToggleDisplayAction($this->ctlAdvanced));
-	  	$this->lblAdvanced->AddAction(new QClickEvent(), new QAjaxAction('lblAdvanced_Click'));
-	  	$this->lblAdvanced->SetCustomStyle('text-decoration', 'underline');
-	  	$this->lblAdvanced->SetCustomStyle('cursor', 'pointer');
-	  }
-
-	  protected function btnGenerate_Click() {
-	  	$this->blnGenerate = true;
-			// Enable Profiling
-      //QApplication::$Database[1]->EnableProfiling();
-      // Expand the Asset object to include the AssetModel, Category, Manufacturer, and Location Objects
-      $objExpansionMap[AssetTransaction::ExpandAsset][Asset::ExpandAssetModel][AssetModel::ExpandCategory] = true;
-      $objExpansionMap[AssetTransaction::ExpandAsset][Asset::ExpandAssetModel][AssetModel::ExpandManufacturer] = true;
-      $objExpansionMap[AssetTransaction::ExpandSourceLocation] = true;
-      $objExpansionMap[AssetTransaction::ExpandDestinationLocation] = true;
-      $objExpansionMap[AssetTransaction::ExpandTransaction][Transaction::ExpandTransactionType] = true;
-      $objExpansionMap[AssetTransaction::ExpandTransaction][Transaction::ExpandCreatedByObject ] = true;
-      $objExpansionMap[AssetTransaction::ExpandTransaction][Transaction::ExpandModifiedByObject] = true;
-
-      $arrTransactionTypes = array();
-      if ($this->chkMove->Checked) {
-        $arrTransactionTypes[] = 1;
-      }
-      if ($this->chkCheckIn->Checked) {
-        $arrTransactionTypes[] = 2;
-      }
-      if ($this->chkCheckOut->Checked) {
-        $arrTransactionTypes[] = 3;
-      }
-      if ($this->chkReserve->Checked) {
-        $arrTransactionTypes[] = 8;
-      }
-      if ($this->chkUnreserve->Checked) {
-        $arrTransactionTypes[] = 9;
-      }
-
-      // begins the report process
-      $oRpt = new PHPReportMaker();
-      // Total Transactions Count
-      $oRpt->putEnvObj("TotalTransactions", AssetTransaction::CountBySearch($this->txtShortDescription->Text, $this->txtAssetCode->Text, $this->txtAssetModelCode->Text, $this->lstUser->SelectedValue, $this->lstCheckedOutBy->SelectedValue, $this->lstReservedBy->SelectedValue, $this->lstCategory->SelectedValue, $this->lstManufacturer->SelectedValue, $this->lstSortByDate->SelectedValue, $this->lstTransactionDate->SelectedValue, $this->dtpTransactionDateFirst->DateTime, $this->dtpTransactionDateLast->DateTime, $arrTransactionTypes, $objExpansionMap));
-      //some data to show in the report
-      $sSql = AssetTransaction::LoadArrayBySearch(true, $this->txtShortDescription->Text, $this->txtAssetCode->Text, $this->txtAssetModelCode->Text, $this->lstUser->SelectedValue, $this->lstCheckedOutBy->SelectedValue, $this->lstReservedBy->SelectedValue, $this->lstCategory->SelectedValue, $this->lstManufacturer->SelectedValue, $this->lstSortByDate->SelectedValue, $this->lstTransactionDate->SelectedValue, $this->dtpTransactionDateFirst->DateTime, $this->dtpTransactionDateLast->DateTime, $arrTransactionTypes, $objExpansionMap);
-      $strXmlColNameByCustomField = "";
-      $strXmlFieldByCustomField = "";
-      $intCustomFieldCount = 0;
-      foreach ($this->chkCustomFieldArray as $chkCustomField) {
-        if ($chkCustomField->Checked) {
-          $strXmlColNameByCustomField .= "<COL>".$chkCustomField->Text."</COL>";
-          $strXmlFieldByCustomField .= "<COL TYPE='FIELD'>__".$chkCustomField->ActionParameter."</COL>";
-          $intCustomFieldCount++;
-        }
-      }
-      $oGroups = "
-        <GROUP NAME='transaction_id' EXPRESSION='transaction_id'>
-          <HEADER>
-            <ROW>
-              <COL ALIGN='LEFT'>Transaction:</COL>
-              <COL ALIGN='LEFT' TYPE='EXPRESSION' COLSPAN='".(3 + $intCustomFieldCount)."'><LINK TYPE='EXPRESSION'>'". __SUBDIRECTORY__ ."/common/transaction_edit.php?intTransactionId='.\$this->getValue('transaction_id')</LINK>\$this->getValue('asset_transaction__transaction_id__transaction_type_id__short_description').' by '.(\$this->getValue('asset_transaction__transaction_id__modified_by')?\$this->getValue('asset_transaction__transaction_id__modified_by__first_name').' '.\$this->getValue('asset_transaction__transaction_id__modified_by__last_name').' on '.\$this->getValue('asset_transaction__transaction_id__modified_date'):\$this->getValue('asset_transaction__transaction_id__created_by__first_name').' '.\$this->getValue('asset_transaction__transaction_id__created_by__last_name').' on '.\$this->getValue('asset_transaction__transaction_id__creation_date'))</COL>
-            </ROW>
-            <ROW>
-              <COL>Asset Code:</COL>
-              <COL>Asset Model:</COL>
-              <COL>From:</COL>
-              <COL>To:</COL>
-              $strXmlColNameByCustomField
-            </ROW>
-          </HEADER>
-          <FIELDS>
-            <ROW>
-              <COL TYPE='FIELD'><LINK TYPE='EXPRESSION'>'". __SUBDIRECTORY__ ."/assets/asset_edit.php?intAssetId='.\$this->getValue('asset_transaction__asset_id__asset_id')</LINK>asset_transaction__asset_id__asset_code</COL>
-              <COL TYPE='FIELD'><LINK TYPE='EXPRESSION'>'". __SUBDIRECTORY__ ."/assets/asset_model_edit.php?intAssetModelId='.\$this->getValue('asset_transaction__asset_id__asset_model_id__asset_model_id')</LINK>asset_transaction__asset_id__asset_model_id__asset_model_code</COL>
-              <COL TYPE='FIELD'>asset_transaction__source_location_id__short_description</COL>
-              <COL TYPE='FIELD'>asset_transaction__destination_location_id__short_description</COL>
-              $strXmlFieldByCustomField
-            </ROW>
-          </FIELDS>
-        </GROUP>";
-      $oRpt->setSQL($sSql);
-      $oRpt->setUser('root');
-      $oRpt->setPassword('');
-      $oRpt->setConnection('localhost');
-      $oRpt->setDatabaseInterface('mysql');
-      $oRpt->setDatabase('tracmor');
-      $oRpt->createFromTemplate('Asset Transaction Report', __DOCROOT__ . __SUBDIRECTORY__ . '/reports/asset_transaction_report.xml',null,null,$oGroups);
-      $oRpt->setNoDataMsg("No data was found, check your query");
-      //$oRpt->setXML(__DOCROOT__ . __SUBDIRECTORY__ . '/reports/asset_transaction_report.xml');
-      //the head of the final html will be write by the Qform
-      $oRpt->setBody(false);
-      //star the output buffer
-      ob_start();
-      //process the report
-      $oRpt->run();
-      //put the output buffer content in the Qlabel
-      $this->lblReport->Text = ob_get_contents();
-      //clean the output buffer
-      ob_end_clean();
-      $this->blnGenerate = false;
-	  }
-
-	  protected function lblAdvanced_Click() {
-	  	if ($this->blnAdvanced) {
-
-	  		$this->blnAdvanced = false;
-	  		$this->lblAdvanced->Text = 'Advanced Search';
-
-	  		$this->ctlAdvanced->ClearControls();
-
-	  	}
-	  	else {
-	  		$this->blnAdvanced = true;
-	  		$this->lblAdvanced->Text = 'Hide Advanced';
-	  	}
-	  }
-
-	  protected function assignGenerateValues() {
-	  	$this->intCategoryId = $this->lstCategory->SelectedValue;
-			$this->intManufacturerId = $this->lstManufacturer->SelectedValue;
-			$this->strShortDescription = $this->txtShortDescription->Text;
-			$this->strAssetCode = $this->txtAssetCode->Text;
-			$this->intAssetModelId = $this->lblAssetModelId->Text;
-			$this->strAssetModelCode = $this->ctlAdvanced->AssetModelCode;
-			$this->intReservedBy = $this->ctlAdvanced->ReservedBy;
-			$this->intCheckedOutBy = $this->ctlAdvanced->CheckedOutBy;
-			$this->strDateModified = $this->ctlAdvanced->DateModified;
-			$this->strDateModifiedFirst = $this->ctlAdvanced->DateModifiedFirst;
-			$this->strDateModifiedLast = $this->ctlAdvanced->DateModifiedLast;
-
-			$this->arrCustomFields = $this->ctlAdvanced->CustomFieldArray;
-			if ($this->arrCustomFields) {
-				foreach ($this->arrCustomFields as &$field) {
-					if ($field['input'] instanceof QListBox) {
-						$field['value'] = $field['input']->SelectedValue;
-					}
-					elseif ($field['input'] instanceof QTextBox) {
-						$field['value'] = $field['input']->Text;
-					}
-				}
-			}
-	  }
 	}
 
 	// Go ahead and run this form object to search the page and event handlers, using
 	// generated/asset_edit.php.inc as the included HTML template file
-	// AssetListForm::Run('AssetListForm', './Qcodo/assets/asset_list.php.inc');
 	AssetTransactionListForm::Run('AssetTransactionListForm', __DOCROOT__ . __SUBDIRECTORY__ . '/reports/asset_transaction_report.tpl.php');
 ?>

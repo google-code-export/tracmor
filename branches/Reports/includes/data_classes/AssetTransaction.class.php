@@ -290,6 +290,25 @@
 			return $arrToReturn;
 		}
 
+		/**
+		 * Load an array of objAssetTransactions
+		 * @param $blnReturnStrQuery - true/false (return strSqlQuery / return objAssetTransaction[])
+		 * @param $strAssetModel
+		 * @param $strAssetCode
+		 * @param $strAssetModelCode
+		 * @param $strUser
+		 * @param $intCheckedOutBy
+		 * @param $intReservedBy
+		 * @param $strCategory
+		 * @param $strManufacturer
+		 * @param $strSortByDate
+		 * @param $strDateModified
+		 * @param $strDateModifiedFirst
+		 * @param $strDateModifiedLast
+		 * @param $arrTransactionTypes
+		 * @param $objExpansionMap
+		 * @return strSqlQuery / objAssetTransaction[]
+		*/
 		public function LoadArrayBySearch($blnReturnStrQuery = true, $strAssetModel = null, $strAssetCode = null, $strAssetModelCode = null, $strUser = null, $intCheckedOutBy = null, $intReservedBy = null, $strCategory = null, $strManufacturer = null, $strSortByDate = "ASC", $strDateModified = null, $strDateModifiedFirst = null, $strDateModifiedLast = null, $arrTransactionTypes = null, $objExpansionMap = null) {
 		  // Setup QueryExpansion
 			$objQueryExpansion = new QQueryExpansion();
@@ -416,7 +435,24 @@
 			}
 		}
 
-		public function CountBySearch($strAssetModel = null, $strAssetCode = null, $strAssetModelCode = null, $strUser = null, $intCheckedOutBy = null, $intReservedBy = null, $strCategory = null, $strManufacturer = null, $strSortByDate = "ASC", $strDateModified = null, $strDateModifiedFirst = null, $strDateModifiedLast = null, $arrTransactionTypes = null, $objExpansionMap = null) {
+		/**
+		 * Count DISTINCT Transactions
+		 * @param $strAssetModel
+		 * @param $strAssetCode
+		 * @param $strAssetModelCode
+		 * @param $strUser
+		 * @param $intCheckedOutBy
+		 * @param $intReservedBy
+		 * @param $strCategory
+		 * @param $strManufacturer
+		 * @param $strDateModified
+		 * @param $strDateModifiedFirst
+		 * @param $strDateModifiedLast
+		 * @param $arrTransactionTypes
+		 * @param $objExpansionMap
+		 * @return int
+		*/
+		public function CountTransactionsBySearch($strAssetModel = null, $strAssetCode = null, $strAssetModelCode = null, $strUser = null, $intCheckedOutBy = null, $intReservedBy = null, $strCategory = null, $strManufacturer = null, $strDateModified = null, $strDateModifiedFirst = null, $strDateModifiedLast = null, $arrTransactionTypes = null, $objExpansionMap = null) {
 		  // Setup QueryExpansion
 			$objQueryExpansion = new QQueryExpansion();
 			if ($objExpansionMap) {

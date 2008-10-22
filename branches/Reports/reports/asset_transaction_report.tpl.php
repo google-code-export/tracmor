@@ -38,11 +38,6 @@
 			<img src="../images/empty.gif" width="10">
 		</td>
 		<td width="100%" valign="top">
-<!-- Begin Search Menu -->
-<?php
-	//$this->ctlSearchMenu->Render();
-?>
-<!-- End Search  Menu -->
     <div class="title">&nbsp;Asset Transaction Reports</div>
 		<table style="border:1px solid #AAAAAA;background-color:#EEEEEE;font-family:verdana;font-size:10;color:#444444;height:40" width="100%">
 			<tr>
@@ -106,22 +101,12 @@
 			   <?php $this->lstSortByDate->RenderWithNameLeft("Width=100"); ?>
 			  </td>
 			  <td style="vertical-align:top;padding-right:8;" align="right" noWrap>
-      	  <?php $this->btnGenerate->Render() ?>
+      	  <?php $this->btnGenerate->Render() ?>&nbsp;<?php $this->btnClear->Render() ?>
       	</td>
 			</tr>
-			<tr>
-  			<td>
-					<?php //$this->lblAdvanced->Render(); ?>
-				</td>
-			  <td style="vertical-align:top;" nowrap>
-			  	<?php //$this->ctlAdvanced->Render(); ?>
-			  </td>
-			</tr>
 	 </table>
-    <?php $this->lblReport->Render(); ?>
-		<?php //$this->dtgAsset->Render() ?>
+    <?php $this->lblReport->RenderWithError(); ?>
 		<br />
-
 
 	<?php  $this->RenderEnd() ?>
 	<?php 	require_once('../includes/footer.inc.php'); ?>
