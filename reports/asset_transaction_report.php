@@ -337,68 +337,77 @@
       // If checked at least one transaction type
       if (count($arrTransactionTypes)) {
         $this->lblReport->Warning = "";
-        // begins the report process
-        $oRpt = new PHPReportMaker();
         // Total Transactions Count
-        $oRpt->putEnvObj("TotalTransactions", AssetTransaction::CountTransactionsBySearch($this->txtShortDescription->Text, $this->txtAssetCode->Text, $this->txtAssetModelCode->Text, $this->lstUser->SelectedValue, $this->lstCheckedOutBy->SelectedValue, $this->lstReservedBy->SelectedValue, $this->lstCategory->SelectedValue, $this->lstManufacturer->SelectedValue, $this->lstTransactionDate->SelectedValue, $this->dtpTransactionDateFirst->DateTime, $this->dtpTransactionDateLast->DateTime, $arrTransactionTypes, $objExpansionMap));
-        //some data to show in the report
-        $sSql = AssetTransaction::LoadArrayBySearch(true, $this->txtShortDescription->Text, $this->txtAssetCode->Text, $this->txtAssetModelCode->Text, $this->lstUser->SelectedValue, $this->lstCheckedOutBy->SelectedValue, $this->lstReservedBy->SelectedValue, $this->lstCategory->SelectedValue, $this->lstManufacturer->SelectedValue, $this->lstSortByDate->SelectedValue, $this->lstTransactionDate->SelectedValue, $this->dtpTransactionDateFirst->DateTime, $this->dtpTransactionDateLast->DateTime, $arrTransactionTypes, $objExpansionMap);
-        $strXmlColNameByCustomField = "";
-        $strXmlFieldByCustomField = "";
-        $intCustomFieldCount = 0;
-        foreach ($this->chkCustomFieldArray as $chkCustomField) {
-          if ($chkCustomField->Checked) {
-            $strXmlColNameByCustomField .= "<COL>".$chkCustomField->Text."</COL>";
-            $strXmlFieldByCustomField .= "<COL TYPE='FIELD'>__".$chkCustomField->ActionParameter."</COL>";
-            $intCustomFieldCount++;
+        $intTotalTransactionCount = AssetTransaction::CountTransactionsBySearch($this->txtShortDescription->Text, $this->txtAssetCode->Text, $this->txtAssetModelCode->Text, $this->lstUser->SelectedValue, $this->lstCheckedOutBy->SelectedValue, $this->lstReservedBy->SelectedValue, $this->lstCategory->SelectedValue, $this->lstManufacturer->SelectedValue, $this->lstTransactionDate->SelectedValue, $this->dtpTransactionDateFirst->DateTime, $this->dtpTransactionDateLast->DateTime, $arrTransactionTypes, $objExpansionMap);
+        // Total Transactions Count > 0 to avoid bug with NoDataMsg
+        if ($intTotalTransactionCount) {
+          // begins the report process
+          $oRpt = new PHPReportMaker();
+          // Create the constant to use in xml template
+          $oRpt->putEnvObj("TotalTransactions", $intTotalTransactionCount);
+          //some data to show in the report
+          $sSql = AssetTransaction::LoadArrayBySearch(true, $this->txtShortDescription->Text, $this->txtAssetCode->Text, $this->txtAssetModelCode->Text, $this->lstUser->SelectedValue, $this->lstCheckedOutBy->SelectedValue, $this->lstReservedBy->SelectedValue, $this->lstCategory->SelectedValue, $this->lstManufacturer->SelectedValue, $this->lstSortByDate->SelectedValue, $this->lstTransactionDate->SelectedValue, $this->dtpTransactionDateFirst->DateTime, $this->dtpTransactionDateLast->DateTime, $arrTransactionTypes, $objExpansionMap);
+          $strXmlColNameByCustomField = "";
+          $strXmlFieldByCustomField = "";
+          $intCustomFieldCount = 0;
+          foreach ($this->chkCustomFieldArray as $chkCustomField) {
+            if ($chkCustomField->Checked) {
+              $strXmlColNameByCustomField .= "<COL>".$chkCustomField->Text."</COL>";
+              $strXmlFieldByCustomField .= "<COL TYPE='FIELD'>__".$chkCustomField->ActionParameter."</COL>";
+              $intCustomFieldCount++;
+            }
           }
+          $oGroups = "
+            <GROUP NAME='transaction_id' EXPRESSION='transaction_id'>
+              <HEADER>
+                <ROW>
+                  <COL ALIGN='LEFT'>Transaction:</COL>
+                  <COL ALIGN='LEFT' TYPE='EXPRESSION' COLSPAN='".(3 + $intCustomFieldCount)."'><LINK TYPE='EXPRESSION'>'". __SUBDIRECTORY__ ."/common/transaction_edit.php?intTransactionId='.\$this->getValue('transaction_id')</LINK>\$this->getValue('asset_transaction__transaction_id__transaction_type_id__short_description').' by '.(\$this->getValue('asset_transaction__transaction_id__modified_by')?\$this->getValue('asset_transaction__transaction_id__modified_by__first_name').' '.\$this->getValue('asset_transaction__transaction_id__modified_by__last_name').' on '.\$this->getValue('asset_transaction__transaction_id__modified_date'):\$this->getValue('asset_transaction__transaction_id__created_by__first_name').' '.\$this->getValue('asset_transaction__transaction_id__created_by__last_name').' on '.\$this->getValue('asset_transaction__transaction_id__creation_date'))</COL>
+                </ROW>
+                <ROW>
+                  <COL>Asset Code:</COL>
+                  <COL>Asset Model:</COL>
+                  <COL>From:</COL>
+                  <COL>To:</COL>
+                  $strXmlColNameByCustomField
+                </ROW>
+              </HEADER>
+              <FIELDS>
+                <ROW>
+                  <COL TYPE='FIELD'><LINK TYPE='EXPRESSION'>'". __SUBDIRECTORY__ ."/assets/asset_edit.php?intAssetId='.\$this->getValue('asset_transaction__asset_id__asset_id')</LINK>asset_transaction__asset_id__asset_code</COL>
+                  <COL TYPE='FIELD'><LINK TYPE='EXPRESSION'>'". __SUBDIRECTORY__ ."/assets/asset_model_edit.php?intAssetModelId='.\$this->getValue('asset_transaction__asset_id__asset_model_id__asset_model_id')</LINK>asset_transaction__asset_id__asset_model_id__asset_model_code</COL>
+                  <COL TYPE='FIELD'>asset_transaction__source_location_id__short_description</COL>
+                  <COL TYPE='FIELD'>asset_transaction__destination_location_id__short_description</COL>
+                  $strXmlFieldByCustomField
+                </ROW>
+              </FIELDS>
+            </GROUP>";
+          $oRpt->setSQL($sSql);
+          $oRpt->setUser('root');
+          $oRpt->setPassword('');
+          $oRpt->setConnection('localhost');
+          $oRpt->setDatabaseInterface('mysql');
+          $oRpt->setDatabase('tracmor');
+          $oRpt->createFromTemplate('Asset Transaction Report', __DOCROOT__ . __SUBDIRECTORY__ . '/reports/asset_transaction_report.xml',null,null,$oGroups);
+          $oRpt->setNoDataMsg("No data was found, check your query");
+          // The head of the final html will be write by the Qform
+          $oRpt->setBody(false);
+          // Start the output buffer
+          ob_start();
+          // Process the report
+          $oRpt->run();
+          // Put the output buffer content in the Qlabel
+          $this->lblReport->Text = ob_get_contents();
+          // Clean the output buffer
+          ob_end_clean();
         }
-        $oGroups = "
-          <GROUP NAME='transaction_id' EXPRESSION='transaction_id'>
-            <HEADER>
-              <ROW>
-                <COL ALIGN='LEFT'>Transaction:</COL>
-                <COL ALIGN='LEFT' TYPE='EXPRESSION' COLSPAN='".(3 + $intCustomFieldCount)."'><LINK TYPE='EXPRESSION'>'". __SUBDIRECTORY__ ."/common/transaction_edit.php?intTransactionId='.\$this->getValue('transaction_id')</LINK>\$this->getValue('asset_transaction__transaction_id__transaction_type_id__short_description').' by '.(\$this->getValue('asset_transaction__transaction_id__modified_by')?\$this->getValue('asset_transaction__transaction_id__modified_by__first_name').' '.\$this->getValue('asset_transaction__transaction_id__modified_by__last_name').' on '.\$this->getValue('asset_transaction__transaction_id__modified_date'):\$this->getValue('asset_transaction__transaction_id__created_by__first_name').' '.\$this->getValue('asset_transaction__transaction_id__created_by__last_name').' on '.\$this->getValue('asset_transaction__transaction_id__creation_date'))</COL>
-              </ROW>
-              <ROW>
-                <COL>Asset Code:</COL>
-                <COL>Asset Model:</COL>
-                <COL>From:</COL>
-                <COL>To:</COL>
-                $strXmlColNameByCustomField
-              </ROW>
-            </HEADER>
-            <FIELDS>
-              <ROW>
-                <COL TYPE='FIELD'><LINK TYPE='EXPRESSION'>'". __SUBDIRECTORY__ ."/assets/asset_edit.php?intAssetId='.\$this->getValue('asset_transaction__asset_id__asset_id')</LINK>asset_transaction__asset_id__asset_code</COL>
-                <COL TYPE='FIELD'><LINK TYPE='EXPRESSION'>'". __SUBDIRECTORY__ ."/assets/asset_model_edit.php?intAssetModelId='.\$this->getValue('asset_transaction__asset_id__asset_model_id__asset_model_id')</LINK>asset_transaction__asset_id__asset_model_id__asset_model_code</COL>
-                <COL TYPE='FIELD'>asset_transaction__source_location_id__short_description</COL>
-                <COL TYPE='FIELD'>asset_transaction__destination_location_id__short_description</COL>
-                $strXmlFieldByCustomField
-              </ROW>
-            </FIELDS>
-          </GROUP>";
-        $oRpt->setSQL($sSql);
-        $oRpt->setUser('root');
-        $oRpt->setPassword('');
-        $oRpt->setConnection('localhost');
-        $oRpt->setDatabaseInterface('mysql');
-        $oRpt->setDatabase('tracmor');
-        $oRpt->createFromTemplate('Asset Transaction Report', __DOCROOT__ . __SUBDIRECTORY__ . '/reports/asset_transaction_report.xml',null,null,$oGroups);
-        $oRpt->setNoDataMsg("No data was found, check your query");
-        // The head of the final html will be write by the Qform
-        $oRpt->setBody(false);
-        // Start the output buffer
-        ob_start();
-        // Process the report
-        $oRpt->run();
-        // Put the output buffer content in the Qlabel
-        $this->lblReport->Text = ob_get_contents();
-        // Clean the output buffer
-        ob_end_clean();
+        else {
+          $this->lblReport->Text = "";
+          $this->lblReport->Warning = "No data was found, check your query.";
+        }
       }
       else {
-        $this->lblReport->Warning = "You must check at least one transaction type";
+        $this->lblReport->Warning = "You must check at least one transaction type.";
       }
       $this->blnGenerate = false;
 	  }
