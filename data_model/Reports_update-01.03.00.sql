@@ -1,1 +1,1 @@
-UPDATE `shortcut` SET `short_description`='Asset Transaction Reports', `link`='../reports/asset_transaction_report.php' WHERE `shortcut_id`='22';
+INSERT INTO `shortcut` (`module_id`, `authorization_id`, `short_description`, `image_path`, `link`, `entity_qtype_id`, `create_flag`) VALUES (7, 1, 'Asset Transaction Report', '../reports/asset_transaction_report.php', 'asset.png', 1, 0);

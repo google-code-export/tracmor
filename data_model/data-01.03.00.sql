@@ -3085,7 +3085,7 @@ INSERT INTO `shortcut` (module_id, authorization_id, transaction_type_id, short_
 (6,2,NULL,'Schedule Receipt','../receiving/receipt_edit.php','receipt_schedule.png',11,1),
 (6,1,NULL,'Receipts','../receiving/receipt_list.php','receipt.png',11,0),
 (7,1,NULL,'Asset Audit Reports','../reports/asset_audit_list.php','receipt.png',1,0),
-(7,1,NULL,'Inventory Audit Reports','../reports/inventory_audit_list.php','receipt.png',2,0);
+(7,1,NULL,'Inventory Audit Reports','../reports/inventory_audit_list.php','receipt.png',2,0),
 (7,1,NULL,'Asset Transaction Report','../reports/asset_transaction_report.php','asset.png',1,0);
 
 
