@@ -407,6 +407,7 @@
         }
       }
       else {
+        $this->lblReport->Text = "";
         $this->lblReport->Warning = "You must check at least one transaction type.";
       }
       $this->blnGenerate = false;
