@@ -339,6 +339,7 @@
         $this->lblReport->Warning = "";
         // Total Transactions Count
         $intTotalTransactionCount = AssetTransaction::CountTransactionsBySearch($this->txtShortDescription->Text, $this->txtAssetCode->Text, $this->txtAssetModelCode->Text, $this->lstUser->SelectedValue, $this->lstCheckedOutBy->SelectedValue, $this->lstReservedBy->SelectedValue, $this->lstCategory->SelectedValue, $this->lstManufacturer->SelectedValue, $this->lstTransactionDate->SelectedValue, $this->dtpTransactionDateFirst->DateTime, $this->dtpTransactionDateLast->DateTime, $arrTransactionTypes, $objExpansionMap);
+        
         // Total Transactions Count > 0 to avoid bug with NoDataMsg
         if ($intTotalTransactionCount) {
           // begins the report process
@@ -382,12 +383,15 @@
                 </ROW>
               </FIELDS>
             </GROUP>";
+          
+					$arrDBInfo = unserialize(DB_CONNECTION_1);
+				
           $oRpt->setSQL($sSql);
-          $oRpt->setUser('root');
-          $oRpt->setPassword('');
-          $oRpt->setConnection('localhost');
+          $oRpt->setUser($arrDBInfo['username']);
+          $oRpt->setPassword($arrDBInfo['password']);
+          $oRpt->setConnection($arrDBInfo['server']);
           $oRpt->setDatabaseInterface('mysql');
-          $oRpt->setDatabase('tracmor');
+          $oRpt->setDatabase($arrDBInfo['database']);
           $oRpt->createFromTemplate('Asset Transaction Report', __DOCROOT__ . __SUBDIRECTORY__ . '/reports/asset_transaction_report.xml',null,null,$oGroups);
           $oRpt->setNoDataMsg("No data was found, check your query");
           // The head of the final html will be write by the Qform
