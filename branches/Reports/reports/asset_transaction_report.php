@@ -376,7 +376,7 @@
               <FIELDS>
                 <ROW>
                   <COL TYPE='FIELD'><LINK TYPE='EXPRESSION'>'". __SUBDIRECTORY__ ."/assets/asset_edit.php?intAssetId='.\$this->getValue('asset_transaction__asset_id__asset_id')</LINK>asset_transaction__asset_id__asset_code</COL>
-                  <COL TYPE='FIELD'><LINK TYPE='EXPRESSION'>'". __SUBDIRECTORY__ ."/assets/asset_model_edit.php?intAssetModelId='.\$this->getValue('asset_transaction__asset_id__asset_model_id__asset_model_id')</LINK>asset_transaction__asset_id__asset_model_id__asset_model_code</COL>
+                  <COL TYPE='FIELD'><LINK TYPE='EXPRESSION'>'". __SUBDIRECTORY__ ."/assets/asset_model_edit.php?intAssetModelId='.\$this->getValue('asset_transaction__asset_id__asset_model_id__asset_model_id')</LINK>asset_transaction__asset_id__asset_model_id__short_description</COL>
                   <COL TYPE='FIELD'>asset_transaction__source_location_id__short_description</COL>
                   <COL TYPE='FIELD'>asset_transaction__destination_location_id__short_description</COL>
                   $strXmlFieldByCustomField
