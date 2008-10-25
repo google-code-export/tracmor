@@ -21,26 +21,11 @@
 
 	require_once('../includes/prepend.inc.php');
 	QApplication::Authenticate(7);
-	require_once(__FORMBASE_CLASSES__ . '/AssetListFormBase.class.php');
 	ini_set("include_path",ini_get("include_path").";" . __INCLUDES__ . "/php/PHPReports/;");
 	require_once('PHPReportMaker.php');
 	$_SESSION["phpReportsLanguage"] = null;
 
-	/**
-	 * This is a quick-and-dirty draft form object to do the List All functionality
-	 * of the Asset class.  It extends from the code-generated
-	 * abstract AssetListFormBase class.
-	 *
-	 * Any display custimizations and presentation-tier logic can be implemented
-	 * here by overriding existing or implementing new methods, properties and variables.
-	 *
-	 * Additional qform control objects can also be defined and used here, as well.
-	 *
-	 * @package Application
-	 * @subpackage FormDraftObjects
-	 *
-	 */
-	class AssetTransactionListForm extends AssetListFormBase {
+	class AssetTransactionListForm extends QForm {
 
 		// Header Tabs
 		protected $ctlHeaderMenu;
@@ -114,18 +99,7 @@
       $this->lblReport = new QLabel($this);
       // If don't put this you will see HTML code instead of a report
       $this->lblReport->HtmlEntities = false;
-
-			if (QApplication::QueryString('intAssetModelId')) {
-				$this->lblAssetModelId->Text = QApplication::QueryString('intAssetModelId');
-				$this->blnGenerate = true;
-			}
   	}
-
-  	  //protected function Form_Exit() {
-  	  // Output database profiling - it shows you the queries made to create this page
-  	  // This will not work on pages with the AJAX Pagination
-      // QApplication::$Database[1]->OutputProfiling();
-  	  //}
 
   	// Create and Setup the Header Composite Control
   	protected function ctlHeaderMenu_Create() {
@@ -439,7 +413,5 @@
   	}
 	}
 
-	// Go ahead and run this form object to search the page and event handlers, using
-	// generated/asset_edit.php.inc as the included HTML template file
 	AssetTransactionListForm::Run('AssetTransactionListForm', __DOCROOT__ . __SUBDIRECTORY__ . '/reports/asset_transaction_report.tpl.php');
 ?>
