@@ -1,0 +1,37 @@
+=== Parent-Child Relationships ===
+----
+
+
+=== Summary ===
+----
+Provide the ability to assign parent/child relationships between assets in Tracmor. 
+
+
+=== Owner ===
+----
+  * Name: [http://code.google.com/u/jsinclair/ Justin Sinclair]
+  * Name: [http://code.google.com/u/hunterjensen/ Hunter Jensen]
+
+
+=== Current Status ==
+----
+  * Target Release: [Release0.2.0 Tracmor 0.2.0]
+  * Last Modified: 2009-02-25
+  * Percentage Completed: 
+
+
+=== Details ===
+  * No details on status at this time
+
+
+=== Use Cases ===
+----
+A computer may have peripherals such as a keyboard, mouse, or printer that are always associated with it,  but it is still desired to track each of these as individual assets.  The solution is to associate these child assets (keyboard, mouse, printer) with a parent asset (the computer).  
+
+
+=== Details ===
+----
+An asset in Tracmor is able to have multiple children,  but only a single parent.  Child assets can also themselves be parents to other assets.
+
+=== User Experience ===
+----
