@@ -22,14 +22,19 @@ Provide the ability to assign parent/child relationships between assets in Tracm
   * No details on status at this time
 
 
-=== Use Cases ===
+=== Use Case ===
 ----
-A computer may have peripherals such as a keyboard, mouse, or printer that are always associated with it,  but it is still desired to track each of these as individual assets.  The solution is to associate these child assets (keyboard, mouse, printer) with a parent asset (the computer).  
+Amelia uses Tracmor to manage the IT assets (such as computers) at her company. A computer may have components such as a hard drive, memory module, and video card that are also being managed as assets in Tracmor.  Amelia would like to make an association between the computer (parent) and its components (children) within Tracmor so that she knows which components are in each computer. She would also like the option to easily include child assets in transactions that are made on a parent asset.
 
-
-=== Details ===
+=== Implementation ===
 ----
-An asset in Tracmor is able to have multiple children,  but only a single parent.  Child assets can also themselves be parents to other assets.
+This feature will allow the user to create parent-child relationships from either the parent or the child asset record. 
+
+===Assigning a parent from the child asset===
+A new "Parent Asset" field will be added to asset records.  Users with edit permissions can enter an asset code in this field to assign a parent to the asset.  An asset in Tracmor may have only one parent, but a parent may have multiple children. Child assets may also be parents.
+
+===Assigning children from the parent asset===
+A new section titled "Child Assets" will be added to asset records.  Users with edit permissions will be able to add children using a text input and "Add" button.  Children will be listed in this section with checkboxes, and users with edit permissions can select one or more children using these checkboxes and either *Remove* (unassign as a child) or *Reassign* (assign to a different parent) the selected child(ren).
 
 === User Experience ===
 ----
