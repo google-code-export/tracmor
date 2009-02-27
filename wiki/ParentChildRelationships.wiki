@@ -14,7 +14,7 @@ Provide the ability to assign parent/child relationships between assets in Tracm
 === Current Status ==
 ----
   * Target Release: Tracmor 0.2.0
-  * Last Modified: 2009-02-25
+  * Last Modified: 2009-02-26
   * Percentage Completed: 
 
 
@@ -37,7 +37,7 @@ A new *Parent Asset* field will be added to asset records.  Users with edit perm
 A new section titled *Child Assets* will be added to asset records.  Users with edit permissions will be able to add children using a text input (or search using pop-up search dialog) and *Add* button.  Children will be listed in this section with checkboxes, and users with edit permissions can select one or more children using these checkboxes and perform the following actions on the selected children:
 
   * *Remove* - The selected asset(s) will no longer be assigned as child to the parent asset
-  * *Reassign* - The selected asset(s) will be assigned to a new parent specified by the user
+  * *Reassign* - The selected asset(s) will be assigned to a new parent specified by the user by entering the asset code or selecting via pop-up search dialog
   * *Link* - The selected asset(s) will be linked to the parent asset (see *Linking children to the parent* below below)
 
 ===Linking children to the parent===
