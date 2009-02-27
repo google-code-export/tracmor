@@ -65,3 +65,7 @@ When attempting to perform a transaction on an asset with linked children, Tracm
 *Mockup #1* - Asset with 1 parent and 1 linked child
 
 http://tracmor.googlecode.com/svn/wiki/images/ParentChildAssetView.png
+
+*Mockup #2* - Editing asset with 1 parent and 1 linked child
+
+http://tracmor.googlecode.com/svn/wiki/images/ParentChildAssetEdit.png
