@@ -15,7 +15,7 @@ Provide the ability to assign parent/child relationships between assets in Tracm
 ----
   * Target Release: Tracmor 0.2.0
   * Last Modified: 2009-02-26
-  * Percentage Completed: 
+  * Percentage Completed: 70%
 
 
 === Details ===
