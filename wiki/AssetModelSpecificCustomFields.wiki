@@ -2,7 +2,7 @@
 
 = Summary =
 ----
-The purpose of this feature is to allow administrators to assign asset custom fields to certain specific asset models. They will have the ability to assign a custom field to All, Some, or None.
+The purpose of this feature is to allow administrators to assign asset custom fields to certain specific asset models. They will have the ability to assign an asset custom field to All, Some, or None.
 
 = Use Case =
 ----
