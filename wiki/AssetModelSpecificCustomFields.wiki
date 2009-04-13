@@ -1,0 +1,31 @@
+#summary Requirements for the Asset Model-Specific Custom Fields feature.
+
+= Summary =
+----
+The purpose of this feature is to allow administrators to assign asset custom fields to certain specific asset models. They will have the ability to assign a custom field to All, Some, or None.
+
+= Use Case =
+----
+Amelia is a Tracmor system administrator for Fictional Co., which has 1,000 asset models. Two of these asset models are Aircards and Computers. All Aircards have a Hexadecimal ESN number, but computers do not. All computers have a brand of Network Adapter, but Aircards do not. Amelia would like to configure Tracmor so that each Aircard in the system can be assigned an ESN #, but not be asked for an Ethernet Card brand. She would also like to assign Network Adapter brand as a custom field for only assets where the asset model is 'computer'.
+
+= Implementation =
+----
+*Custom Field Edit* 
+
+The custom field edit page will be updated with a new interface component. When "Assets" is selected in the "Apply To" multi-select box, the new component will be displayed. When "Assets" is unselected, the new component will disappear.
+
+The component will include an asset model lookup tool (modeled after the asset lookup tool). The administrator will be able to select one or many asset models in the lookup tool and add them to this Custom Field record. When clicking the button to "Add Asset Models", the datagrid will be updated with those selected asset models. Next to the lookup icon will be a checkbox to select "All" and apply this custom field to all asset models. This will be checked by default. This component will also include a checkbox labeled "Searchable". This will determine whether the custom field will be included in the advanced search menu for asset searches.
+
+A datagrid will be displayed to show the asset models that this custom field has been applied to. If the custom field has been applied to "All" using the "All" checkbox, the datagrid will not be displayed and a message will read "All Asset Models".
+
+*Asset Model Edit* 
+
+The asset model edit page will be updated with a new field: "Asset Custom Fields". This will be a multi-select checkbox component with all Asset Custom Fields listed. The user can select which asset custom fields will be assigned to this particular asset model.
+
+*Asset Search* 
+
+These changes will apply to the QAssetSearchComposite.class.php, and therefore all implementations of asset search throughout the application. All custom fields marked as "searchable" will be included in the "Advanced Search" menu on all asset search pages.
+
+* Asset Edit* 
+
+The asset edit page will only display custom fields which have been assigned to this particular asset model. When creating a new asset, these will need to be determined and displayed when the asset model is selected.
