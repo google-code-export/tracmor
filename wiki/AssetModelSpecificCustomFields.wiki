@@ -12,6 +12,8 @@ Amelia is a Tracmor system administrator for Fictional Co., which has 1,000 asse
 ----
 *Custom Field Edit* 
 
+See the functional prototype here - http://tracmor.barefootsolutions.com/asset_model_specific_custom_fields.
+
 The custom field edit page will be updated with a new interface component. When "Assets" is selected in the "Apply To" multi-select box, the new component will be displayed. When "Assets" is unselected, the new component will disappear.
 
 The component will include an asset model lookup tool (modeled after the asset lookup tool). The administrator will be able to select one or many asset models in the lookup tool and add them to this Custom Field record. When clicking the button to "Add Asset Models", the datagrid will be updated with those selected asset models. Next to the lookup icon will be a checkbox to select "All" and apply this custom field to all asset models. This will be checked by default. This component will also include a checkbox labeled "Searchable". This will determine whether the custom field will be included in the advanced search menu for asset searches.
