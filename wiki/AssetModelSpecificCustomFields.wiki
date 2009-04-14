@@ -16,9 +16,11 @@ See the functional prototype here - http://tracmor.barefootsolutions.com/asset_m
 
 The custom field edit page will be updated with a new interface component. When "Assets" is selected in the "Apply To" multi-select box, the new component will be displayed. When "Assets" is unselected, the new component will disappear.
 
-The component will include an asset model lookup tool (modeled after the asset lookup tool). The administrator will be able to select one or many asset models in the lookup tool and add them to this Custom Field record. When clicking the button to "Add Asset Models", the datagrid will be updated with those selected asset models. Next to the lookup icon will be a checkbox to select "All" and apply this custom field to all asset models. This will be checked by default. This component will also include a checkbox labeled "Searchable". This will determine whether the custom field will be included in the advanced search menu for asset searches.
+A new boolean value "Searchable" will be added to all custom fields. This will determine whether the custom field will be included in the advanced search menu for all searches.
 
-A datagrid will be displayed to show the asset models that this custom field has been applied to. If the custom field has been applied to "All" using the "All" checkbox, the datagrid will not be displayed and a message will read "All Asset Models".
+The component will include an asset model textbox, add button, and lookup tool (modeled after the asset lookup tool). The administrator will be able to select one or many asset models in the lookup tool and add them to this Custom Field record. The admin will also be able to manually type in asset model codes and click the 'Add'. When clicking the button to "Add Asset Models" in the lookup tool, the datagrid will be updated with those selected asset models. Also included in this component will be a checkbox to select "All Asset Models" and apply this custom field to all asset models. 
+
+A datagrid will be displayed to show the asset models that this custom field has been applied to. If the custom field has been applied to "All" using the "Check All" checkbox in the lookup tool, the datagrid will not be displayed but the "All Asset Models" checkbox will be checked.
 
 *Asset Model Edit* 
 
