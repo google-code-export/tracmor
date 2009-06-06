@@ -19,7 +19,7 @@ Provide the ability to assign parent/child relationships between assets in Tracm
 
 
 === Details ===
-  * This feature is complete and being tested.
+  * This feature is complete and has been tested.
 
 
 === Use Case ===
