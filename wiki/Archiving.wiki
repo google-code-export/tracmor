@@ -32,13 +32,17 @@ This feature will allow the user to archive/unarchive assets from within an asse
 A new "Archive" button will be added to asset records, and will be placed with the other transaction buttons (to the right of the "Ship" button). This button labeling and click action will reflect the state of the asset, so that if the asset is already archived, the button would be labeled "Unarchive" and would trigger an unarchive transaction when clicked. This button will only be visible to users with authorization to perform archiving (as specified in their user role). 
 
 *Asset Records*
+
 When an asset has been archived, the Edit, Clone, and Attach buttons will be disabled for that asset, but the Delete button will still be available to authorized users. All transactions other than Unarchive will be disabled.
 
 *Asset Searches*
+
 A new Advanced Search filter will be available to include archived assets in Asset searches. This filter will be a checkbox labeled "Include Archived" and will appear after Attachments in Advanced search. This checkbox will be unchecked by default. Archived assets will only appear in search results if this checkbox is checked. This applies to all asset searches, including those using the lookup tool.
 
 *Reports*
+
 Archived assets will be included in the Asset Transaction Report. At this time there will be no option to exclude them.
 
 *Portable Data Terminal*
+
 When performing transactions or audits with a PDT, archived assets will be treated as invalid assets,  handled exactly the same way as if you scanned a bar code that didn't exist in tracmor.
