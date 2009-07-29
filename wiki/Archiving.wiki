@@ -41,7 +41,7 @@ When an asset has been archived, the Edit, Clone, and Attach buttons will be dis
 
 *Asset Searches*
 
-A new Advanced Search filter will be available to include archived assets in Asset searches. This filter will be a checkbox labeled "Include Archived" and will appear after Attachments in Advanced search. This checkbox will be unchecked by default. Archived assets will only appear in search results if this checkbox is checked, or if the "Archived" location is selected. This applies to all asset searches, including those using the lookup tool.
+A new Advanced Search filter will be available to include archived assets in Asset searches. This filter will be a checkbox labeled "Include Archived" and will appear after Attachments in Advanced search. This checkbox will be unchecked by default. Archived assets will only appear in search results if this checkbox is checked, or if the "Archived" location is selected. This applies to all asset searches, including those using the lookup tool.  Any archived assets in the search results will have a small 'archived' icon next to the asset code. When this icon is hovered over with the mouse, a hovertip will display the text "Archived by xxxx", where "xxxx" is the name of the user who archived the asset.
 
 *Reports*
 
