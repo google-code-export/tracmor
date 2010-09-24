@@ -1,0 +1,136 @@
+<?php
+/*
+ * Copyright (c)  2009, Tracmor, LLC
+ *
+ * This file is part of Tracmor.
+ *
+ * Tracmor is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tracmor is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tracmor; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+ 	
+	require('../includes/prepend.inc.php');		/* if you DO NOT have "includes/" in your include_path */
+	QApplication::Authenticate(7);
+	require_once(__FORMBASE_CLASSES__ . '/AuditListFormBase.class.php');
+	
+	class InventoryAuditViewForm extends QForm {
+		// Header Menu
+		protected $ctlHeaderMenu;
+		
+		// Shortcut Menu
+		protected $ctlShortcutMenu;
+		
+		// The view type radio button list
+		protected $rblDiscrepancy;
+		
+		// The Audit Datagrid
+		protected $dtgAudit;
+		
+		// The Audit Objects Array By AssetId
+		protected $objAssetArrayById;
+		
+		protected function Form_Create() {
+			// Create the Header Menu
+			$this->ctlHeaderMenu_Create();
+			$this->ctlShortcutMenu_Create();
+			$this->rblDiscrepancy_Create();
+			$this->dtgAudit_Create();
+		}
+		
+		// Create and Setup the Header Composite Control
+		protected function ctlHeaderMenu_Create() {
+			$this->ctlHeaderMenu = new QHeaderMenu($this);
+		}
+		
+		// Create and Setp the Shortcut Menu Composite Control
+  	protected function ctlShortcutMenu_Create() {
+  		$this->ctlShortcutMenu = new QShortcutMenu($this);
+  	}
+  	
+  	// Create and Setup the Discrepancy Radio Button List
+  	protected function rblDiscrepancy_Create() {
+  		$this->rblDiscrepancy = new QRadioButtonList($this);
+			$this->rblDiscrepancy->AddItem(new QListItem('View Discrepancies Only', 'discrepancies', true));
+			$this->rblDiscrepancy->AddItem(new QListItem('View All', 'all'));
+			$this->rblDiscrepancy->AddAction(new QChangeEvent(), new QAjaxAction('rblDiscrepancy_Change'));
+  	}
+  	
+  	// Create and Setup the Asset Audit List
+  	protected function dtgAudit_Create() {
+  		$this->dtgAudit = new QDataGrid($this);
+			$this->dtgAudit->Name = 'inventory_audit_list';
+  		$this->dtgAudit->CellPadding = 5;
+  		$this->dtgAudit->CellSpacing = 0;
+  		$this->dtgAudit->CssClass = "datagrid";
+  		
+  		// Enable Pagination, and set to 1000 items per page
+      $objPaginator = new QPaginator($this->dtgAudit);
+      $this->dtgAudit->Paginator = $objPaginator;
+      $this->dtgAudit->ItemsPerPage = 1000;
+  		
+  		$this->dtgAudit->UseAjax = true;
+  		// Allow for column toggling
+      $this->dtgAudit->ShowColumnToggle = true;
+      // Allow for CSV Export
+      $this->dtgAudit->ShowExportCsv = true;
+      
+  		$this->dtgAudit->AddColumn(new QDataGridColumnExt('Location', '<?= $_ITEM->Location->ShortDescription ?>',
+  			array('OrderByClause' => QQ::OrderBy(QQN::AuditScan()->LocationId), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AuditScan()->LocationId, false))));
+  		$this->dtgAudit->AddColumn(new QDataGridColumnExt('Inventory Code', '<?= $_ITEM->InventoryModel->InventoryModelCode ?>',
+  			array('OrderByClause' => QQ::OrderBy(AuditScan::AuditScanExt()->InventoryModel->InventoryModelCode), 'ReverseOrderByClause' => QQ::OrderBy(AuditScan::AuditScanExt()->InventoryModel->InventoryModelCode, false))));
+  		$this->dtgAudit->AddColumn(new QDataGridColumnExt('Inventory Model', '<?= $_ITEM->InventoryModel->ShortDescription ?>',
+  			array('OrderByClause' => QQ::OrderBy(AuditScan::AuditScanExt()->InventoryModel->ShortDescription), 'ReverseOrderByClause' => QQ::OrderBy(AuditScan::AuditScanExt()->InventoryModel->ShortDescription, false))));
+  		$this->dtgAudit->AddColumn(new QDataGridColumnExt('PDT Count', '<?= $_ITEM->Count ?>',
+  			array('OrderByClause' => QQ::OrderBy(QQN::AuditScan()->Count), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AuditScan()->Count, false))));
+  		$this->dtgAudit->AddColumn(new QDataGridColumnExt('System Count', '<?= $_ITEM->SystemCount ?>',
+  			array('OrderByClause' => QQ::OrderBy(QQN::AuditScan()->SystemCount), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AuditScan()->SystemCount, false))));
+  		
+  		$this->dtgAudit->SetDataBinder('dtgAudit_Bind');
+  	}
+  	
+  	protected function dtgAudit_Bind() {
+  	  if ($this->rblDiscrepancy->SelectedValue == 'discrepancies') {
+  	    $objConditions = QQ::AndCondition(QQ::Equal(QQN::AuditScan()->AuditId, $_GET['intAuditId']), QQ::NotEqual(QQN::AuditScan()->Count, QQN::AuditScan()->SystemCount));
+  	  }
+  	  else {
+  	    $objConditions = QQ::Equal(QQN::AuditScan()->AuditId, $_GET['intAuditId']);
+  	  }
+  	  
+  	  $objAuditScanArray = AuditScan::QueryArray($objConditions, QQ::Clause(QQ::Expand(QQN::AuditScan()->Location), $this->dtgAudit->OrderByClause));
+  	  
+      if ($objAuditScanArray) {
+      	foreach ($objAuditScanArray as $objAuditScan) {
+      		$objAuditScan->InventoryModel = InventoryModel::QuerySingle(QQ::Equal(QQN::InventoryModel()->InventoryModelId, $objAuditScan->EntityId), QQ::Clause(QQ::Expand(QQN::InventoryModel()->InventoryModelCode)));
+      	}
+      }
+      
+      if (count($objAuditScanArray) == 0) {
+      	$this->dtgAudit->ShowHeader = false;
+      }
+      else {
+      	$this->dtgAudit->ShowHeader = true;
+      }
+      
+  	  $this->dtgAudit->DataSource = $objAuditScanArray;
+  	}
+  	
+  	protected function rblDiscrepancy_Change($strFormId, $strControlId, $strParameter) {
+  		// This is where you will toggle between showing only the discrepancies in the datagrid or showing all of the audit scans.
+  		$this->dtgAudit->MarkAsModified();
+  	}
+  	
+	}
+	
+	// Go ahead and run this form object to generate the page
+	InventoryAuditViewForm::Run('InventoryAuditViewForm', 'inventory_audit_view.tpl.php');
+?>
