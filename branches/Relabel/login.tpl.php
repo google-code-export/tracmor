@@ -22,7 +22,6 @@
 	include(__INCLUDES__ . '/header.inc.php');
 	$this->RenderBegin();
 ?>
-
 <table cellpadding="0" cellspacing="0" width="100%" style="background:url(../images/main_header_bg.png); background-repeat: repeat-x;">
 	<tr style="height:40px">
 		<td>
@@ -38,12 +37,7 @@
 		<td>
 			<table cellpadding="0" cellspacing="0" style="width:100%;">
 				<tr style="height:24px">
-					<td style="width:15px;background-image: url(../images/emptyTabSpace.gif); background-repeat:repeat-x;"><img src="../images/empty.gif" width="15" height="1"></td>
-						<!--echo(sprintf('<td class="%sleft"><img src="../images/empty.gif" width="12" height="1"></td>', $strTabClass));
-						echo(sprintf('<td class="%smiddle"><a href="%s" class="%slabel" border="0">%s</a></td>', $strTabClass, $link, $strTabClass, ucfirst($objRoleModule->Module->ShortDescription)));
-						echo(sprintf('<td class="%sright"><img src="../images/empty.gif" width="12" height="1"></td>', $strTabClass));
-						echo('<td class="empty_tab_space"><img src="../images/empty.gif" width="1" height="1"></td>');-->
-	
+					<td style="width:15px;background-image: url(../images/emptyTabSpace.gif); background-repeat:repeat-x;"><img src="../images/empty.gif" width="15" height="1"></td>	
 					<td class="empty_tab_space" width="100%">&nbsp;</td>
 				</tr>
 			</table>
@@ -53,11 +47,8 @@
 		<td>
 			<table cellpadding="0" cellspacing="0">
 				<tr>
-					<td width="100%" style="padding-left:10px;font-family:arial;color:#FFFFFF;font-size:12px;font-weight:bold;">Welcome</td>
-					<td><img src="./images/searchSeparator.gif"></td><!--
-					<td style="padding-left:5;padding-right:5;font-family:arial;color:#FFFFFF;font-size:12;font-weight:bold;"></td>
-					<td style="padding-left:5;padding-right:5;"><input type="text" style="border:1px solid #000000;font-size:12;font-family:arial;"></td>
-					<td style="padding-right:15;"><input type="submit" value="Go" style="font-family:arial;font-size:12;font-weight:bold;"></td>-->
+					<td width="100%" style="padding-left:10px;font-family:arial;color:#FFFFFF;font-size:12px;font-weight:bold;"><?php _t('Welcome'); ?></td>
+					<td><img src="./images/searchSeparator.gif"></td>
 				</tr>
 			</table>
 		</td>
@@ -72,7 +63,6 @@
 		<td></td>
 	</tr>
 </table>
-
 <table width="100%">
 	<tr height="300">
 		<td align="center">
@@ -90,7 +80,7 @@
 								<td style="text-align:center;">
 									<table style="text-align:center;padding:8px">
 										<tr style="height:40px;">
-											<td style="vertical-align:top;color:#615c5c;" class="item_label">Please enter your username and password.</td>
+											<td style="vertical-align:top;color:#615c5c;" class="item_label"><?php _t('Please enter your username and password.'); ?></td>
 										</tr>
 										<tr>
 											<td><?php $this->txtUsername->RenderDesignedNoRequired(); ?></td>
@@ -123,6 +113,5 @@
 		</td>
 	</tr>
 </table>
-
 <?php $this->RenderEnd(); ?>
 <?php require_once(__INCLUDES__ . '/footer.inc.php'); ?>

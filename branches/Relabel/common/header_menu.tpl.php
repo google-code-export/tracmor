@@ -19,9 +19,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 ?>
-
 	<body marginwidth="0" marginheight="0" topmargin="0" leftmargin="0">
-	
 	<table width="100%" cellpadding="0" cellspacing="0">
 		<tr>
 			<td>
@@ -31,7 +29,7 @@
 							<table cellpadding="0" cellspacing="0" style="width:100%;">
 								<tr>
 									<td style="padding-left:15px;padding-top:6px;"><?php $this->lblLogo->Render(); ?></td>
-									<td style="padding-right:10px;text-align:right;" align="right" width="100%" valign="top"><a href="http://www.tracmor.com/whatsnew.html" target="_blank" style="color:#214478;font-family:arial;font-size:12px;text-decoration:none;font-weight:bold;">New Features</a>&nbsp;&nbsp;|&nbsp;&nbsp;<?php $this->lblSignOut->Render(); ?></td>
+									<td style="padding-right:10px;text-align:right;" align="right" width="100%" valign="top"><?php $this->lblSignOut->Render(); ?></td>
 								</tr>
 							</table>
 						</td>
@@ -82,31 +80,19 @@
 						<td>
 							<table cellpadding="0" cellspacing="0">
 								<tr>
-									<?php 
-										echo(sprintf('<td width="100%%" style="padding-left:10px;font-family:arial;color:#FFFFFF;font-size:12px;font-weight:bold;">Welcome %s</td>', QApplication::$objUserAccount->FirstName));
-									?>
-									<td><?php $this->objParentObject->DefaultWaitIcon->Render(); ?></td>
-									<!--<td><img src="../images/searchSeparator.gif"></td>-->
-									<!--<td style="padding-left:5px;padding-right:5px;font-family:arial;color:#FFFFFF;font-size:12px;font-weight:bold;">Search</td>
-									<td style="padding-left:5px;padding-right:5px;"><input type="text" style="border:1px solid #000000;font-size:12px;font-family:arial;"></td>
-									<td style="padding-right:15px;"><input type="submit" value="Go" style="font-family:arial;font-size:12px;font-weight:bold;"></td>-->
+									<td width="100%%" style="padding-left:10px;font-family:arial;color:#FFFFFF;font-size:12px;font-weight:bold;">
+										<?php echo(sprintf(QApplication::Translate('Welcome %s'), QApplication::$objUserAccount->FirstName)); ?>
+									</td>
+									<td>
+										<?php $this->objParentObject->DefaultWaitIcon->Render(); ?>
+									</td>
 								</tr>
 							</table>
 						</td>
 					</tr>
 					<tr style="height:1px;background-color:#787878;">
 						<td></td>
-					</tr>					
-					<!--<tr style="height:20px;background-color:#dddddd">
-						<td>
-							<table cellpadding="0" cellspacing="0">
-								<tr>
-									<td style="padding-left:10px;font-family:arial;color:#555555;font-size:12px;font-weight:bold;">Last Viewed:</td>
-									<td></td>
-								</tr>
-							</table>
-						</td>
-					</tr>-->
+					</tr>
 				</table>
 			</td>
 		</tr>

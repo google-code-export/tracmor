@@ -37,21 +37,21 @@
 		
 		protected function txtUsername_Create() {
 			$this->txtUsername = new QTextBox($this);
-			$this->txtUsername->Name = 'Username:';
+			$this->txtUsername->Name = QApplication::Translate('Username:');
 			$this->txtUsername->Required = true;
-			QApplication::ExecuteJavaScript(sprintf("document.getElementById('%s').focus()", $this->txtUsername->ControlId));
+			$this->txtUsername->Focus();
 		}
 		
 		protected function txtPassword_Create() {
 			$this->txtPassword = new QTextBox($this);
-			$this->txtPassword->Name = 'Password:';
+			$this->txtPassword->Name = QApplication::Translate('Password:');
 			$this->txtPassword->Required = true;
 			$this->txtPassword->TextMode = QTextMode::Password;
 		}
 		
 		protected function btnLogin_Create() {
 			$this->btnLogin = new QButton($this);
-			$this->btnLogin->Text = 'Login';
+			$this->btnLogin->Text = QApplication::Translate('Login');
 			$this->btnLogin->PrimaryButton = true;
 			$this->btnLogin->AddAction(new QClickEvent(), new QAjaxAction('btnLogin_Click'));
 		}
@@ -76,7 +76,7 @@
 			$strPassword = $this->txtPassword->Text;
 
 			$objUserAccount = UserAccount::LoadByUsername($strUsername);
-			$errorMessage = 'Invalid username or password.';
+			$errorMessage = QApplication::Translate('Invalid username or password.');
 			
 			// Check if that username exists
 			if (!$objUserAccount) {
@@ -133,4 +133,3 @@
 	
 	LoginForm::Run('LoginForm', QApplication::$DocumentRoot . __SUBDIRECTORY__ . '/login.tpl.php');
 ?>
-	

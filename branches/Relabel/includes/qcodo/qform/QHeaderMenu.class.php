@@ -18,9 +18,6 @@
  * along with Tracmor; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-
-<?php
 
 class QHeaderMenu extends QControl {
 
@@ -95,7 +92,7 @@ class QHeaderMenu extends QControl {
 	
 	protected function lblSignOut_Create() {
 		$this->lblSignOut = new QLabel($this);
-		$this->lblSignOut->Text = 'Sign Out';
+		$this->lblSignOut->Text = QApplication::Translate('Sign Out');
 		$this->lblSignOut->AddAction(new QClickEvent(), new QServerControlAction($this, 'lblSignOut_Click'));
 		$this->lblSignOut->ForeColor = '#555555';
 		$this->lblSignOut->FontNames = 'arial';

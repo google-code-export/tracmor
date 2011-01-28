@@ -18,9 +18,6 @@
  * along with Tracmor; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-
-<?php
 
 class QAdvancedSearchComposite extends QControl {
 
@@ -144,7 +141,7 @@ class QAdvancedSearchComposite extends QControl {
 
   protected function txtAssetModelCode_Create() {
     $this->txtAssetModelCode = new QTextBox($this);
-		$this->txtAssetModelCode->Name = 'Asset Model Code';
+		$this->txtAssetModelCode->Name = QApplication::Translate('Model Number');
     $this->txtAssetModelCode->AddAction(new QEnterKeyEvent(), new QServerControlAction($this->objParentObject, 'btnSearch_Click'));
     $this->txtAssetModelCode->AddAction(new QEnterKeyEvent(), new QTerminateAction());
     // if ($this->objParentObject instanceof AssetListFormBase) {
@@ -158,9 +155,9 @@ class QAdvancedSearchComposite extends QControl {
 
   protected function lstReservedBy_Create() {
   	$this->lstReservedBy = new QListBox($this);
-  	$this->lstReservedBy->Name = 'Reserved By';
-  	$this->lstReservedBy->AddItem('- Select One -', null, true);
-  	$this->lstReservedBy->AddItem('Any', 'any');
+  	$this->lstReservedBy->Name = QApplication::Translate('Reserved By');
+  	$this->lstReservedBy->AddItem(QApplication::Translate('- Select One -'), null, true);
+  	$this->lstReservedBy->AddItem(QApplication::Translate('Any'), 'any');
   	$objUserAccountArray = UserAccount::LoadAllAsCustomArray('username');
   	if ($objUserAccountArray) {
   		foreach ($objUserAccountArray as $arrUserAccount) {
@@ -171,9 +168,9 @@ class QAdvancedSearchComposite extends QControl {
 
   protected function lstCheckedOutBy_Create() {
   	$this->lstCheckedOutBy = new QListBox($this);
-  	$this->lstCheckedOutBy->Name = 'Checked Out By';
-		$this->lstCheckedOutBy->AddItem('- Select One -', null, true);
-  	$this->lstCheckedOutBy->AddItem('Any', 'any');
+  	$this->lstCheckedOutBy->Name = QApplication::Translate('Checked Out By');
+		$this->lstCheckedOutBy->AddItem(QApplication::Translate('- Select One -'), null, true);
+  	$this->lstCheckedOutBy->AddItem(QApplication::Translate('Any'), 'any');
   	$objUserAccountArray = UserAccount::LoadAllAsCustomArray('username');
   	if ($objUserAccountArray) {
   		foreach ($objUserAccountArray as $arrUserAccount) {
@@ -184,24 +181,24 @@ class QAdvancedSearchComposite extends QControl {
 
   protected function chkInclude_Create() {
     $this->chkArchived = new QCheckBox($this);
-  	$this->chkArchived->Name = 'Include Archived';
+  	$this->chkArchived->Name = QApplication::Translate('Include Archived');
   	$this->chkArchived->AddAction(new QEnterKeyEvent(), new QServerControlAction($this->objParentObject, 'btnSearch_Click'));
   	$this->chkArchived->AddAction(new QEnterKeyEvent(), new QTerminateAction());
 
   	$this->chkIncludeTBR = new QCheckBox($this);
-  	$this->chkIncludeTBR->Name = 'Include To Be Received';
+  	$this->chkIncludeTBR->Name = QApplication::Translate('Include To Be Received');
   	$this->chkIncludeTBR->AddAction(new QEnterKeyEvent(), new QServerControlAction($this->objParentObject, 'btnSearch_Click'));
   	$this->chkIncludeTBR->AddAction(new QEnterKeyEvent(), new QTerminateAction());
 
   	$this->chkIncludeShipped = new QCheckBox($this);
-  	$this->chkIncludeShipped->Name = 'Include Shipped';
+  	$this->chkIncludeShipped->Name = QApplication::Translate('Include Shipped');
   	$this->chkIncludeShipped->AddAction(new QEnterKeyEvent(), new QServerControlAction($this->objParentObject, 'btnSearch_Click'));
   	$this->chkIncludeShipped->AddAction(new QEnterKeyEvent(), new QTerminateAction());
   }
 
   protected function txtFromCompany_Create() {
 	$this->txtFromCompany = new QTextBox($this);
-	$this->txtFromCompany->Name = 'Ship FromCompany';
+	$this->txtFromCompany->Name = QApplication::Translate('Sender Company');
 	$this->txtFromCompany->AddAction(new QEnterKeyEvent(), new QServerAction('btnSearch_Click'));
 	$this->txtFromCompany->AddAction(new QEnterKeyEvent(), new QTerminateAction());
 	$this->txtFromCompany->Visible = (get_class($this->objParentObject) == 'ShipmentListForm') ? true : false;
@@ -209,7 +206,7 @@ class QAdvancedSearchComposite extends QControl {
 
   protected function txtFromContact_Create() {
 	$this->txtFromContact = new QTextBox($this);
-	$this->txtFromContact->Name = 'Ship From Contact';
+	$this->txtFromContact->Name = QApplication::Translate('Sender Contact');
 	$this->txtFromContact->AddAction(new QEnterKeyEvent(), new QServerAction('btnSearch_Click'));
 	$this->txtFromContact->AddAction(new QEnterKeyEvent(), new QTerminateAction());
 	$this->txtFromContact->Visible = (get_class($this->objParentObject) == 'ShipmentListForm') ? true : false;
@@ -217,7 +214,7 @@ class QAdvancedSearchComposite extends QControl {
 
   protected function txtTrackingNumber_Create() {
 		$this->txtTrackingNumber = new QTextBox($this);
-		$this->txtTrackingNumber->Name = 'Tracking Number';
+		$this->txtTrackingNumber->Name = QApplication::Translate('Tracking Number');
 		$this->txtTrackingNumber->AddAction(new QEnterKeyEvent(), new QServerAction('btnSearch_Click'));
 		$this->txtTrackingNumber->AddAction(new QEnterKeyEvent(), new QTerminateAction());
 		$this->txtTrackingNumber->Visible = (get_class($this->objParentObject) == 'ShipmentListForm') ? true : false;
@@ -225,8 +222,8 @@ class QAdvancedSearchComposite extends QControl {
 
   protected function lstCourier_Create() {
   	$this->lstCourier = new QListBox($this);
-  	$this->lstCourier->Name = 'Courier';
-  	$this->lstCourier->AddItem('- Select One -', null, true);
+  	$this->lstCourier->Name = QApplication::Translate('Courier');
+  	$this->lstCourier->AddItem(QApplication::Translate('- Select One -'), null, true);
   	$objCourierArray = Courier::LoadAll();
   	if ($objCourierArray) {
   		foreach ($objCourierArray as $objCourier) {
@@ -237,7 +234,7 @@ class QAdvancedSearchComposite extends QControl {
 
   protected function txtNote_Create() {
   	$this->txtNote = new QTextBox($this);
-  	$this->txtNote->Name = 'Note';
+  	$this->txtNote->Name = QApplication::Translate('Note');
   	$this->txtNote->AddAction(new QEnterKeyEvent(), new QServerAction('btnSearch_Click'));
   	$this->txtNote->AddAction(new QEnterKeyEvent(), new QTerminateAction());
   	$this->txtNote->Visible = (get_class($this->objParentObject) == 'ShipmentListForm' || get_class($this->objParentObject) == 'ReceiptListForm') ? true : false;
@@ -245,7 +242,7 @@ class QAdvancedSearchComposite extends QControl {
 
   protected function chkAttachment_Create() {
   	$this->chkAttachment = new QCheckBox($this);
-  	$this->chkAttachment->Name = 'Attachment(s)';
+  	$this->chkAttachment->Name = QApplication::Translate('Attachment(s)');
   	if ($this->objParentControl) {
   	  $this->chkAttachment->AddAction(new QEnterKeyEvent(), new QServerControlAction($this->objParentControl, 'btnSearch_Click'));
   	}

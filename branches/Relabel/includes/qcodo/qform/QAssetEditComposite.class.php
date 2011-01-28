@@ -18,9 +18,6 @@
  * along with Tracmor; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-
-<?php
 
 require(__DOCROOT__ . __SUBDIRECTORY__ . '/assets/AssetModelEditPanel.class.php');
 
@@ -245,7 +242,7 @@ class QAssetEditComposite extends QControl {
 	// Create the Asset Code text input
 	protected function txtAssetCode_Create() {
 		$this->txtAssetCode = new QTextBox($this);
-		$this->txtAssetCode->Name = 'Asset Code';
+		$this->txtAssetCode->Name = QApplication::Translate('Asset Code');
 		$this->txtAssetCode->Required = true;
 		$this->txtAssetCode->CausesValidation = true;
 		$this->txtAssetCode->AddAction(new QEnterKeyEvent(), new QAjaxControlAction($this, 'btnSave_Click'));
@@ -257,7 +254,7 @@ class QAssetEditComposite extends QControl {
 	// Create the Asset Code text input
 	protected function txtParentAssetCode_Create() {
 		$this->txtParentAssetCode = new QTextBox($this);
-		$this->txtParentAssetCode->Name = 'Parent Asset';
+		$this->txtParentAssetCode->Name = QApplication::Translate('Parent Asset');
 		$this->txtParentAssetCode->Width = '230';
 		$this->txtParentAssetCode->Required = false;
 		$this->txtParentAssetCode->CausesValidation = true;
@@ -283,7 +280,7 @@ class QAssetEditComposite extends QControl {
 		$this->lstAssetModel->Name = 'Asset Model';
 		$this->lstAssetModel->Required = true;
 		if (!$this->blnEditMode)
-			$this->lstAssetModel->AddItem('- Select One -', null);
+			$this->lstAssetModel->AddItem(QApplication::Translate('- Select One -'), null);
 		$assetModelArray = AssetModel::LoadAllIntoArray();
 		if ($assetModelArray) foreach ($assetModelArray as $assetModel) {
 			$objListItem = new QListItem($assetModel['short_description'], $assetModel['asset_model_id']);
@@ -300,7 +297,7 @@ class QAssetEditComposite extends QControl {
 	// Create and Setup lstLocation
 	protected function lstLocation_Create() {
 		$this->lstLocation = new QListBox($this);
-		$this->lstLocation->Name = 'Location';
+		$this->lstLocation->Name = QApplication::Translate('Location');
 		$this->lstLocation->Required = true;
 		$this->lstLocation->AddItem('- Select One -', null);
 		$objLocationArray = Location::LoadAllLocations(true,false,'short_description');
@@ -332,32 +329,32 @@ class QAssetEditComposite extends QControl {
 	// Create the Location label
 	protected function lblLocation_Create() {
 		$this->lblLocation = new QLabel($this);
-		$this->lblLocation->Name = 'Location';
+		$this->lblLocation->Name = QApplication::Translate('Location');
 	}
 
 	// Create the Asset Model Code label
 	protected function lblAssetModelCode_Create() {
 		// It is better to use late-binding here because we are only getting one record
 		$this->lblAssetModelCode = new QLabel($this);
-		$this->lblAssetModelCode->Name = 'Asset Model Code';
+		$this->lblAssetModelCode->Name = QApplication::Translate('Model Number');
 	}
 
 	// Create the Manufacturer Label
 	protected function lblManufacturer_Create() {
 		$this->lblManufacturer = new QLabel($this);
-		$this->lblManufacturer->Name = 'Manufacturer';
+		$this->lblManufacturer->Name = QApplication::Translate('Manufacturer');
 	}
 
 	// Create the Category Label
 	protected function lblCategory_Create() {
 		$this->lblCategory = new QLabel($this);
-		$this->lblCategory->Name = 'Category';
+		$this->lblCategory->Name = QApplication::Translate('Category');
 	}
 
 	// Create the Reserved By Label
 	protected function lblReservedBy_Create() {
 		$this->lblReservedBy = new QLabel($this);
-		$this->lblReservedBy->Name = 'Reserved By';
+		$this->lblReservedBy->Name = QApplication::Translate('Reserved By');
 		if ($this->objAsset->ReservedFlag) {
 			$objUserAccount = $this->objAsset->GetLastTransactionUser();
 			$this->lblReservedBy->Text = $objUserAccount->__toString();
@@ -371,13 +368,13 @@ class QAssetEditComposite extends QControl {
 	// Create the Asset Code label
 	protected function lblAssetCode_Create() {
 		$this->lblAssetCode = new QLabel($this);
-		$this->lblAssetCode->Name = 'Asset Code';
+		$this->lblAssetCode->Name = QApplication::Translate('Asset Tag');
 	}
 
 	// Create the Creation Date Label
 	protected function lblCreationDate_Create() {
 		$this->lblCreationDate = new QLabel($this);
-		$this->lblCreationDate->Name = 'Date Created';
+		$this->lblCreationDate->Name = QApplication::Translate('Date Created');
 		if ($this->blnEditMode) {
 			$this->lblCreationDate->Text = $this->objAsset->CreationDate->PHPDate('Y-m-d H:i:s') . ' by ' . $this->objAsset->CreatedByObject->__toStringFullName();
 		}
@@ -389,7 +386,7 @@ class QAssetEditComposite extends QControl {
 	// Create the Modified Date Label
 	protected function lblModifiedDate_Create() {
 		$this->lblModifiedDate = new QLabel($this);
-		$this->lblModifiedDate->Name = 'Last Modified';
+		$this->lblModifiedDate->Name = QApplication::Translate('Last Modified');
 		if (!$this->blnEditMode) {
 			$this->lblModifiedDate->Visible = false;
 		}
@@ -399,7 +396,7 @@ class QAssetEditComposite extends QControl {
 		$this->lblNewAssetModel = new QLabel($this);
 		$this->lblNewAssetModel->HtmlEntities = false;
 		$this->lblNewAssetModel->Text = '<img src="../images/add.png">';
-		$this->lblNewAssetModel->ToolTip = "New Asset Model";
+		$this->lblNewAssetModel->ToolTip = QApplication::Translate('New Model');
 		$this->lblNewAssetModel->CssClass = "add_icon";
 	  $this->lblNewAssetModel->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'lblNewAssetModel_Click'));
 	}
@@ -407,7 +404,7 @@ class QAssetEditComposite extends QControl {
 	// Create the Parent Asset Label
 	protected function lblParentAssetCode_Create() {
 		$this->lblParentAssetCode = new QLabel($this);
-		$this->lblParentAssetCode->Name = 'Parent Asset';
+		$this->lblParentAssetCode->Name = QApplication::Translate('Parent Asset');
 		$this->lblParentAssetCode->HtmlEntities = false;
 	}
 
@@ -439,9 +436,9 @@ class QAssetEditComposite extends QControl {
 	protected function btnDelete_Create() {
 		$this->btnDelete = new QButton($this);
 		$this->btnDelete->Text = 'Delete';
-		$this->btnDelete->AddAction(new QClickEvent(), new QConfirmAction('Are you SURE you want to DELETE this Asset?'));
+		$this->btnDelete->AddAction(new QClickEvent(), new QConfirmAction(QApplication::Translate('Are you SURE you want to DELETE this Asset?')));
 		$this->btnDelete->AddAction(new QClickEvent(), new QServerControlAction($this, 'btnDelete_Click'));
-		$this->btnDelete->AddAction(new QEnterKeyEvent(), new QConfirmAction('Are you SURE you want to DELETE this Asset?'));
+		$this->btnDelete->AddAction(new QEnterKeyEvent(), new QConfirmAction(QApplication::Translate('Are you SURE you want to DELETE this Asset?')));
 		$this->btnDelete->AddAction(new QEnterKeyEvent(), new QServerControlAction($this, 'btnDelete_Click'));
 		$this->btnDelete->AddAction(new QEnterKeyEvent(), new QTerminateAction());
 		$this->btnDelete->CausesValidation = false;
@@ -454,7 +451,7 @@ class QAssetEditComposite extends QControl {
   // Setup Save Button
 	protected function btnSave_Create() {
 		$this->btnSave = new QButton($this);
-		$this->btnSave->Text = 'Save';
+		$this->btnSave->Text = QApplication::Translate('Save');
 		$this->btnSave->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnSave_Click'));
 		$this->btnSave->AddAction(new QEnterKeyEvent(), new QAjaxControlAction($this, 'btnSave_Click'));
 		$this->btnSave->AddAction(new QEnterKeyEvent(), new QTerminateAction());
@@ -465,7 +462,7 @@ class QAssetEditComposite extends QControl {
 	// Setup Cancel Button
 	protected function btnCancel_Create() {
 		$this->btnCancel = new QButton($this);
-		$this->btnCancel->Text = 'Cancel';
+		$this->btnCancel->Text = QApplication::Translate('Cancel');
 		$this->btnCancel->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnCancel_Click'));
 		$this->btnCancel->AddAction(new QEnterKeyEvent(), new QAjaxControlAction($this, 'btnCancel_Click'));
 		$this->btnCancel->AddAction(new QEnterKeyEvent(), new QTerminateAction());
@@ -475,7 +472,7 @@ class QAssetEditComposite extends QControl {
 	// Setup Edit Button
 	protected function btnEdit_Create() {
 	  $this->btnEdit = new QButton($this);
-    $this->btnEdit->Text = 'Edit';
+    $this->btnEdit->Text = QApplication::Translate('Edit');
     $this->btnEdit->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnEdit_Click'));
     $this->btnEdit->AddAction(new QEnterKeyEvent(), new QAjaxControlAction($this, 'btnEdit_Click'));
     $this->btnEdit->AddAction(new QEnterKeyEvent(), new QTerminateAction());
@@ -486,7 +483,7 @@ class QAssetEditComposite extends QControl {
 	// Setup Clone Button
 	protected function btnClone_Create() {
 		$this->btnClone = new QButton($this);
-		$this->btnClone->Text = 'Clone';
+		$this->btnClone->Text = QApplication::Translate('Clone');
 		$this->btnClone->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnClone_Click'));
 		$this->btnClone->AddAction(new QEnterKeyEvent(), new QAjaxControlAction($this, 'btnClone_Click'));
 		$this->btnClone->AddAction(new QEnterKeyEvent(), new QTerminateAction());
@@ -508,7 +505,7 @@ class QAssetEditComposite extends QControl {
 	// Setup Move Button
 	protected function btnMove_Create() {
 		$this->btnMove = new QButton($this);
-		$this->btnMove->Text = 'Move';
+		$this->btnMove->Text = QApplication::Translate('Move');
 		$this->btnMove->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnMove_Click'));
 		$this->btnMove->AddAction(new QEnterKeyEvent(), new QAjaxControlAction($this, 'btnMove_Click'));
 		$this->btnMove->AddAction(new QEnterKeyEvent(), new QTerminateAction());
@@ -520,7 +517,7 @@ class QAssetEditComposite extends QControl {
 	// Setup Checkout Button
 	protected function btnCheckOut_Create() {
 		$this->btnCheckOut = new QButton($this);
-		$this->btnCheckOut->Text = 'Check Out';
+		$this->btnCheckOut->Text = QApplication::Translate('Check Out');
 		$this->btnCheckOut->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnCheckOut_Click'));
 		$this->btnCheckOut->AddAction(new QEnterKeyEvent(), new QAjaxControlAction($this, 'btnCheckOut_Click'));
 		$this->btnCheckOut->AddAction(new QEnterKeyEvent(), new QTerminateAction());
@@ -536,7 +533,7 @@ class QAssetEditComposite extends QControl {
 	// Setup Check In Button
 	protected function btnCheckIn_Create() {
 		$this->btnCheckIn = new QButton($this);
-		$this->btnCheckIn->Text = 'Check In';
+		$this->btnCheckIn->Text = QApplication::Translate('Check In');
 		$this->btnCheckIn->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnCheckIn_Click'));
 		$this->btnCheckIn->AddAction(new QEnterKeyEvent(), new QAjaxControlAction($this, 'btnCheckIn_Click'));
 		$this->btnCheckIn->AddAction(new QEnterKeyEvent(), new QTerminateAction());
@@ -553,7 +550,7 @@ class QAssetEditComposite extends QControl {
 	// Setup Reserve Button
 	protected function btnReserve_Create() {
 		$this->btnReserve = new QButton($this);
-		$this->btnReserve->Text = 'Reserve';
+		$this->btnReserve->Text = QApplication::Translate('Reserve');
 		$this->btnReserve->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnReserve_Click'));
 		$this->btnReserve->AddAction(new QEnterKeyEvent(), new QAjaxControlAction($this, 'btnReserve_Click'));
 		$this->btnReserve->AddAction(new QEnterKeyEvent(), new QTerminateAction());
@@ -569,7 +566,7 @@ class QAssetEditComposite extends QControl {
 	// Setup Reserve Button
 	protected function btnUnreserve_Create() {
 		$this->btnUnreserve = new QButton($this);
-		$this->btnUnreserve->Text = 'Unreserve';
+		$this->btnUnreserve->Text = QApplication::Translate('Unreserve');
 		$this->btnUnreserve->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnUnreserve_Click'));
 		$this->btnUnreserve->AddAction(new QEnterKeyEvent(), new QAjaxControlAction($this, 'btnUnreserve_Click'));
 		$this->btnUnreserve->AddAction(new QEnterKeyEvent(), new QTerminateAction());
@@ -586,7 +583,7 @@ class QAssetEditComposite extends QControl {
 	// Setup Ship Button
 	protected function btnShip_Create() {
 		$this->btnShip = new QButton($this);
-		$this->btnShip->Text = 'Ship';
+		$this->btnShip->Text = QApplication::Translate('Ship');
 		$this->btnShip->AddAction(new QClickEvent(), new QServerControlAction($this, 'btnShip_Click'));
 		$this->btnShip->AddAction(new QEnterKeyEvent(), new QServerControlAction($this, 'btnShip_Click'));
 		$this->btnShip->AddAction(new QEnterKeyEvent(), new QTerminateAction());
@@ -615,11 +612,11 @@ class QAssetEditComposite extends QControl {
 			// Check if they have the ability to create a new Archivement
 			QApplication::AuthorizeControl(null, $this->btnArchive, 2, 5);
 			if ($this->objAsset->ArchivedFlag) {
-  		  $this->btnArchive->Text = 'Unarchive';
+  		  $this->btnArchive->Text = QApplication::Translate('Unarchive');
   		  RoleTransactionTypeAuthorization::AuthorizeControlByRoleTransactionType($this->objAsset, $this->btnArchive, 11);
   		}
   		else {
-  		  $this->btnArchive->Text = 'Archive';
+  		  $this->btnArchive->Text = QApplication::Translate('Archive');
   		  RoleTransactionTypeAuthorization::AuthorizeControlByRoleTransactionType($this->objAsset, $this->btnArchive, 10);
   		}
 		}
@@ -628,7 +625,7 @@ class QAssetEditComposite extends QControl {
 	// Setup Receive Button
 	protected function btnReceive_Create() {
 		$this->btnReceive = new QButton($this);
-		$this->btnReceive->Text = 'Receive';
+		$this->btnReceive->Text = QApplication::Translate('Receive');
 		$this->btnReceive->AddAction(new QClickEvent(), new QServerControlAction($this, 'btnReceive_Click'));
 		$this->btnReceive->AddAction(new QEnterKeyEvent(), new QServerControlAction($this, 'btnReceive_Click'));
 		$this->btnReceive->AddAction(new QEnterKeyEvent(), new QTerminateAction());
@@ -659,11 +656,11 @@ class QAssetEditComposite extends QControl {
     $this->dtgAssetTransaction->Paginator = $objPaginator;
     $this->dtgAssetTransaction->ItemsPerPage = 20;
 
-    $this->dtgAssetTransaction->AddColumn(new QDataGridColumn('Transaction Type', '<?= $_ITEM->Transaction->__toStringWithLink() ?>', array('OrderByClause' => QQ::OrderBy(QQN::AssetTransaction()->Transaction->TransactionType->ShortDescription), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AssetTransaction()->Transaction->TransactionType->ShortDescription, false), 'CssClass' => "dtg_column", 'HtmlEntities' => false)));
-    $this->dtgAssetTransaction->AddColumn(new QDataGridColumn('From', '<?= $_ITEM->__toStringSourceLocation() ?>', array('OrderByClause' => QQ::OrderBy(QQN::AssetTransaction()->SourceLocation->ShortDescription), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AssetTransaction()->SourceLocation->ShortDescription, false), 'CssClass' => "dtg_column")));
-    $this->dtgAssetTransaction->AddColumn(new QDataGridColumn('To', '<?= $_ITEM->__toStringDestinationLocation() ?>', array('OrderByClause' => QQ::Orderby(QQN::AssetTransaction()->DestinationLocation->ShortDescription), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AssetTransaction()->DestinationLocation->ShortDescription, false), 'CssClass' => "dtg_column")));
-    $this->dtgAssetTransaction->AddColumn(new QDataGridColumn('User', '<?= $_ITEM->Transaction->CreatedByObject->__toStringFullName() ?>', array('OrderByClause' => QQ::Orderby(QQN::AssetTransaction()->CreatedByObject->LastName), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AssetTransaction()->CreatedByObject->LastName, false), 'CssClass' => "dtg_column")));
-    $this->dtgAssetTransaction->AddColumn(new QDataGridColumn('Date', '<?= $_ITEM->Transaction->CreationDate->PHPDate("Y-m-d H:i:s"); ?>', array('OrderByClause' => QQ::OrderBy(QQN::AssetTransaction()->Transaction->CreationDate), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AssetTransaction()->Transaction->CreationDate, false), 'CssClass' => "dtg_column")));
+    $this->dtgAssetTransaction->AddColumn(new QDataGridColumn(QApplication::Translate('Transaction Type'), '<?= $_ITEM->Transaction->__toStringWithLink() ?>', array('OrderByClause' => QQ::OrderBy(QQN::AssetTransaction()->Transaction->TransactionType->ShortDescription), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AssetTransaction()->Transaction->TransactionType->ShortDescription, false), 'CssClass' => "dtg_column", 'HtmlEntities' => false)));
+    $this->dtgAssetTransaction->AddColumn(new QDataGridColumn(QApplication::Translate('From'), '<?= $_ITEM->__toStringSourceLocation() ?>', array('OrderByClause' => QQ::OrderBy(QQN::AssetTransaction()->SourceLocation->ShortDescription), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AssetTransaction()->SourceLocation->ShortDescription, false), 'CssClass' => "dtg_column")));
+    $this->dtgAssetTransaction->AddColumn(new QDataGridColumn(QApplication::Translate('To'), '<?= $_ITEM->__toStringDestinationLocation() ?>', array('OrderByClause' => QQ::Orderby(QQN::AssetTransaction()->DestinationLocation->ShortDescription), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AssetTransaction()->DestinationLocation->ShortDescription, false), 'CssClass' => "dtg_column")));
+    $this->dtgAssetTransaction->AddColumn(new QDataGridColumn(QApplication::Translate('User'), '<?= $_ITEM->Transaction->CreatedByObject->__toStringFullName() ?>', array('OrderByClause' => QQ::Orderby(QQN::AssetTransaction()->CreatedByObject->LastName), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AssetTransaction()->CreatedByObject->LastName, false), 'CssClass' => "dtg_column")));
+    $this->dtgAssetTransaction->AddColumn(new QDataGridColumn(QApplication::Translate('Date'), '<?= $_ITEM->Transaction->CreationDate->PHPDate("Y-m-d H:i:s"); ?>', array('OrderByClause' => QQ::OrderBy(QQN::AssetTransaction()->Transaction->CreationDate), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AssetTransaction()->Transaction->CreationDate, false), 'CssClass' => "dtg_column")));
 
     $this->dtgAssetTransaction->SortColumnIndex = 4;
     $this->dtgAssetTransaction->SortDirection = 1;
@@ -685,7 +682,7 @@ class QAssetEditComposite extends QControl {
 	protected function lblShipmentReceipt_Create() {
 		$this->lblShipmentReceipt = new QLabel($this);
 		$this->lblShipmentReceipt->Name = 'Shipping/Receiving History';
-		$this->lblShipmentReceipt->Text = 'Shipping/Receiving History';
+		$this->lblShipmentReceipt->Text = QApplication::Translate('Shipping/Receiving History');
 		$this->lblShipmentReceipt->CssClass = 'title';
 	}
 
@@ -701,15 +698,15 @@ class QAssetEditComposite extends QControl {
 		$this->dtgShipmentReceipt->Paginator = $objPaginator;
 		$this->dtgShipmentReceipt->ItemsPerPage = 20;
 
-		$this->dtgShipmentReceipt->AddColumn(new QDataGridColumn('Type', '<?= $_ITEM->Transaction->TransactionType->__toString() ?>', array('CssClass' => 'dtg_column', 'HtmlEntities' => false)));
-		$this->dtgShipmentReceipt->AddColumn(new QDataGridColumn('Number', '<?= $_ITEM->Transaction->ToStringNumberWithLink() ?> <?= $_ITEM->Transaction->ToStringHoverTips($_CONTROL); ?>', array('CssClass' => 'dtg_column', 'HtmlEntities' => false)));
-		$this->dtgShipmentReceipt->AddColumn(new QDataGridColumn('Company', '<?= $_ITEM->Transaction->ToStringCompany() ?>', array('CssClass' => 'dtg_column', 'HtmlEntities' => false)));
-		$this->dtgShipmentReceipt->AddColumn(new QDataGridColumn('Contact', '<?= $_ITEM->Transaction->ToStringContact() ?>', array('CssClass' => 'dtg_column', 'HtmlEntities' => false)));
-		$this->dtgShipmentReceipt->AddColumn(new QDataGridColumn('Scheduled By', '<?= $_ITEM->Transaction->CreatedByObject->__toString() ?>', array('CssClass' => 'dtg_column', 'HtmlEntities' => false)));
-		$this->dtgShipmentReceipt->AddColumn(new QDataGridColumn('Status', '<?= $_ITEM->Transaction->ToStringStatusStyled() ?>', array('CssClass' => 'dtg_column', 'HtmlEntities' => false)));
-		$this->dtgShipmentReceipt->AddColumn(new QDataGridColumn('Tracking', '<?= $_ITEM->Transaction->ToStringTrackingNumber() ?>', array('CssClass' => 'dtg_column', 'HtmlEntities' => false)));
-		$this->dtgShipmentReceipt->AddColumn(new QDataGridColumn('Creation Date', '<?= $_ITEM->Transaction->CreationDate ?>', array('CssClass' => 'dtg_column', 'HtmlEntities' => false)));
-		$this->dtgShipmentReceipt->AddColumn(new QDataGridColumn('Ship/Receive Date', '<?= $_CONTROL->objParentControl->getShipReceiveDate($_ITEM) ?>', array('CssClass' => 'dtg_column', 'HtmlEntities' => false)));
+		$this->dtgShipmentReceipt->AddColumn(new QDataGridColumn(QApplication::Translate('Type'), '<?= $_ITEM->Transaction->TransactionType->__toString() ?>', array('CssClass' => 'dtg_column', 'HtmlEntities' => false)));
+		$this->dtgShipmentReceipt->AddColumn(new QDataGridColumn(QApplication::Translate('Number'), '<?= $_ITEM->Transaction->ToStringNumberWithLink() ?> <?= $_ITEM->Transaction->ToStringHoverTips($_CONTROL); ?>', array('CssClass' => 'dtg_column', 'HtmlEntities' => false)));
+		$this->dtgShipmentReceipt->AddColumn(new QDataGridColumn(QApplication::Translate('Company'), '<?= $_ITEM->Transaction->ToStringCompany() ?>', array('CssClass' => 'dtg_column', 'HtmlEntities' => false)));
+		$this->dtgShipmentReceipt->AddColumn(new QDataGridColumn(QApplication::Translate('Contact'), '<?= $_ITEM->Transaction->ToStringContact() ?>', array('CssClass' => 'dtg_column', 'HtmlEntities' => false)));
+		$this->dtgShipmentReceipt->AddColumn(new QDataGridColumn(QApplication::Translate('Scheduled By'), '<?= $_ITEM->Transaction->CreatedByObject->__toString() ?>', array('CssClass' => 'dtg_column', 'HtmlEntities' => false)));
+		$this->dtgShipmentReceipt->AddColumn(new QDataGridColumn(QApplication::Translate('Status'), '<?= $_ITEM->Transaction->ToStringStatusStyled() ?>', array('CssClass' => 'dtg_column', 'HtmlEntities' => false)));
+		$this->dtgShipmentReceipt->AddColumn(new QDataGridColumn(QApplication::Translate('Tracking'), '<?= $_ITEM->Transaction->ToStringTrackingNumber() ?>', array('CssClass' => 'dtg_column', 'HtmlEntities' => false)));
+		$this->dtgShipmentReceipt->AddColumn(new QDataGridColumn(QApplication::Translate('Creation Date'), '<?= $_ITEM->Transaction->CreationDate ?>', array('CssClass' => 'dtg_column', 'HtmlEntities' => false)));
+		$this->dtgShipmentReceipt->AddColumn(new QDataGridColumn(QApplication::Translate('Ship/Receive Date'), '<?= $_CONTROL->objParentControl->getShipReceiveDate($_ITEM) ?>', array('CssClass' => 'dtg_column', 'HtmlEntities' => false)));
 
 		//$this->dtgShipmentReceipt->SortColumnIndex = 4;
     //$this->dtgShipmentReceipt->SortDirection = 1;
@@ -738,13 +735,13 @@ class QAssetEditComposite extends QControl {
 					$this->lblAssetModelCode->Text = $objAssetModel->AssetModelCode;
 				}
 				else {
-					$this->lblAssetModelCode->Text = 'None';
+					$this->lblAssetModelCode->Text = QApplication::Translate('None');
 				}
 				if ($objAssetModel->Manufacturer) {
 					$this->lblManufacturer->Text = $objAssetModel->Manufacturer->ShortDescription;
 				}
 				else {
-					$this->lblManufactuerer->Text = 'None';
+					$this->lblManufactuerer->Text = QApplication::Translate('None');
 				}
 				if ($objAssetModel->Category) {
 					$this->lblCategory->Text = $objAssetModel->Category->ShortDescription;
@@ -807,7 +804,7 @@ class QAssetEditComposite extends QControl {
 				if (!$this->blnEditMode) {
 					if ($intAssetLimit && Asset::CountActive() >= $intAssetLimit) {
 						$blnError = true;
-						$this->txtAssetCode->Warning = "Your asset limit has been reached.";
+						$this->txtAssetCode->Warning = QApplication::Translate('Your asset limit has been reached.');
 					}
 				}
 
@@ -815,7 +812,7 @@ class QAssetEditComposite extends QControl {
 				$AssetDuplicate = Asset::LoadByAssetCode($this->txtAssetCode->Text);
 				if ($AssetDuplicate) {
 					$blnError = true;
-					$this->txtAssetCode->Warning = "That asset code is already in use. Please try another.";
+					$this->txtAssetCode->Warning = QApplication::Translate('That asset code is already in use. Please try another.');
 				}
 
 				if (!$blnError && $this->txtParentAssetCode->Text) {
@@ -823,7 +820,7 @@ class QAssetEditComposite extends QControl {
     				$objParentAsset = Asset::LoadByAssetCode($this->txtParentAssetCode->Text);
     				if (!$objParentAsset) {
     				  $blnError = true;
-    					$this->txtParentAssetCode->Warning = "That asset code does not exist. Please try another.";
+    					$this->txtParentAssetCode->Warning = QApplication::Translate('That asset code does not exist. Please try another.');
     				}
     				else {
     				  $this->objAsset->ParentAssetId = $objParentAsset->AssetId;
@@ -831,7 +828,7 @@ class QAssetEditComposite extends QControl {
 				  }
 				  else {
 				    $blnError = true;
-    				$this->txtParentAssetCode->Warning = "Parent asset code must not be the same as asset code. Please try another.";
+    				$this->txtParentAssetCode->Warning = QApplication::Translate('Parent asset code must not be the same as asset code. Please try another.');
 				  }
 				}
 				else {
@@ -869,7 +866,7 @@ class QAssetEditComposite extends QControl {
 				$AssetDuplicate = Asset::LoadByAssetCode($this->txtAssetCode->Text);
 				if ($AssetDuplicate && $AssetDuplicate->AssetId != $this->objAsset->AssetId) {
 					$blnError = true;
-					$this->txtAssetCode->Warning = "That asset code is already in use. Please try another.";
+					$this->txtAssetCode->Warning = QApplication::Translate('That asset code is already in use. Please try another.');
 				}
 
 				if (!$blnError && $this->txtParentAssetCode->Text) {
@@ -878,7 +875,7 @@ class QAssetEditComposite extends QControl {
 				  foreach ($arrChildAsset as $objChildAsset) {
 				    if ($objChildAsset->AssetCode == $this->txtParentAssetCode->Text) {
 				      $blnError = true;
-				      $this->txtParentAssetCode->Warning = "Parent asset code is already a child of this asset. Please try another.";
+				      $this->txtParentAssetCode->Warning = QApplication::Translate('Parent asset code is already a child of this asset. Please try another.');
 				      break;
 				    }
 				  }
@@ -887,7 +884,7 @@ class QAssetEditComposite extends QControl {
       				$objParentAsset = Asset::LoadByAssetCode($this->txtParentAssetCode->Text);
       				if (!$objParentAsset) {
       				  $blnError = true;
-      					$this->txtParentAssetCode->Warning = "That asset code does not exist. Please try another.";
+      					$this->txtParentAssetCode->Warning = QApplication::Translate('That asset code does not exist. Please try another.');
       				}
       				else {
       				  $this->objAsset->ParentAssetId = $objParentAsset->AssetId;
@@ -895,7 +892,7 @@ class QAssetEditComposite extends QControl {
   				  }
   				  else {
   				    $blnError = true;
-      				$this->txtParentAssetCode->Warning = "Parent asset code must not be the same as asset code. Please try another.";
+      				$this->txtParentAssetCode->Warning = QApplication::Translate('Parent asset code must not be the same as asset code. Please try another.');
   				  }
 				  }
 				}
@@ -955,7 +952,7 @@ class QAssetEditComposite extends QControl {
 			$objDatabase->TransactionRollback();
 
 			// Output the error
-			$this->btnCancel->Warning = sprintf('This asset has been updated by another user. You must <a href="asset_edit.php?intAssetId=%s">Refresh</a> to edit this Asset.', $this->objAsset->AssetId);
+			$this->btnCancel->Warning = sprintf(QApplication::Translate('This asset has been updated by another user. You must <a href="asset_edit.php?intAssetId=%s">Refresh</a> to edit this Asset.'), $this->objAsset->AssetId);
 		}
 	}
 
@@ -988,7 +985,7 @@ class QAssetEditComposite extends QControl {
 		// Load custom fields for asset with values from original asset
 		$this->objAsset->objCustomFieldArray = CustomField::LoadObjCustomFieldArray(1, $this->blnEditMode);
 		// Set the asset_code to null because they are unique
-		$this->lblHeaderAssetCode->Text = 'New Asset';
+		$this->lblHeaderAssetCode->Text = QApplication::Translate('New Asset');
 		$this->txtAssetCode->Text = '';
 
 		$this->dtgAssetTransaction->MarkAsModified();
@@ -1018,7 +1015,7 @@ class QAssetEditComposite extends QControl {
 		}
 		catch (QDatabaseException $objExc) {
 			if ($objExc->ErrorNumber == 1451) {
-				$this->btnDelete->Warning = 'This asset cannot be deleted because it is associated with one or more transactions.';
+				$this->btnDelete->Warning = QApplication::Translate('This asset cannot be deleted because it is associated with one or more transactions.');
 			}
 			else {
 				throw new QDatabaseException();
@@ -1301,7 +1298,7 @@ class QAssetEditComposite extends QControl {
 		  $this->lblParentAssetCode->Text = "";
 		}
 		if ($this->objAsset->ModifiedDate) {
-			$this->lblModifiedDate->Text = $this->objAsset->ModifiedDate . ' by ' . $this->objAsset->ModifiedByObject->__toStringFullName();
+			$this->lblModifiedDate->Text = $this->objAsset->ModifiedDate . QApplication::Translate(' by ') . $this->objAsset->ModifiedByObject->__toStringFullName();
 		}
 
 		// Update custom labels

@@ -19,51 +19,49 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-
-
 	// Build array of all fields to display
 	$arrAdvancedSearchFields = array();
 
 	// Show Asset Model Code for Asset Search
 	if (get_class($this->objParentObject) == 'AssetListForm' || get_class($this->objParentObject) == 'QAssetSearchComposite') {
-		$arrAdvancedSearchFields[] = array('name' => 'Asset Model Code:',  'value' => $this->txtAssetModelCode->RenderWithError(false));
-		$arrAdvancedSearchFields[] = array('name' => 'Reserved By:', 'value' => $this->lstReservedBy->RenderWithError(false));
-		$arrAdvancedSearchFields[] = array('name' => 'Checked Out By:', 'value' => $this->lstCheckedOutBy->RenderWithError(false));
+		$arrAdvancedSearchFields[] = array('name' => QApplication::Translate('Model Number:'),  'value' => $this->txtAssetModelCode->RenderWithError(false));
+		$arrAdvancedSearchFields[] = array('name' => QApplication::Translate('Reserved By:'), 'value' => $this->lstReservedBy->RenderWithError(false));
+		$arrAdvancedSearchFields[] = array('name' => QApplication::Translate('Checked Out By:'), 'value' => $this->lstCheckedOutBy->RenderWithError(false));
 	}
 
 	// Show Tracking Number for Shipment Search
 	if (get_class($this->objParentObject) == 'ShipmentListForm') {
-		$arrAdvancedSearchFields[] = array('name' => 'Sender Company:', 'value' => $this->txtFromCompany->RenderWithError(false));
-		$arrAdvancedSearchFields[] = array('name' => 'Sender Contact:', 'value' => $this->txtFromContact->RenderWithError(false));
-		$arrAdvancedSearchFields[] = array('name' => 'Tracking Number:', 'value' => $this->txtTrackingNumber->RenderWithError(false));
-		$arrAdvancedSearchFields[] = array('name' => 'Courier:', 'value' => $this->lstCourier->RenderWithError(false));
-		$arrAdvancedSearchFields[] = array('name' => 'Note:', 'value' => $this->txtNote->RenderWithError(false));
-		$arrAdvancedSearchFields[] = array('name' => 'Ship Date:', 'value' => $this->dtpShipmentDate->RenderWithError(false));
+		$arrAdvancedSearchFields[] = array('name' => QApplication::Translate('Sender Company:'), 'value' => $this->txtFromCompany->RenderWithError(false));
+		$arrAdvancedSearchFields[] = array('name' => QApplication::Translate('Sender Contact:'), 'value' => $this->txtFromContact->RenderWithError(false));
+		$arrAdvancedSearchFields[] = array('name' => QApplication::Translate('Tracking Number:'), 'value' => $this->txtTrackingNumber->RenderWithError(false));
+		$arrAdvancedSearchFields[] = array('name' => QApplication::Translate('Courier:'), 'value' => $this->lstCourier->RenderWithError(false));
+		$arrAdvancedSearchFields[] = array('name' => QApplication::Translate('Note:'), 'value' => $this->txtNote->RenderWithError(false));
+		$arrAdvancedSearchFields[] = array('name' => QApplication::Translate('Ship Date:'), 'value' => $this->dtpShipmentDate->RenderWithError(false));
 	}
 
 	if (get_class($this->objParentObject) == 'ReceiptListForm') {
-		$arrAdvancedSearchFields[] = array('name' => 'Note:', 'value' => $this->txtNote->RenderWithError(false));
-		$arrAdvancedSearchFields[] = array('name' => 'Date Due:', 'value' => $this->dtpDueDate->RenderWithError(false));
-		$arrAdvancedSearchFields[] = array('name' => 'Date Received:', 'value' => $this->dtpReceiptDate->RenderWithError(false));
+		$arrAdvancedSearchFields[] = array('name' => QApplication::Translate('Note:'), 'value' => $this->txtNote->RenderWithError(false));
+		$arrAdvancedSearchFields[] = array('name' => QApplication::Translate('Date Due:'), 'value' => $this->dtpDueDate->RenderWithError(false));
+		$arrAdvancedSearchFields[] = array('name' => QApplication::Translate('Date Received:'), 'value' => $this->dtpReceiptDate->RenderWithError(false));
 	}
 
 	
 	if (get_class($this->objParentObject) == 'AssetListForm' || get_class($this->objParentObject) == 'QAssetSearchComposite') {
 		//$arrAdvancedSearchFields[] = array('name' => 'Date:',   'value' => $this->lstDateModified->RenderWithError(false));
 		//$arrAdvancedSearchFields[] = array('name' => '&nbsp;', 'value' => $this->lstModifiedCreated->RenderWithError(false));
-		$arrAdvancedSearchFields[] = array('name' => 'Date:',   'value' => $this->lstModifiedCreated->RenderWithError(false));
+		$arrAdvancedSearchFields[] = array('name' => QApplication::Translate('Date:'),   'value' => $this->lstModifiedCreated->RenderWithError(false));
 		$arrAdvancedSearchFields[] = array('name' => '&nbsp;', 'value' => $this->lstDateModified->RenderWithError(false));
 	} else {
-		$arrAdvancedSearchFields[] = array('name' => 'Date Modified:',   'value' => $this->lstDateModified->RenderWithError(false));
+		$arrAdvancedSearchFields[] = array('name' => QApplication::Translate('Date Modified:'),   'value' => $this->lstDateModified->RenderWithError(false));
 	}
 	$arrAdvancedSearchFields[] = array('name' => '&nbsp;', 'value' => $this->dtpDateModifiedFirst->RenderWithError(false));
 	$arrAdvancedSearchFields[] = array('name' => '&nbsp;', 'value' => $this->dtpDateModifiedLast->RenderWithError(false));
-	$arrAdvancedSearchFields[] = array('name' => 'Attachment(s)', 'value' => $this->chkAttachment->RenderWithError(false));
+	$arrAdvancedSearchFields[] = array('name' => QApplication::Translate('Attachment(s)'), 'value' => $this->chkAttachment->RenderWithError(false));
 
 	if (get_class($this->objParentObject) == 'AssetListForm' || get_class($this->objParentObject) == 'QAssetSearchComposite') {
-	   $arrAdvancedSearchFields[] = array('name' => 'Include Archived:', 'value' => $this->chkArchived->RenderWithError(false));
-	  $arrAdvancedSearchFields[] = array('name' => 'Include To Be Received:', 'value' => $this->chkIncludeTBR->RenderWithError(false));
-	  $arrAdvancedSearchFields[] = array('name' => 'Include Shipped:', 'value' => $this->chkIncludeShipped->RenderWithError(false));
+	   $arrAdvancedSearchFields[] = array('name' => QApplication::Translate('Include Archived:'), 'value' => $this->chkArchived->RenderWithError(false));
+	  $arrAdvancedSearchFields[] = array('name' => QApplication::Translate('Include To Be Received:'), 'value' => $this->chkIncludeTBR->RenderWithError(false));
+	  $arrAdvancedSearchFields[] = array('name' => QApplication::Translate('Include Shipped:'), 'value' => $this->chkIncludeShipped->RenderWithError(false));
 	}
 
 	// Custom Fields
