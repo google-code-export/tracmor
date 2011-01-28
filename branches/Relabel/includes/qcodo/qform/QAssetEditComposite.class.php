@@ -242,7 +242,7 @@ class QAssetEditComposite extends QControl {
 	// Create the Asset Code text input
 	protected function txtAssetCode_Create() {
 		$this->txtAssetCode = new QTextBox($this);
-		$this->txtAssetCode->Name = QApplication::Translate('Asset Code');
+		$this->txtAssetCode->Name = QApplication::Translate('Asset Tag');
 		$this->txtAssetCode->Required = true;
 		$this->txtAssetCode->CausesValidation = true;
 		$this->txtAssetCode->AddAction(new QEnterKeyEvent(), new QAjaxControlAction($this, 'btnSave_Click'));
