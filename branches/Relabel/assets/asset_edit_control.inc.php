@@ -28,27 +28,27 @@
 	// Asset Model
 
 		if (!$this->blnEditMode){
-			$arrAssetFields[] = array('name' => 'Asset Model:',  'value' => $this->lstAssetModel->RenderWithError(false) . '&nbsp;' . $this->lblNewAssetModel->Render(false));
+			$arrAssetFields[] = array('name' => QApplication::Translate('Model:'),  'value' => $this->lstAssetModel->RenderWithError(false) . '&nbsp;' . $this->lblNewAssetModel->Render(false));
 		}
 		else{
-			$arrAssetFields[] = array('name' => 'Asset Model:',  'value' => $this->lstAssetModel->Render(false) . $this->lblNewAssetModel->Render(false) . $this->lblAssetModel->Render(false));
+			$arrAssetFields[] = array('name' => QApplication::Translate('Model:'),  'value' => $this->lstAssetModel->Render(false) . $this->lblNewAssetModel->Render(false) . $this->lblAssetModel->Render(false));
 		}
 
-		$arrAssetFields[] = array('name' => 'Asset Code:',   'value' => $this->txtAssetCode->RenderWithError(false) . $this->chkAutoGenerateAssetCode->Render(false) . $this->lblAssetCode->Render(false));
+		$arrAssetFields[] = array('name' => QApplication::Translate('Asset Tag:'),   'value' => $this->txtAssetCode->RenderWithError(false) . $this->chkAutoGenerateAssetCode->Render(false) . $this->lblAssetCode->Render(false));
 
-		$arrAssetFields[] = array('name' => 'Category:',     'value' => $this->lblCategory->Render(false));
-		$arrAssetFields[] = array('name' => 'Manufacturer:', 'value' => $this->lblManufacturer->Render(false));
-		$arrAssetFields[] = array('name' => 'Asset Model Code:',  'value' => $this->lblAssetModelCode->Render(false));
+		$arrAssetFields[] = array('name' => QApplication::Translate('Category:'),     'value' => $this->lblCategory->Render(false));
+		$arrAssetFields[] = array('name' => QApplication::Translate('Manufacturer:'), 'value' => $this->lblManufacturer->Render(false));
+		$arrAssetFields[] = array('name' => QApplication::Translate('Model Number:'),  'value' => $this->lblAssetModelCode->Render(false));
 		if (!$this->blnEditMode) {
-			$arrAssetFields[] = array('name' => 'Location:',     'value' => $this->lstLocation->RenderWithError(false));
+			$arrAssetFields[] = array('name' => QApplication::Translate('Location:'),     'value' => $this->lstLocation->RenderWithError(false));
 		}
 		else {
-			$arrAssetFields[] = array('name' => 'Location:', 'value' => $this->lblLocation->RenderWithError(false));
+			$arrAssetFields[] = array('name' => QApplication::Translate('Location:'), 'value' => $this->lblLocation->RenderWithError(false));
 		}
 
 		// Only display 'Reserved By' if the asset is reserved
 		if ($this->lblReservedBy->Visible) {
-			$arrAssetFields[] = array('name' => 'Reserved By:', 'value' => $this->lblReservedBy->Render(false));
+			$arrAssetFields[] = array('name' => QApplication::Translate('Reserved By:'), 'value' => $this->lblReservedBy->Render(false));
 		}
 
 	// Custom Fields
@@ -59,17 +59,16 @@
 		}
 	}
 
-	$arrAssetFields[] = array('name' => 'Parent Asset:', 'value' => $this->lblParentAssetCode->Render(false) . $this->txtParentAssetCode->RenderWithError(false) . $this->lblIconParentAssetCode->Render(false));
+	$arrAssetFields[] = array('name' => QApplication::Translate('Parent Asset:'), 'value' => $this->lblParentAssetCode->Render(false) . $this->txtParentAssetCode->RenderWithError(false) . $this->lblIconParentAssetCode->Render(false));
 
 	// Display Metadata fields in Edit mode only
 	if ($this->blnEditMode) {
-		$arrAssetFields[] = array('name' => 'Date Created:', 'value' => $this->lblCreationDate->Render(false));
-		$arrAssetFields[] = array('name' => 'Date Modified:', 'value' => $this->lblModifiedDate->Render(false));
+		$arrAssetFields[] = array('name' => QApplication::Translate('Date Created:'), 'value' => $this->lblCreationDate->Render(false));
+		$arrAssetFields[] = array('name' => QApplication::Translate('Date Modified:'), 'value' => $this->lblModifiedDate->Render(false));
 	}
 
 ?>
-
-<div class="title">Assets: <?php $this->lblHeaderAssetCode->Render(); ?></div>
+<div class="title"><?php _t('Assets:'); ?> <?php $this->lblHeaderAssetCode->Render(); ?></div>
 <table class="datagrid" cellpadding="5" cellspacing="0" border="0" >
 	<tr>
 		<td class="record_header">
@@ -138,7 +137,7 @@ $this->pnlAttachments->Render();
 		$this->btnArchive->Render();
 		echo '<br class="item_divider">';
 		echo '<br class="item_divider">';
-		echo '<div class="title">Transactions</div>';
+		echo '<div class="title">' . QApplication::Translate('Transactions') . '</div>';
 		$this->dtgAssetTransaction->RenderWithError();
 	}
 ?>

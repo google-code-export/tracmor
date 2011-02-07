@@ -21,28 +21,16 @@
 
 	include('../includes/header.inc.php');
 	$this->RenderBegin();
-?>
-
-<?php 
 
 	if ($this->objTransaction->EntityQtypeId == EntityQtype::Asset) {
-		$strEntityType = 'Assets';
+		$strEntityType = QApplication::Translate('Assets');
 	} elseif ($this->objTransaction->EntityQtypeId == EntityQtype::Inventory) {
-		$strEntityType = 'Inventory';
+		$strEntityType = QApplication::Translate('Inventory');
 	}
-?>
 
-<!-- Begin Header Menu -->
-<?php 
 	$this->ctlHeaderMenu->Render();
-?>
-<!-- End Header Menu -->
-<!-- Begin Shortcut Menu -->
-<?php
 	$this->ctlShortcutMenu->Render();
 ?>
-<!-- End Shortcut Menu -->
-
 		</td>
 		<td>
 			<img src="../images/empty.gif" width="10">
@@ -54,15 +42,15 @@
 	
 	<table cellpadding="0" cellspacing="0">
 		<tr>
-			<td class="record_field_name">Date:</td>
+			<td class="record_field_name"><?php _t('Date:'); ?></td>
 			<td class="record_field_value"><?php $this->lblCreationDate->Render(); ?></td>
 		</tr>
 		<tr>
-			<td class="record_field_name">User: </td>
+			<td class="record_field_name"><?php _t('User:'); ?></td>
 			<td class="record_field_value"><?php $this->lblUser->Render(); ?></td>
 		</tr>
 		<tr>
-			<td class="record_field_name">Note:</td>
+			<td class="record_field_name"><?php _t('Note:'); ?></td>
 			<td class="record_field_value"><?php $this->lblNote->Render(); ?></td>
 		</tr>
 	</table>
@@ -72,9 +60,9 @@
 	<br class="item_divide" />
 	
 	<br class="item_divide" />
-	<a href="../assets/asset_list.php">Asset List</a>
+	<a href="../assets/asset_list.php"><?php _t('Asset List'); ?></a>
 	<br class="item_divide" />
-	<a href="../inventory/inventory_model_list.php">Inventory List</a>
+	<a href="../inventory/inventory_model_list.php"><?php _t('Inventory List'); ?></a>
 
 	<?php $this->RenderEnd() ?>		
 	</body>

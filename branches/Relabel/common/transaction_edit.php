@@ -91,21 +91,21 @@
 		// Create the creation date label
 		protected function lblCreationDate_Create() {
 			$this->lblCreationDate = new QLabel($this);
-			$this->lblCreationDate->Name = 'Date';
+			$this->lblCreationDate->Name = QApplication::Translate('Date');
 			$this->lblCreationDate->Text = $this->objTransaction->CreationDate->__toString(QDateTime::FormatIso);
 		}
 		
 		// Create the user label
 		protected function lblUser_Create() {
 			$this->lblUser = new QLabel($this);
-			$this->lblUser->Name = 'User';
+			$this->lblUser->Name = QApplication::Translate('User');
 			$this->lblUser->Text = $this->objTransaction->CreatedByObject->__toStringFullName();
 		}		
 		
 		// Create the note label
 		protected function lblNote_Create() {
 			$this->lblNote = new QLabel($this);
-			$this->lblNote->Name = 'Note';
+			$this->lblNote->Name = QApplication::Translate('Note');
 			$this->lblNote->Text = $this->objTransaction->Note;
 		}
 		
@@ -129,17 +129,17 @@
 	    // These datagrids are not sortable because they would need early expansion
 	    // Sorting is possible to implement but not worth the time right now
 	    if ($this->objTransaction->EntityQtypeId == EntityQtype::Asset) {
-		    $this->dtgEntity->AddColumn(new QDataGridColumn('Asset Code', '<?= $_ITEM->Asset->__toStringWithLink("bluelink") ?>', 'CssClass="dtg_column"', 'HtmlEntities="false"'));
-		    $this->dtgEntity->AddColumn(new QDataGridColumn('Model', '<?= $_ITEM->Asset->AssetModel->__toStringWithLink($_ITEM->Asset->AssetModel,"bluelink") ?>', 'Width=200', 'CssClass="dtg_column"', 'HtmlEntities="false"'));
-		    $this->dtgEntity->AddColumn(new QDataGridColumn('Source', '<?= $_ITEM->SourceLocation->__toString() ?>', 'CssClass="dtg_column"'));
-		    $this->dtgEntity->AddColumn(new QDataGridColumn('Destination', '<?= $_ITEM->DestinationLocation->__toString() ?>', 'CssClass="dtg_column"'));
+		    $this->dtgEntity->AddColumn(new QDataGridColumn(QApplication::Translate('Asset Tag'), '<?= $_ITEM->Asset->__toStringWithLink("bluelink") ?>', 'CssClass="dtg_column"', 'HtmlEntities="false"'));
+		    $this->dtgEntity->AddColumn(new QDataGridColumn(QApplication::Translate('Model'), '<?= $_ITEM->Asset->AssetModel->__toStringWithLink($_ITEM->Asset->AssetModel,"bluelink") ?>', 'Width=200', 'CssClass="dtg_column"', 'HtmlEntities="false"'));
+		    $this->dtgEntity->AddColumn(new QDataGridColumn(QApplication::Translate('Source'), '<?= $_ITEM->SourceLocation->__toString() ?>', 'CssClass="dtg_column"'));
+		    $this->dtgEntity->AddColumn(new QDataGridColumn(QApplication::Translate('Destination'), '<?= $_ITEM->DestinationLocation->__toString() ?>', 'CssClass="dtg_column"'));
 	    }
 	    elseif ($this->objTransaction->EntityQtypeId == EntityQtype::Inventory) {
-	    	$this->dtgEntity->AddColumn(new QDataGridColumn('Inventory Code', '<?= $_ITEM->InventoryLocation->InventoryModel->__toStringWithLink("bluelink") ?>', 'CssClass="dtg_column"', 'HtmlEntities="false"'));	    	
-	    	$this->dtgEntity->AddColumn(new QDataGridColumn('Inventory Model', '<?= $_ITEM->InventoryLocation->InventoryModel->ShortDescription ?>', 'CssClass="dtg_column"'));
-	    	$this->dtgEntity->AddColumn(new QDataGridColumn('Source', '<?= $_ITEM->SourceLocation->__toString() ?>', 'CssClass="dtg_column"'));
-	    	$this->dtgEntity->AddColumn(new QDataGridColumn('Destination', '<?= $_ITEM->DestinationLocation->__toString() ?>', 'CssClass="dtg_column"'));
-	    	$this->dtgEntity->AddColumn(new QDataGridColumn('Quantity', '<?= $_ITEM->Quantity ?>', 'CssClass="dtg_column"'));
+	    	$this->dtgEntity->AddColumn(new QDataGridColumn(QApplication::Translate('Inventory Code'), '<?= $_ITEM->InventoryLocation->InventoryModel->__toStringWithLink("bluelink") ?>', 'CssClass="dtg_column"', 'HtmlEntities="false"'));	    	
+	    	$this->dtgEntity->AddColumn(new QDataGridColumn(QApplication::Translate('Inventory Model'), '<?= $_ITEM->InventoryLocation->InventoryModel->ShortDescription ?>', 'CssClass="dtg_column"'));
+	    	$this->dtgEntity->AddColumn(new QDataGridColumn(QApplication::Translate('Source'), '<?= $_ITEM->SourceLocation->__toString() ?>', 'CssClass="dtg_column"'));
+	    	$this->dtgEntity->AddColumn(new QDataGridColumn(QApplication::Translate('Destination'), '<?= $_ITEM->DestinationLocation->__toString() ?>', 'CssClass="dtg_column"'));
+	    	$this->dtgEntity->AddColumn(new QDataGridColumn(QApplication::Translate('Quantity'), '<?= $_ITEM->Quantity ?>', 'CssClass="dtg_column"'));
 	    }
 	    
 	    $objStyle = $this->dtgEntity->RowStyle;

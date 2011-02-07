@@ -187,9 +187,9 @@
 
 	    $this->dtgChildAssets->AddColumn(new QDataGridColumnExt('<?=$_CONTROL->chkSelectAll_Render() ?>', '<?=$_CONTROL->chkSelected_Render($_ITEM->AssetId) ?>', 'CssClass="dtg_column"', 'HtmlEntities=false', 'Width=15px', 'Display=false'));
 	    $this->dtgChildAssets->AddColumn(new QDataGridColumn('&nbsp;', '<?= $_FORM->DisplayLockedImage($_ITEM->LinkedFlag) ?>', array('CssClass' => "dtg_column", 'Width' => "15px", 'HtmlEntities' => false)));
-	    $this->dtgChildAssets->AddColumn(new QDataGridColumn('Asset Code', '<?= $_ITEM->__toStringWithLink("bluelink") ?>', array('CssClass' => "dtg_column", 'Width' => "30%", 'HtmlEntities' => false)));
-	    $this->dtgChildAssets->AddColumn(new QDataGridColumn('Asset Model', '<?= $_ITEM->AssetModel->__toStringWithLink("bluelink") ?>', array('CssClass' => "dtg_column", 'Width' => "30%", 'HtmlEntities' => false)));
-	    $this->dtgChildAssets->AddColumn(new QDataGridColumn('Location', '<?= $_ITEM->Location->__toString() ?>', array('CssClass' => "dtg_column", 'Width' => "30%")));
+	    $this->dtgChildAssets->AddColumn(new QDataGridColumn(QApplication::Translate('Asset Tag'), '<?= $_ITEM->__toStringWithLink("bluelink") ?>', array('CssClass' => "dtg_column", 'Width' => "30%", 'HtmlEntities' => false)));
+	    $this->dtgChildAssets->AddColumn(new QDataGridColumn(QApplication::Translate('Model'), '<?= $_ITEM->AssetModel->__toStringWithLink("bluelink") ?>', array('CssClass' => "dtg_column", 'Width' => "30%", 'HtmlEntities' => false)));
+	    $this->dtgChildAssets->AddColumn(new QDataGridColumn(QApplication::Translate('Location'), '<?= $_ITEM->Location->__toString() ?>', array('CssClass' => "dtg_column", 'Width' => "30%")));
 
 	    //$this->dtgChildAssets->SortColumnIndex = 2;
 
@@ -354,10 +354,9 @@ CREATE FIELD METHODS
 
 		protected function lblChildAssets_Create() {
 		  $this->lblChildAssets = new QLabel($this);
-		  $this->lblChildAssets->Text = "Child Assets";
+		  $this->lblChildAssets->Text = QApplication::Translate('Child Assets');
 		  $this->lblChildAssets->CssClass = "title";
 		}
-
 
 		protected function ctlAssetSearchTool_Create() {
 		  $this->ctlAssetSearchTool = new QAssetSearchToolComposite($this);
@@ -365,19 +364,19 @@ CREATE FIELD METHODS
 
 		protected function btnChildAssetsRemove_Create() {
 		  $this->btnChildAssetsRemove = new QButton($this);
-		  $this->btnChildAssetsRemove->Text = "Remove";
+		  $this->btnChildAssetsRemove->Text = QApplication::Translate('Remove');
 		  $this->btnChildAssetsRemove->Enabled = false;
 		  $this->btnChildAssetsRemove->Display = false;
-		  $this->btnChildAssetsRemove->AddAction(new QClickEvent(), new QConfirmAction('Are you SURE you want to REMOVE this Asset?'));
-  		$this->btnChildAssetsRemove->AddAction(new QClickEvent(), new QAjaxAction('btnChildAssetsRemove_Click'));
-  		$this->btnChildAssetsRemove->AddAction(new QEnterKeyEvent(), new QConfirmAction('Are you SURE you want to REMOVE this Asset?'));
+		  $this->btnChildAssetsRemove->AddAction(new QClickEvent(), new QConfirmAction(QApplication::Translate('Are you SURE you want to REMOVE this Asset?')));
+		$this->btnChildAssetsRemove->AddAction(new QClickEvent(), new QAjaxAction('btnChildAssetsRemove_Click'));
+  		$this->btnChildAssetsRemove->AddAction(new QEnterKeyEvent(), new QConfirmAction(QApplication::Translate('Are you SURE you want to REMOVE this Asset?')));
   		$this->btnChildAssetsRemove->AddAction(new QEnterKeyEvent(), new QAjaxAction('btnChildAssetsRemove_Click'));
   		$this->btnChildAssetsRemove->AddAction(new QEnterKeyEvent(), new QTerminateAction());
 		}
 
 		protected function btnReassign_Create() {
 		  $this->btnReassign = new QButton($this);
-		  $this->btnReassign->Text = "Reassign";
+		  $this->btnReassign->Text = QApplication::Translate('Reassign');
 		  $this->btnReassign->Enabled = false;
 		  $this->btnReassign->Display = false;
 		  $this->btnReassign->AddAction(new QClickEvent(), new QAjaxAction('btnReassign_Click'));
@@ -387,7 +386,7 @@ CREATE FIELD METHODS
 
 		protected function btnLinkToParent_Create() {
 		  $this->btnLinkToParent = new QButton($this);
-		  $this->btnLinkToParent->Text = "Lock to Parent";
+		  $this->btnLinkToParent->Text = QApplication::Translate('Lock to Parent');
 		  $this->btnLinkToParent->Enabled = false;
 		  $this->btnLinkToParent->Display = false;
 		  $this->btnLinkToParent->AddAction(new QClickEvent(), new QAjaxAction('btnLinkToParent_Click'));
@@ -397,7 +396,7 @@ CREATE FIELD METHODS
 
 		protected function btnUnlink_Create() {
 		  $this->btnUnlink = new QButton($this);
-		  $this->btnUnlink->Text = "Unlock";
+		  $this->btnUnlink->Text = QApplication::Translate('Unlock');
 		  $this->btnUnlink->Enabled = false;
 		  $this->btnUnlink->Display = false;
 		  $this->btnUnlink->AddAction(new QClickEvent(), new QAjaxAction('btnUnlink_Click'));
@@ -411,10 +410,10 @@ CREATE FIELD METHODS
 		  $this->pnlAddChildAsset->Template = "asset_pnl_add_child_asset.tpl.php";
 
 		  $this->lblAssetCode = new QLabel($this->pnlAddChildAsset);
-		  $this->lblAssetCode->Text = "Asset Code:";
+		  $this->lblAssetCode->Text = QApplication::Translate('Asset Tag:');
 
 		  $this->btnAddChild = new QButton($this->pnlAddChildAsset);
-		  $this->btnAddChild->Text = "Add Child";
+		  $this->btnAddChild->Text = QApplication::Translate('Add Child');
 		  $this->btnAddChild->AddAction(new QClickEvent(), new QAjaxAction('btnAddChild_Click'));
 		  $this->btnAddChild->AddAction(new QEnterKeyEvent(), new QAjaxAction('btnAddChild_Click'));
 		  $this->btnAddChild->AddAction(new QEnterKeyEvent(), new QTerminateAction());
@@ -468,7 +467,7 @@ CREATE FIELD METHODS
           // Create the Remove button for this row in the DataGrid
           // Use ActionParameter to specify the ID of the asset
           $btnRemove = new QButton($this->ctlAssetTransact->dtgAssetTransact, $strControlId);
-          $btnRemove->Text = 'Remove';
+          $btnRemove->Text = QApplication::Translate('Remove');
           $btnRemove->ActionParameter = $objAsset->AssetId;
           $btnRemove->AddAction(new QClickEvent(), new QAjaxAction('btnRemove_Click'));
           $btnRemove->AddAction(new QEnterKeyEvent(), new QAjaxAction('btnRemove_Click'));
@@ -509,10 +508,10 @@ CREATE FIELD METHODS
   		  $objChildAsset = Asset::LoadByAssetCode($this->txtAddChild->Text);
   		  if ($objChildAsset) {
   		    if ($objChildAsset->ParentAssetId) {
-  		      $this->txtAddChild->Warning = "That asset code already have the parent asset code. Please try another.";
+  		      $this->txtAddChild->Warning = QApplication::Translate('That asset already has a parent. Please try another.');
   		    }
   		    elseif ($objChildAsset->AssetCode == $this->objAsset->AssetCode) {
-  		      $this->txtAddChild->Warning = "That asset code does not exist. Please try another.";
+  		      $this->txtAddChild->Warning = QApplication::Translate('That asset does not exist. Please try another.');
   		    }
   		    else {
   		      $objChildAsset->LinkedFlag = false;
@@ -524,7 +523,7 @@ CREATE FIELD METHODS
   		    }
   		  }
   		  else {
-  		    $this->txtAddChild->Warning = "That asset code does not exist. Please try another.";
+  		    $this->txtAddChild->Warning = QApplication::Translate('That asset does not exist. Please try another.');
   		  }
 		  }
 		  else {
@@ -538,7 +537,7 @@ CREATE FIELD METHODS
       if ($this->intDlgStatus) {
         $this->ctlAssetSearchTool->Refresh();
       }
-      $this->ctlAssetSearchTool->btnAssetSearchToolAdd->Text = "Add Selected";
+      $this->ctlAssetSearchTool->btnAssetSearchToolAdd->Text = QApplication::Translate('Add Selected');
       $this->ctlAssetSearchTool->dlgAssetSearchTool->ShowDialogBox();
       $this->intDlgStatus = 2; // Add Child
 		}
@@ -551,12 +550,12 @@ CREATE FIELD METHODS
         if ($this->intDlgStatus) {
           $this->ctlAssetSearchTool->Refresh();
         }
-        $this->ctlAssetSearchTool->btnAssetSearchToolAdd->Text = "Reassign";
+        $this->ctlAssetSearchTool->btnAssetSearchToolAdd->Text = QApplication::Translate('Reassign');
         $this->ctlAssetSearchTool->dlgAssetSearchTool->ShowDialogBox();
 		    $this->intDlgStatus = 1; // Reassign
 		  }
       else {
-        $this->btnUnlink->Warning = "No selected assets.";
+        $this->btnUnlink->Warning = QApplication::Translate('No selected assets.');
       }
 		}
 
@@ -588,7 +587,7 @@ CREATE FIELD METHODS
 		    }
 		  }
 		  else {
-		    $this->btnUnlink->Warning = "No selected assets.";
+		    $this->btnUnlink->Warning = QApplication::Translate('No selected assets.');
 		  }
 		}
 
@@ -608,16 +607,16 @@ CREATE FIELD METHODS
 		      $objAsset = $objNewChildAssetArray[$intAssetId];
 		      // Error checking
           if ($objAsset->LocationId != $this->objAsset->LocationId) {
-            $blnError = true;
-      		  $this->btnUnlink->Warning .= "The child asset (" . $objAsset->AssetCode . ") must be in the same location as the parent asset.<br />";
+              $blnError = true;
+			  $this->btnUnlink->Warning .= sprintf(QApplication::Translate('The child asset (%s) must be in the same location as the parent asset.'), $objAsset->AssetCode) . '<br />';
           }
           elseif ($objAsset->CheckedOutFlag || $objAsset->ReservedFlag || $objAsset->ArchivedFlag || $objAsset->LocationId == 2 && $objAsset->LocationId == 3 || $objAsset->LocationId == 5 || AssetTransaction::PendingTransaction($objAsset->AssetId)) {
       		  $blnError = true;
-      		  $this->btnUnlink->Warning .= "Child asset code (" . $objAsset->AssetCode . ") must not be currently Archived, Checked Out, Pending Shipment, Shipped/TBR, or Reserved.<br />";
+			  $this->btnUnlink->Warning .= sprintf(QApplication::Translate('The child asset (%s) must not be currently Archived, Checked Out, Pending Shipment, Shipped/TBR, or Reserved.'), $objAsset->AssetCode) . '<br />';
       		}
       		elseif ($this->objAsset->CheckedOutFlag || $this->objAsset->ReservedFlag || $this->objAsset->ArchivedFlag || $this->objAsset->LocationId == 2 && $this->objAsset->LocationId == 3 || $this->objAsset->LocationId == 5 || AssetTransaction::PendingTransaction($this->objAsset->AssetId)) {
       		  $blnError = true;
-      		  $this->btnUnlink->Warning .= "Parent asset code (" . $this->objAsset->AssetCode . ") must not be currently Archived, Checked Out, Pending Shipment, Shipped/TBR, or Reserved.<br />";
+			  $this->btnUnlink->Warning .= sprintf(QApplication::Translate('The parent asset (%s) must not be currently Archived, Checked Out, Pending Shipment, Shipped/TBR, or Reserved.'), $this->objAsset->AssetCode) . '<br />';
       		}
       		else {
       		  $objAsset->LinkedFlag = true;
@@ -633,7 +632,7 @@ CREATE FIELD METHODS
 		    $this->UncheckAllItems();
 		  }
 		  else {
-		    $this->btnUnlink->Warning = "No selected assets.";
+		    $this->btnUnlink->Warning = QApplication::Translate('No selected assets.');
 		  }
 		}
 
@@ -664,10 +663,10 @@ CREATE FIELD METHODS
         case '1' :
           $intSelectedAssetId = $this->ctlAssetSearchTool->ctlAssetSearch->dtgAsset->GetSelected("AssetId");
           if (count($intSelectedAssetId) > 1) {
-            $this->ctlAssetSearchTool->lblWarning->Text = "You must select only one parent asset.";
+            $this->ctlAssetSearchTool->lblWarning->Text = QApplication::Translate('You must select only one parent asset.');
           }
           elseif (count($intSelectedAssetId) != 1) {
-            $this->ctlAssetSearchTool->lblWarning->Text = "No selected assets.";
+            $this->ctlAssetSearchTool->lblWarning->Text = QApplication::Translate('No selected assets.');
           }
           else {
             if ($objAsset = Asset::LoadByAssetId($intSelectedAssetId[0])) {
@@ -690,7 +689,7 @@ CREATE FIELD METHODS
                   unset($objNewChildAssetArray[$intAssetId]);
                 }
                 else{
-                  $this->ctlAssetSearchTool->lblWarning->Text = "Parent and child asset codes cannot be the same.";
+                  $this->ctlAssetSearchTool->lblWarning->Text = QApplication::Translate('Parent and child asset tags cannot be the same.');
                   $blnError = true;
                 }
               }
@@ -721,7 +720,7 @@ CREATE FIELD METHODS
             $intSelectedAssetCount++;
             $objNewChildAsset = Asset::LoadByAssetId($intAssetId);
             if ($objNewChildAsset && $objNewChildAsset->ParentAssetId) {
-    		      $this->ctlAssetSearchTool->lblWarning->Text .= "Asset code (" . $objNewChildAsset->AssetCode . ") already have the parent asset code. Please try another.<br />";
+    		      $this->ctlAssetSearchTool->lblWarning->Text .= sprintf(QApplication::Translate('That asset (%s) already has a parent. Please try another.'), $objNewChildAsset->AssetCode) . '<br />';
     		      $blnError = true;
             }
             elseif ($objNewChildAsset->AssetCode != $this->objAsset->AssetCode) {
@@ -730,12 +729,12 @@ CREATE FIELD METHODS
               $arrCheckedAssets[] = $objNewChildAsset;
             }
             else {
-              $this->ctlAssetSearchTool->lblWarning->Text .= "Asset code (" . $objNewChildAsset->AssetCode . ") must not be the same as asset code.<br />";
+              $this->ctlAssetSearchTool->lblWarning->Text .= QApplication::Translate('Parent and child asset tags cannot be the same.') . '<br />';
               $blnError = true;
             }
           }
           if ($intSelectedAssetCount == 0) {
-            $this->ctlAssetSearchTool->lblWarning->Text .= "No selected assets.<br />";
+            $this->ctlAssetSearchTool->lblWarning->Text .= QApplication::Translate('No selected assets.') . '<br />';
           }
           elseif (!$blnError) {
             foreach ($arrCheckedAssets as $objAsset) {
@@ -750,18 +749,18 @@ CREATE FIELD METHODS
         case '3' :
           $intSelectedAssetId = $this->ctlAssetSearchTool->ctlAssetSearch->dtgAsset->GetSelected("AssetId");
           if (count($intSelectedAssetId) > 1) {
-            $this->ctlAssetSearchTool->lblWarning->Text = "You must select only one parent asset.";
+            $this->ctlAssetSearchTool->lblWarning->Text = QApplication::Translate('You must select only one parent asset.');
           }
           elseif (count($intSelectedAssetId) != 1) {
-            $this->ctlAssetSearchTool->lblWarning->Text = "No selected assets.";
+            $this->ctlAssetSearchTool->lblWarning->Text = QApplication::Translate('No selected assets.');
           }
           else {
             if (!($objParentAsset = Asset::LoadByAssetId($intSelectedAssetId[0]))) {
-              $this->ctlAssetSearchTool->lblWarning->Text = "That asset code does not exist. Please try another.";
+              $this->ctlAssetSearchTool->lblWarning->Text = QApplication::Translate('That asset does not exist. Please try another.');
 
             }
             elseif ($objParentAsset->AssetId == $this->objAsset->AssetId) {
-        			$this->ctlAssetSearchTool->lblWarning->Text = "Parent asset code must not be the same as asset code. Please try another.";
+        			$this->ctlAssetSearchTool->lblWarning->Text = QApplication::Translate('Parent and child asset tags cannot be the same.');
             }
             else {
               $this->ctlAssetEdit->txtParentAssetCode->Text = $objParentAsset->AssetCode;
@@ -770,7 +769,7 @@ CREATE FIELD METHODS
           }
           break;
         default :
-          $this->ctlAssetSearchTool->lblWarning->Text = "Error: unknown action";
+          $this->ctlAssetSearchTool->lblWarning->Text = QApplication::Translate('Error: unknown action');
           break;
       }
 
@@ -872,7 +871,7 @@ CREATE FIELD METHODS
       if ($this->intDlgStatus) {
         $this->ctlAssetSearchTool->Refresh();
       }
-      $this->ctlAssetSearchTool->btnAssetSearchToolAdd->Text = "Add Parent Asset";
+      $this->ctlAssetSearchTool->btnAssetSearchToolAdd->Text = QApplication::Translate('Add Parent Asset');
       $this->ctlAssetSearchTool->dlgAssetSearchTool->ShowDialogBox();
 		  $this->intDlgStatus = 3; // Adding the Parent Asset Code
 		}
