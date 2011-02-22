@@ -95,11 +95,11 @@
       $this->dtgAssetModel->ItemsPerPage = 20;
       
       $this->dtgAssetModel->AddColumn(new QDataGridColumnExt('<img src=../images/icons/attachment.gif border=0 title=Attachments alt=Attachments>', '<?= Attachment::toStringIcon($_ITEM->GetVirtualAttribute(\'attachment_count\')); ?>', 'SortByCommand="__attachment_count ASC"', 'ReverseSortByCommand="__attachment_count DESC"', 'CssClass="dtg_column"', 'HtmlEntities="false"'));
-      $this->dtgAssetModel->AddColumn(new QDataGridColumnExt('Assets', '<?= $_ITEM->__toStringWithAssetCountLink($_ITEM,"bluelink"); ?>', 'SortByCommand="asset_count ASC"', 'ReverseSortByCommand="asset_count DESC"', 'CssClass="dtg_column"', 'HtmlEntities=false'));
-      $this->dtgAssetModel->AddColumn(new QDataGridColumnExt('Name', '<?= $_ITEM->__toStringWithLink($_ITEM,"bluelink"); ?>', 'SortByCommand="short_description ASC"', 'ReverseSortByCommand="short_description DESC"', 'CssClass="dtg_column"', 'HtmlEntities="false"'));
-      $this->dtgAssetModel->AddColumn(new QDataGridColumnExt('Category', '<?= $_FORM->dtgAssetModel_Category_Render($_ITEM); ?>', 'SortByCommand="asset_model__category_id__short_description ASC"', 'ReverseSortByCommand="asset_model__category_id__short_description DESC"', 'CssClass="dtg_column"'));
-      $this->dtgAssetModel->AddColumn(new QDataGridColumnExt('Manufacturer', '<?= $_FORM->dtgAssetModel_Manufacturer_Render($_ITEM); ?>', 'SortByCommand="asset_model__manufacturer_id__short_description ASC"', 'ReverseSortByCommand="asset_model__manufacturer_id__short_description DESC"', 'CssClass="dtg_column"'));
-      $this->dtgAssetModel->AddColumn(new QDataGridColumnExt('Asset Model Code', '<?= htmlentities(QString::Truncate($_ITEM->AssetModelCode, 200)); ?>', 'FontBold=true', 'SortByCommand="asset_model_code ASC"', 'ReverseSortByCommand="asset_model_code DESC"', 'CssClass="dtg_column"'));
+      $this->dtgAssetModel->AddColumn(new QDataGridColumnExt(QApplication::Translate('Assets'), '<?= $_ITEM->__toStringWithAssetCountLink($_ITEM,"bluelink"); ?>', 'SortByCommand="asset_count ASC"', 'ReverseSortByCommand="asset_count DESC"', 'CssClass="dtg_column"', 'HtmlEntities=false'));
+      $this->dtgAssetModel->AddColumn(new QDataGridColumnExt(QApplication::Translate('Model'), '<?= $_ITEM->__toStringWithLink($_ITEM,"bluelink"); ?>', 'SortByCommand="short_description ASC"', 'ReverseSortByCommand="short_description DESC"', 'CssClass="dtg_column"', 'HtmlEntities="false"'));
+      $this->dtgAssetModel->AddColumn(new QDataGridColumnExt(QApplication::Translate('Category'), '<?= $_FORM->dtgAssetModel_Category_Render($_ITEM); ?>', 'SortByCommand="asset_model__category_id__short_description ASC"', 'ReverseSortByCommand="asset_model__category_id__short_description DESC"', 'CssClass="dtg_column"'));
+      $this->dtgAssetModel->AddColumn(new QDataGridColumnExt(QApplication::Translate('Manufacturer'), '<?= $_FORM->dtgAssetModel_Manufacturer_Render($_ITEM); ?>', 'SortByCommand="asset_model__manufacturer_id__short_description ASC"', 'ReverseSortByCommand="asset_model__manufacturer_id__short_description DESC"', 'CssClass="dtg_column"'));
+      $this->dtgAssetModel->AddColumn(new QDataGridColumnExt(QApplication::Translate('Model Number'), '<?= htmlentities(QString::Truncate($_ITEM->AssetModelCode, 200)); ?>', 'FontBold=true', 'SortByCommand="asset_model_code ASC"', 'ReverseSortByCommand="asset_model_code DESC"', 'CssClass="dtg_column"'));
       
       // Add the custom field columns with Display set to false. These can be shown by using the column toggle menu.
       $objCustomFieldArray = CustomField::LoadObjCustomFieldArray(EntityQtype::AssetModel, false);
@@ -183,8 +183,8 @@
 
   	protected function lstCategory_Create() {
 	  	$this->lstCategory = new QListBox($this);
-			$this->lstCategory->Name = 'Category';
-			$this->lstCategory->AddItem(new QListItem('- ALL -', null));
+			$this->lstCategory->Name = QApplication::Translate('Category');
+			$this->lstCategory->AddItem(new QListItem(QApplication::Translate('- ALL -'), null));
 			$objCategoryArray = Category::LoadAllWithFlags(true, false, 'short_description');
 			if ($objCategoryArray) {
 				foreach ($objCategoryArray as $objCategory) {
@@ -197,8 +197,8 @@
 	  
 	  protected function lstManufacturer_Create() {
       $this->lstManufacturer = new QListBox($this);
-			$this->lstManufacturer->Name = 'Manufacturer';
-			$this->lstManufacturer->AddItem(new QListItem('- ALL -', null));
+			$this->lstManufacturer->Name = QApplication::Translate('Manufacturer');
+			$this->lstManufacturer->AddItem(new QListItem(QApplication::Translate('- ALL -'), null));
 			// foreach (Manufacturer::LoadAll('short_description') as $objManufacturer) {
 			foreach (Manufacturer::LoadAll(QQ::Clause(QQ::OrderBy(QQN::Manufacturer()->ShortDescription))) as $objManufacturer) {
 				$this->lstManufacturer->AddItem(new QListItem($objManufacturer->ShortDescription, $objManufacturer->ManufacturerId));
@@ -209,14 +209,14 @@
 
 	  protected function txtDescription_Create() {
 	    $this->txtDescription = new QTextBox($this);
-			$this->txtDescription->Name = 'Description';
+			$this->txtDescription->Name = QApplication::Translate('Description');
       $this->txtDescription->AddAction(new QEnterKeyEvent(), new QServerAction('btnSearch_Click'));
       $this->txtDescription->AddAction(new QEnterKeyEvent(), new QTerminateAction());
 	  }
 	  
 	  protected function txtAssetModelCode_Create() {
       $this->txtAssetModelCode = new QTextBox($this);
-			$this->txtAssetModelCode->Name = 'Asset Model Code';
+			$this->txtAssetModelCode->Name = QApplication::Translate('Model Number');
       $this->txtAssetModelCode->AddAction(new QEnterKeyEvent(), new QServerAction('btnSearch_Click'));
       $this->txtAssetModelCode->AddAction(new QEnterKeyEvent(), new QTerminateAction());	  	
 	  }
@@ -224,7 +224,7 @@
 	  protected function btnSearch_Create() {
 			$this->btnSearch = new QButton($this);
 			$this->btnSearch->Name = 'search';
-			$this->btnSearch->Text = 'Search';
+			$this->btnSearch->Text = QApplication::Translate('Search');
 			$this->btnSearch->AddAction(new QClickEvent(), new QServerAction('btnSearch_Click'));
 			$this->btnSearch->AddAction(new QEnterKeyEvent(), new QServerAction('btnSearch_Click'));
 			$this->btnSearch->AddAction(new QEnterKeyEvent(), new QTerminateAction());
@@ -233,7 +233,7 @@
 	  protected function btnClear_Create() {
 	  	$this->btnClear = new QButton($this);
 			$this->btnClear->Name = 'clear';
-			$this->btnClear->Text = 'Clear';
+			$this->btnClear->Text = QApplication::Translate('Clear');
 			$this->btnClear->AddAction(new QClickEvent(), new QServerAction('btnClear_Click'));
 			$this->btnClear->AddAction(new QEnterKeyEvent(), new QServerAction('btnClear_Click'));
 			$this->btnClear->AddAction(new QEnterKeyEvent(), new QTerminateAction());
@@ -242,7 +242,7 @@
 	  protected function lblAdvanced_Create() {
 	  	$this->lblAdvanced = new QLabel($this);
 	  	$this->lblAdvanced->Name = 'Advanced';
-	  	$this->lblAdvanced->Text = 'Advanced Search';
+	  	$this->lblAdvanced->Text = QApplication::Translate('Advanced Search');
 	  	$this->lblAdvanced->AddAction(new QClickEvent(), new QToggleDisplayAction($this->ctlAdvanced));
 	  	$this->lblAdvanced->AddAction(new QClickEvent(), new QAjaxAction('lblAdvanced_Click'));
 	  	$this->lblAdvanced->SetCustomStyle('text-decoration', 'underline');
@@ -285,14 +285,14 @@
 	  	if ($this->blnAdvanced) {
 	  		
 	  		$this->blnAdvanced = false;
-	  		$this->lblAdvanced->Text = 'Advanced Search';
+	  		$this->lblAdvanced->Text = QApplication::Translate('Advanced Search');
 	  		
 	  		$this->ctlAdvanced->ClearControls();
 	  		
 	  	}
 	  	else {
 	  		$this->blnAdvanced = true;
-	  		$this->lblAdvanced->Text = 'Hide Advanced';
+	  		$this->lblAdvanced->Text = QApplication::Translate('Hide Advanced');
 	  	}
 	  }
 	  

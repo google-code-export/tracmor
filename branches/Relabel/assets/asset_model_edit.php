@@ -142,7 +142,7 @@ class AssetModelEditForm extends AssetModelEditFormBase {
 	// Create the Short Description label (Asset Model Name)
 	protected function lblShortDescription_Create() {
 		$this->lblShortDescription = new QLabel($this);
-		$this->lblShortDescription->Name = 'Asset Model';
+		$this->lblShortDescription->Name = QApplication::Translate('Model');
 		if ($this->blnEditMode) {
 			$this->lblShortDescription->Text = $this->objAssetModel->__toString();
 		}
@@ -151,7 +151,7 @@ class AssetModelEditForm extends AssetModelEditFormBase {
 	// Create the Asset Model Header label (Asset Model Name)
 	protected function lblAssetModelHeader_Create() {
 		$this->lblAssetModelHeader = new QLabel($this);
-		$this->lblAssetModelHeader->Name = 'Asset Model';
+		$this->lblAssetModelHeader->Name = QApplication::Translate('Model');
 		$this->lblAssetModelHeader->Text = $this->objAssetModel->__toString();
 	}
 
@@ -159,7 +159,7 @@ class AssetModelEditForm extends AssetModelEditFormBase {
 	protected function lblAssetModelCode_Create() {
 		// It is better to use late-binding here because we are only getting one record
 		$this->lblAssetModelCode = new QLabel($this);
-		$this->lblAssetModelCode->Name = 'Asset Model Code';
+		$this->lblAssetModelCode->Name = QApplication::Translate('Model Number');
 		if ($this->blnEditMode) {
 			$this->lblAssetModelCode->Text = $this->objAssetModel->AssetModelCode;
 		}
@@ -168,7 +168,7 @@ class AssetModelEditForm extends AssetModelEditFormBase {
 	// Create the Category Label
 	protected function lblCategory_Create() {
 		$this->lblCategory = new QLabel($this);
-		$this->lblCategory->Name = 'Category';
+		$this->lblCategory->Name = QApplication::Translate('Category');
 		if ($this->blnEditMode) {
 			$this->lblCategory->Text = $this->objAssetModel->Category->ShortDescription;
 		}
@@ -177,7 +177,7 @@ class AssetModelEditForm extends AssetModelEditFormBase {
 	// Create the Manufacturer Label
 	protected function lblManufacturer_Create() {
 		$this->lblManufacturer = new QLabel($this);
-		$this->lblManufacturer->Name = 'Manufacturer';
+		$this->lblManufacturer->Name = QApplication::Translate('Manufacturer');
 		if ($this->blnEditMode) {
 			$this->lblManufacturer->Text = $this->objAssetModel->Manufacturer->ShortDescription;
 		}
@@ -301,7 +301,7 @@ class AssetModelEditForm extends AssetModelEditFormBase {
 	// Setup Save Button
 	protected function btnSave_Create() {
 		$this->btnSave = new QButton($this);
-		$this->btnSave->Text = 'Save';
+		$this->btnSave->Text = QApplication::Translate('Save');
 		$this->btnSave->CausesValidation = true;
 		// This cannot be Ajax because Javascript cannot access local files
 		$this->btnSave->AddAction(new QClickEvent(), new QServerAction('btnSave_Click'));
@@ -314,7 +314,7 @@ class AssetModelEditForm extends AssetModelEditFormBase {
 	// Setup Cancel Button
 	protected function btnCancel_Create() {
 		$this->btnCancel = new QButton($this);
-		$this->btnCancel->Text = 'Cancel';
+		$this->btnCancel->Text = QApplication::Translate('Cancel');
 		$this->btnCancel->AddAction(new QClickEvent(), new QAjaxAction('btnCancel_Click'));
 		$this->btnCancel->CausesValidation = false;
 		$this->btnCancel->TabIndex = $this->intNextTabIndex++;
@@ -323,7 +323,7 @@ class AssetModelEditForm extends AssetModelEditFormBase {
 	// Setup Edit Button
 	protected function btnEdit_Create() {
 		$this->btnEdit = new QButton($this);
-		$this->btnEdit->Text = 'Edit';
+		$this->btnEdit->Text = QApplication::Translate('Edit');
 		$this->btnEdit->AddAction(new QClickEvent(), new QAjaxAction('btnEdit_Click'));
 		$this->btnEdit->CausesValidation = false;
 		QApplication::AuthorizeControl($this->objAssetModel, $this->btnEdit, 2);
@@ -332,8 +332,8 @@ class AssetModelEditForm extends AssetModelEditFormBase {
 	// Setup Delete Button
 	protected function btnDelete_Create() {
 		$this->btnDelete = new QButton($this);
-		$this->btnDelete->Text = 'Delete';
-		$this->btnDelete->AddAction(new QClickEvent(), new QConfirmAction('Are you SURE you want to DELETE this Asset Model?'));
+		$this->btnDelete->Text = QApplication::Translate('Delete');
+		$this->btnDelete->AddAction(new QClickEvent(), new QConfirmAction(QApplication::Translate('Are you SURE you want to DELETE this Model?')));
 		$this->btnDelete->AddAction(new QClickEvent(), new QServerAction('btnDelete_Click'));
 		$this->btnDelete->CausesValidation = false;
 		if (!$this->blnEditMode) {
@@ -438,7 +438,7 @@ class AssetModelEditForm extends AssetModelEditFormBase {
 		catch (QDatabaseExceptionBase $objExc) {
 			$objDatabase->TransactionRollback();
 			if ($objExc->ErrorNumber == 1451) {
-				$this->btnDelete->Warning = 'This asset model cannot be deleted because it is associated with one or more assets.';
+				$this->btnDelete->Warning = QApplication::Translate('This model cannot be deleted because it is associated with one or more assets.');
 			}
 			else {
 				throw new QDatabaseExceptionBase();

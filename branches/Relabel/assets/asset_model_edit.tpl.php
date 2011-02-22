@@ -21,14 +21,7 @@
 
 	include('../includes/header.inc.php');
 	$this->RenderBegin();
-?>
-<!-- Begin Header Menu -->
-<?php 
 	$this->ctlHeaderMenu->Render();
-?>
-<!-- End Header Menu -->
-<!-- Begin Shortcut Menu -->
-<?php
 	$this->ctlShortcutMenu->Render();
 ?>
 <!-- End Shortcut Menu -->
@@ -40,12 +33,12 @@
 	<?php 
 	
 		// Build array of all fields to display
-			$arrAssetModelFields[] = array('name' => 'Short Description:', 'value' => $this->txtShortDescription->RenderWithError(false) . $this->lblShortDescription->Render(false));
-			$arrAssetModelFields[] = array('name' => 'Category:', 'value' => $this->lblCategory->Render(false) . $this->lstCategory->RenderWithError(false));
-			$arrAssetModelFields[] = array('name' => 'Manufacturer:', 'value' => $this->lblManufacturer->Render(false) . $this->lstManufacturer->RenderWithError(false));
-			$arrAssetModelFields[] = array('name' => 'Asset Model Code:', 'value' => $this->lblAssetModelCode->Render(false) . $this->txtAssetModelCode->RenderWithError(false));
-			$arrAssetModelFields[] = array('name' => 'Long Description:', 'value' => $this->pnlLongDescription->Render(false) . $this->txtLongDescription->RenderWithError(false));
-			$arrAssetModelFields[] = array('name' => 'Image:', 'value' => $this->ifcImage->RenderWithError(false) . $this->lblImage->Render(false));
+			$arrAssetModelFields[] = array('name' => QApplication::Translate('Model:'), 'value' => $this->txtShortDescription->RenderWithError(false) . $this->lblShortDescription->Render(false));
+			$arrAssetModelFields[] = array('name' => QApplication::Translate('Category:'), 'value' => $this->lblCategory->Render(false) . $this->lstCategory->RenderWithError(false));
+			$arrAssetModelFields[] = array('name' => QApplication::Translate('Manufacturer:'), 'value' => $this->lblManufacturer->Render(false) . $this->lstManufacturer->RenderWithError(false));
+			$arrAssetModelFields[] = array('name' => QApplication::Translate('Model Number:'), 'value' => $this->lblAssetModelCode->Render(false) . $this->txtAssetModelCode->RenderWithError(false));
+			$arrAssetModelFields[] = array('name' => QApplication::Translate('Description:'), 'value' => $this->pnlLongDescription->Render(false) . $this->txtLongDescription->RenderWithError(false));
+			$arrAssetModelFields[] = array('name' => QApplication::Translate('Image:'), 'value' => $this->ifcImage->RenderWithError(false) . $this->lblImage->Render(false));
 		// Custom Fields
 		if ($this->arrCustomFields) {
 			foreach ($this->arrCustomFields as $field) {
@@ -62,7 +55,7 @@
 		//}		
 	?>
 		
-		<div class="title">Asset Models: <?php $this->lblAssetModelHeader->Render(); ?></div>
+		<div class="title"><?php _t('Models:'); ?> <?php $this->lblAssetModelHeader->Render(); ?></div>
 		<table class="datagrid" cellpadding="5" cellspacing="0" border="0" >
 			<tr>
 				<td class="record_header">
@@ -123,4 +116,4 @@ $this->pnlAttachments->Render();
 		<br class="item_divider" />
 		
 	<?php $this->RenderEnd() ?>
-	<?php 	require_once('../includes/footer.inc.php'); ?>
+	<?php require_once('../includes/footer.inc.php'); ?>

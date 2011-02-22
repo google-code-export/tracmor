@@ -134,7 +134,7 @@
 		// Create and Setup txtAssetModelCode
 		protected function txtAssetModelCode_Create() {
 			$this->txtAssetModelCode = new QTextBox($this);
-			$this->txtAssetModelCode->Name = QApplication::Translate('Asset Model Code');
+			$this->txtAssetModelCode->Name = QApplication::Translate('Model Number');
 			$this->txtAssetModelCode->Text = $this->objAssetModel->AssetModelCode;
 			$this->txtAssetModelCode->MaxLength = AssetModel::AssetModelCodeMaxLength;
 		}
@@ -142,7 +142,7 @@
 		// Create and Setup txtShortDescription
 		protected function txtShortDescription_Create() {
 			$this->txtShortDescription = new QTextBox($this);
-			$this->txtShortDescription->Name = QApplication::Translate('Short Description');
+			$this->txtShortDescription->Name = QApplication::Translate('Model');
 			$this->txtShortDescription->Text = $this->objAssetModel->ShortDescription;
 			$this->txtShortDescription->Required = true;
 			$this->txtShortDescription->MaxLength = AssetModel::ShortDescriptionMaxLength;
@@ -151,7 +151,7 @@
 		// Create and Setup txtLongDescription
 		protected function txtLongDescription_Create() {
 			$this->txtLongDescription = new QTextBox($this);
-			$this->txtLongDescription->Name = QApplication::Translate('Long Description');
+			$this->txtLongDescription->Name = QApplication::Translate('Description');
 			$this->txtLongDescription->Text = $this->objAssetModel->LongDescription;
 			$this->txtLongDescription->TextMode = QTextMode::MultiLine;
 		}

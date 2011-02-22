@@ -18,9 +18,6 @@
  * along with Tracmor; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-
-<?php
 
 class QAssetTransactComposite extends QControl {
 
@@ -116,14 +113,14 @@ class QAssetTransactComposite extends QControl {
 	// Create the Asset Code label
 	protected function lblAssetCode_Create() {
 		$this->lblAssetCode = new QLabel($this);
-		$this->lblAssetCode->Name = 'Asset Code';
+		$this->lblAssetCode->Name = QApplication::Translate('Asset Tag');
 		$this->lblAssetCode->Text = $this->objAsset->AssetCode;
 	}
 
 	// Create the Note text field
 	protected function txtNote_Create() {
 		$this->txtNote = new QTextBox($this);
-		$this->txtNote->Name = 'Note';
+		$this->txtNote->Name = QApplication::Translate('Note');
 		$this->txtNote->TextMode = QTextMode::MultiLine;
 		$this->txtNote->Columns = 80;
 		$this->txtNote->Rows = 4;
@@ -133,8 +130,8 @@ class QAssetTransactComposite extends QControl {
 	// Create and Setup lstLocation
 	protected function lstLocation_Create() {
 		$this->lstLocation = new QListBox($this);
-		$this->lstLocation->Name = 'Location';
-		$this->lstLocation->AddItem('- Select One -', null);
+		$this->lstLocation->Name = QApplication::Translate('Location');
+		$this->lstLocation->AddItem(QApplication::Translate('- Select One -'), null);
 		$objLocationArray = Location::LoadAllLocations(false, false, 'short_description');
 		if ($objLocationArray) foreach ($objLocationArray as $objLocation) {
 			$objListItem = new QListItem($objLocation->__toString(), $objLocation->LocationId);
@@ -147,7 +144,7 @@ class QAssetTransactComposite extends QControl {
 	// Eventually this field will receive information from the AML
 	protected function txtNewAssetCode_Create() {
 		$this->txtNewAssetCode = new QTextBox($this);
-		$this->txtNewAssetCode->Name = 'Asset Code';
+		$this->txtNewAssetCode->Name = QApplication::Translate('Asset Tag');
 		$this->txtNewAssetCode->AddAction(new QEnterKeyEvent(), new QAjaxControlAction($this, 'btnAdd_Click'));
 		$this->txtNewAssetCode->AddAction(new QEnterKeyEvent(), new QTerminateAction());
 		$this->txtNewAssetCode->CausesValidation = false;
@@ -156,7 +153,7 @@ class QAssetTransactComposite extends QControl {
 	// Create the save button
 	protected function btnSave_Create() {
 		$this->btnSave = new QButton($this);
-		$this->btnSave->Text = 'Save';
+		$this->btnSave->Text = QApplication::Translate('Save');
 		$this->btnSave->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnSave_Click'));
 		$this->btnSave->AddAction(new QEnterKeyEvent(), new QAjaxControlAction($this, 'btnSave_Click'));
 		$this->btnSave->AddAction(new QEnterKeyEvent(), new QTerminateAction());
@@ -166,7 +163,7 @@ class QAssetTransactComposite extends QControl {
 	// Setup Cancel Button
 	protected function btnCancel_Create() {
 		$this->btnCancel = new QButton($this);
-		$this->btnCancel->Text = 'Cancel';
+		$this->btnCancel->Text = QApplication::Translate('Cancel');
 		$this->btnCancel->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnCancel_Click'));
 		$this->btnCancel->AddAction(new QEnterKeyEvent(), new QAjaxControlAction($this, 'btnCancel_Click'));
 		$this->btnCancel->AddAction(new QEnterKeyEvent(), new QTerminateAction());
@@ -176,7 +173,7 @@ class QAssetTransactComposite extends QControl {
 	// Setup Add Button
 	protected function btnAdd_Create() {
 		$this->btnAdd = new QButton($this);
-		$this->btnAdd->Text = 'Add';
+		$this->btnAdd->Text = QApplication::Translate('Add');
 		$this->btnAdd->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnAdd_Click'));
 		$this->btnAdd->AddAction(new QEnterKeyEvent(), new QAjaxControlAction($this, 'btnAdd_Click'));
 		$this->btnAdd->AddAction(new QEnterKeyEvent(), new QTerminateAction());
@@ -199,10 +196,10 @@ class QAssetTransactComposite extends QControl {
     $this->dtgAssetTransact->Paginator = $objPaginator;
     $this->dtgAssetTransact->ItemsPerPage = 20;
 
-    $this->dtgAssetTransact->AddColumn(new QDataGridColumn('Asset Code', '<?= $_ITEM->__toStringWithLink("bluelink") ?>', array('CssClass' => "dtg_column", 'HtmlEntities' => false)));
-    $this->dtgAssetTransact->AddColumn(new QDataGridColumn('Model', '<?= $_ITEM->AssetModel->__toStringWithLink("bluelink") ?>', array('Width' => 200, 'CssClass' => "dtg_column", 'HtmlEntities' => false)));
-    $this->dtgAssetTransact->AddColumn(new QDataGridColumn('Current Location', '<?= $_ITEM->Location->__toString() ?>', array('CssClass' => "dtg_column", 'HtmlEntities' => false)));
-    $this->dtgAssetTransact->AddColumn(new QDataGridColumn('Action', '<?= $_FORM->RemoveColumn_Render($_ITEM) ?>', array('CssClass' => "dtg_column", 'HtmlEntities' => false)));
+    $this->dtgAssetTransact->AddColumn(new QDataGridColumn(QApplication::Translate('Asset Tag'), '<?= $_ITEM->__toStringWithLink("bluelink") ?>', array('CssClass' => "dtg_column", 'HtmlEntities' => false)));
+    $this->dtgAssetTransact->AddColumn(new QDataGridColumn(QApplication::Translate('Model'), '<?= $_ITEM->AssetModel->__toStringWithLink("bluelink") ?>', array('Width' => 200, 'CssClass' => "dtg_column", 'HtmlEntities' => false)));
+    $this->dtgAssetTransact->AddColumn(new QDataGridColumn(QApplication::Translate('Current Location'), '<?= $_ITEM->Location->__toString() ?>', array('CssClass' => "dtg_column", 'HtmlEntities' => false)));
+    $this->dtgAssetTransact->AddColumn(new QDataGridColumn(QApplication::Translate('Action'), '<?= $_FORM->RemoveColumn_Render($_ITEM) ?>', array('CssClass' => "dtg_column", 'HtmlEntities' => false)));
 
 /*    $this->dtgAssetTransact->AddColumn(new QDataGridColumn('Asset Code', '<?= $_ITEM->__toStringWithLink("bluelink") ?>', 'SortByCommand="asset_code ASC"', 'ReverseSortByCommand="asset_code DESC"', 'CssClass="dtg_column"', 'HtmlEntities=false"'));
     $this->dtgAssetTransact->AddColumn(new QDataGridColumn('Model', '<?= $_ITEM->AssetModel->__toStringWithLink("bluelink") ?>', 'Width=200', 'SortByCommand="asset__asset_model_id__short_description ASC"', 'ReverseSortByCommand="asset__asset_model_id__short_description DESC"', 'CssClass="dtg_column"', 'HtmlEntities=false"'));
@@ -249,7 +246,7 @@ class QAssetTransactComposite extends QControl {
 				foreach ($this->objAssetArray as $asset) {
 					if ($asset && $asset->AssetCode == $strAssetCode) {
 						$blnError = true;
-						$this->txtNewAssetCode->Warning = "That asset has already been added.";
+						$this->txtNewAssetCode->Warning = QApplication::Translate('That asset has already been added.');
 					}
 				}
 			}
@@ -258,99 +255,99 @@ class QAssetTransactComposite extends QControl {
 			  $objNewAsset = Asset::LoadByAssetCode($this->txtNewAssetCode->Text);
 				if (!($objNewAsset instanceof Asset)) {
 					$blnError = true;
-					$this->txtNewAssetCode->Warning = "That asset code does not exist.";
+					$this->txtNewAssetCode->Warning = QApplication::Translate('That asset tag does not exist.');
 				}
 				elseif ($objNewAsset->LinkedFlag) {
 				  $blnError = true;
-				  $this->txtNewAssetCode->Warning = "That asset is locked to a parent asset.";
+				  $this->txtNewAssetCode->Warning = QApplication::Translate('That asset is locked to a parent asset.');
 				}
 				// Cannot move, check out/in, nor reserve/unreserve any assets that have been archived
 				elseif ($objNewAsset->LocationId == 6 && $this->intTransactionTypeId != 11) {
 					$blnError = true;
-					$this->txtNewAssetCode->Warning = "That asset has already been archived.";
+					$this->txtNewAssetCode->Warning = QApplication::Translate('That asset has already been archived.');
 				}
 				// Cannot move, check out/in, nor reserve/unreserve any assets that have been shipped
 				elseif ($objNewAsset->LocationId == 2) {
 					$blnError = true;
-					$this->txtNewAssetCode->Warning = "That asset has already been shipped.";
+					$this->txtNewAssetCode->Warning = QApplication::Translate('That asset has already been shipped.');
 				}
 				// Cannot move, check out/in, nor reserve/unreserve any assets that are scheduled to  be received
 				elseif ($objNewAsset->LocationId == 5) {
 					$blnError = true;
-					$this->txtNewAssetCode->Warning = "That asset is currently scheduled to be received.";
+					$this->txtNewAssetCode->Warning = QApplication::Translate('That asset is currently scheduled to be received.');
 				}
 				elseif ($objPendingShipment = AssetTransaction::PendingShipment($objNewAsset->AssetId)) {
 					$blnError = true;
-					$this->txtNewAssetCode->Warning = "That asset is already in a pending shipment.";
+					$this->txtNewAssetCode->Warning = QApplication::Translate('That asset is already in a pending shipment.');
 				}
 				elseif (!QApplication::AuthorizeEntityBoolean($objNewAsset, 2)) {
 					$blnError = true;
-					$this->txtNewAssetCode->Warning = "You do not have authorization to perform a transaction on this asset.";
+					$this->txtNewAssetCode->Warning = QApplication::Translate('You do not have authorization to perform a transaction on this asset.');
 				}
 				// Move
 				elseif ($this->intTransactionTypeId == 1) {
 					if ($objNewAsset->CheckedOutFlag) {
 						$blnError = true;
-						$this->txtNewAssetCode->Warning = "That asset is checked out.";
+						$this->txtNewAssetCode->Warning = QApplication::Translate('That asset is checked out.');
 					}
 					elseif ($objNewAsset->ReservedFlag) {
 						$blnError = true;
-						$this->txtNewAssetCode->Warning = "That asset is reserved.";
+						$this->txtNewAssetCode->Warning = QApplication::Translate('That asset is reserved.');
 					}
 				}
 				// Check in
 				elseif ($this->intTransactionTypeId == 2) {
 					if (!$objNewAsset->CheckedOutFlag) {
 						$blnError = true;
-						$this->txtNewAssetCode->Warning = "That asset is not checked out.";
+						$this->txtNewAssetCode->Warning = QApplication::Translate('That asset is not checked out.');
 					}
 					elseif ($objNewAsset->ReservedFlag) {
 						$blnError = true;
-						$this->txtNewAssetCode->Warning = "That asset is reserved.";
+						$this->txtNewAssetCode->Warning = QApplication::Translate('That asset is reserved.');
 					}
 					elseif ($objNewAsset->CheckedOutFlag) {
 						$objUserAccount = $objNewAsset->GetLastTransactionUser();
-						if ($objUserAccount->UserAccountId != QApplication::$objUserAccount->UserAccountId) {
+						if ((QApplication::$TracmorSettings->StrictCheckinPolicy == '1') && ($objUserAccount->UserAccountId != QApplication::$objUserAccount->UserAccountId)) {
 							$blnError = true;
-							$this->txtNewAssetCode->Warning = "That asset was not checked out by the current user.";
+							$this->txtNewAssetCode->Warning = QApplication::Translate('That asset was not checked out by the current user.');
 						}
 					}
 				}
 				elseif ($this->intTransactionTypeId ==3) {
 					if ($objNewAsset->CheckedOutFlag) {
 						$blnError = true;
-						$this->txtNewAssetCode->Warning = "That asset is already checked out.";
+						$this->txtNewAssetCode->Warning = QApplication::Translate('That asset is already checked out.');
 					}
 					elseif ($objNewAsset->ReservedFlag) {
 						$blnError = true;
-						$this->txtNewAssetCode->Warning = "That asset is reserved.";
+						$this->txtNewAssetCode->Warning = QApplication::Translate('That asset is reserved.');
 					}
 				}
 				elseif ($this->intTransactionTypeId == 8) {
 					if ($objNewAsset->ReservedFlag) {
 						$blnError = true;
-						$this->txtNewAssetCode->Warning = "That asset is already reserved.";
+						$this->txtNewAssetCode->Warning = QApplication::Translate('That asset is already reserved.');
 					}
 					elseif ($objNewAsset->CheckedOutFlag) {
 						$blnError = true;
-						$this->txtNewAssetCode->Warning = "That asset is checked out.";
+						$this->txtNewAssetCode->Warning = QApplication::Translate('That asset is checked out.');
 					}
 				}
 				// Unreserver
 				elseif ($this->intTransactionTypeId == 9) {
 					if (!$objNewAsset->ReservedFlag) {
 						$blnError = true;
-						$this->txtNewAssetCode->Warning = "That asset is not reserved";
+						$this->txtNewAssetCode->Warning = QApplication::Translate('That asset is not reserved');
 					}
 					elseif ($objNewAsset->CheckedOutFlag) {
 						$blnError = true;
-						$this->txtNewAssetCode->Warning = "That asset is checked out.";
+						$this->txtNewAssetCode->Warning = QApplication::Translate('That asset is checked out.');
 					}
 					elseif ($objNewAsset->ReservedFlag) {
 						$objUserAccount = $objNewAsset->GetLastTransactionUser();
 						if ($objUserAccount->UserAccountId != QApplication::$objUserAccount->UserAccountId) {
 							$blnError = true;
-							$this->txtNewAssetCode->Warning = "That asset was not reserved by the current user.";
+							$this->txtNewAssetCode->Warning = QApplication::Translate('That asset was not reserved by the current user.');
 						}
 					}
 				}
@@ -358,22 +355,22 @@ class QAssetTransactComposite extends QControl {
 				elseif ($this->intTransactionTypeId == 10) {
 					if ($objNewAsset->ArchivedFlag) {
 						$blnError = true;
-						$this->txtNewAssetCode->Warning = "That asset is already archived.";
+						$this->txtNewAssetCode->Warning = QApplication::Translate('That asset is already archived.');
 					}
 					elseif ($objNewAsset->CheckedOutFlag) {
 						$blnError = true;
-						$this->txtNewAssetCode->Warning = "That asset is checked out.";
+						$this->txtNewAssetCode->Warning = QApplication::Translate('That asset is checked out.');
 					}
 					elseif ($objNewAsset->ReservedFlag) {
 						$blnError = true;
-						$this->txtNewAssetCode->Warning = "That asset is reserved.";
+						$this->txtNewAssetCode->Warning = QApplication::Translate('That asset is reserved.');
 					}
 				}
 				// Unarchive
 				elseif ($this->intTransactionTypeId == 11) {
 					if (!$objNewAsset->ArchivedFlag) {
 						$blnError = true;
-						$this->txtNewAssetCode->Warning = "That asset is not archived.";
+						$this->txtNewAssetCode->Warning = QApplication::Translate('That asset is not archived.');
 					}
 				}
 
@@ -383,12 +380,12 @@ class QAssetTransactComposite extends QControl {
             // If the user has 'None' privileges for this transaction
             if ($objRoleTransactionTypeAuthorization->AuthorizationLevelId == 3) {
     				  $blnError = true;
-    					$this->txtNewAssetCode->Warning = "You do not have privileges for this transaction.";
+    					$this->txtNewAssetCode->Warning = QApplication::Translate('You do not have privileges for this transaction.');
   					}
   					// Check the user is the owner (if he has owner-only privileges)
     				elseif ($objRoleTransactionTypeAuthorization->AuthorizationLevelId == 2 && $objNewAsset->CreatedBy != QApplication::$objUserAccount->UserAccountId) {
     				  $blnError = true;
-    					$this->txtNewAssetCode->Warning = "You are not the owner of this asset.";
+    					$this->txtNewAssetCode->Warning = QApplication::Translate('You are not the owner of this asset.');
     				}
           }
 				}
@@ -404,21 +401,21 @@ class QAssetTransactComposite extends QControl {
 					    $strAssetCodeArray[] = $objLinkedAsset->AssetCode;
 					    $this->objAssetArray[] = $objLinkedAsset;
 					  }
-					  $this->txtNewAssetCode->Warning = sprintf("The following asset(s) have been added to the transaction because they are locked to asset (%s):<br />%s", $objNewAsset->AssetCode, implode('<br />', $strAssetCodeArray));
+					  $this->txtNewAssetCode->Warning = sprintf(QApplication::Translate('The following asset(s) have been added to the transaction because they are locked to asset (%s):') . '<br />%s', $objNewAsset->AssetCode, implode('<br />', $strAssetCodeArray));
 					}
 					$this->dtgAssetTransact->Refresh();
 				}
 			}
 		}
 		else {
-			$this->txtNewAssetCode->Warning = "Please enter an asset code.";
+			$this->txtNewAssetCode->Warning = QApplication::Translate('Please enter an asset tag.');
 		}
 	}
 
 	public function btnAssetSearchToolAdd_Click() {
 	  $intSelectedAssetId = $this->ctlAssetSearchTool->ctlAssetSearch->dtgAsset->GetSelected("AssetId");
     if (count($intSelectedAssetId) < 1) {
-      $this->ctlAssetSearchTool->lblWarning->Text = "No selected assets.";
+      $this->ctlAssetSearchTool->lblWarning->Text = QApplication::Translate('No selected assets.');
     }
     else {
       $lblNewWarning = "";
@@ -446,19 +443,19 @@ class QAssetTransactComposite extends QControl {
 				// TransactionTypeId = 1 is for moves
 				if ($this->intTransactionTypeId == 1) {
 					if ($asset->LocationId == $this->lstLocation->SelectedValue) {
-						$this->dtgAssetTransact->Warning = 'Cannot move an asset from a location to the same location.';
+						$this->dtgAssetTransact->Warning = QApplication::Translate('Cannot move an asset from a location to the same location.');
 						$blnError = true;
 					}
 				}
 
 				// For all transactions except Unreserve, make sure the asset is not already reserved
 				if ($this->intTransactionTypeId != 9 && $asset->ReservedFlag) {
-					$this->btnCancel->Warning = sprintf('The Asset %s is reserved.',$asset->AssetCode);
+					$this->btnCancel->Warning = sprintf(QApplication::Translate('The Asset %s is reserved.'),$asset->AssetCode);
 					$blnError = true;
 				}
 				// For all transactions except Unarchive, make sure the asset is not already archived
 				if ($this->intTransactionTypeId != 11 && $asset->ArchivedFlag) {
-					$this->btnCancel->Warning = sprintf('The Asset %s is archived.',$asset->AssetCode);
+					$this->btnCancel->Warning = sprintf(QApplication::Translate('The Asset %s is archived.'),$asset->AssetCode);
 					$blnError = true;
 				}
 
@@ -467,11 +464,11 @@ class QAssetTransactComposite extends QControl {
 			if (!$blnError) {
 
 				if (($this->intTransactionTypeId == 1 || $this->intTransactionTypeId == 2 || $this->intTransactionTypeId == 11) && is_null($this->lstLocation->SelectedValue)) {
-					$this->lstLocation->Warning = 'Location is required.';
+					$this->lstLocation->Warning = QApplication::Translate('Location is required.');
 					$blnError = true;
 				}
 				elseif ($this->txtNote->Text == '') {
-					$this->txtNote->Warning = 'Note is required.';
+					$this->txtNote->Warning = QApplication::Translate('Note is required.');
 					$blnError = true;
 				}
 			}
@@ -576,7 +573,7 @@ class QAssetTransactComposite extends QControl {
 					$objAsset = Asset::Load($objExc->EntityId);
 					$this->objParentObject->btnRemove_Click($this->objParentObject->FormId, 'btnRemove' . $objExc->EntityId, $objExc->EntityId);
           // Lock Exception Thrown, Report the Error
-          $this->btnCancel->Warning = sprintf('The Asset %s has been altered by another user and removed from the transaction. You may add the asset again or save the transaction without it.', $objAsset->AssetCode);
+          $this->btnCancel->Warning = sprintf(QApplication::Translate('The Asset %s has been altered by another user and removed from the transaction. You may add the asset again or save the transaction without it.'), $objAsset->AssetCode);
 				}
 			}
 		}
@@ -647,10 +644,9 @@ class QAssetTransactComposite extends QControl {
 				  $strAssetCodeArray[] = $objLinkedAsset->AssetCode;
 				  $this->objAssetArray[] = $objLinkedAsset;
 				}
-				$this->txtNewAssetCode->Warning = sprintf("The following asset(s) have been added to the transaction because they are locked to asset (%s):<br />%s", $this->objAsset->AssetCode, implode('<br />', $strAssetCodeArray));
+				$this->txtNewAssetCode->Warning = sprintf(QApplication::Translate('The following asset(s) have been added to the transaction because they are locked to asset (%s):') . '<br />%s', $this->objAsset->AssetCode, implode('<br />', $strAssetCodeArray));
 			}
 		}
-
 	}
 
 	// Uncheck all items but SelectAll checkbox
