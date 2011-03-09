@@ -1,4 +1,5 @@
 #summary Archiving
+#labels Deprecated
 
 === Summary ===
 ----
