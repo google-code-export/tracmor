@@ -1,4 +1,5 @@
 #summary Requirements for the Asset Model-Specific Custom Fields feature.
+#labels Phase-Requirements
 
 = Summary =
 ----
