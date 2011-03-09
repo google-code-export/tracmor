@@ -5,6 +5,20 @@
 ----
 The purpose of this enhancement is to allow Tracmor administrators to set custom fields to be required without being forced to enter a default value for the custom field.
 
+
+=== Owner ===
+----
+  * Name: [http://code.google.com/u/jsinclair/ Justin Sinclair]
+  * Name: [http://code.google.com/u/hunterjensen/ Hunter Jensen]
+
+
+=== Current Status ==
+----
+  * Target Release: Tracmor 0.4.0
+  * Last Modified: 2011-03-08
+  * Percentage Completed: 0%
+
+
 = Use Case =
 ----
 Michael is the Tracmor administrator for Dunder Mifflin Paper Co. He uses several custom fields in Tracmor, and often sets these fields to be required because he wants users to enter or select a value for these fields when creating assets and other records in Tracmor. Unfortunately, Tracmor forces Michael to enter a default value for such custom fields, which foils his plan because it allows users to create records without so much as looking at these custom fields. Michael would be really happy if entering a default value was always optional when creating custom fields.
