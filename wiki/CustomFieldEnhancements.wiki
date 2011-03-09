@@ -1,0 +1,19 @@
+#summary Requirements for custom field enhancement
+
+= Summary =
+----
+The purpose of these enhancements is to allow users to check out assets to other users and contacts, as well as set due dates for checking assets back in.
+
+= Use Case =
+----
+Michael is the Tracmor administrator for Dunder Mifflin Paper Co. He uses several custom fields in Tracmor, and often sets these fields to be required because he wants users to enter or select a value for these fields when creating assets and other records in Tracmor. Unfortunately, Tracmor forces Michael to enter a default value for such custom fields, which foils his plan because it allows users to create records without so much as looking at these custom fields. Michael would be really happy if entering a default value was always optional when creating custom fields.
+
+= Implementation =
+----
+*Admin Module*
+
+The page for creating and editing custom fields (custom_field_edit.php) will be updated to no longer require a default value to be entered if the custom field is set as required. Even if an existing custom field is updated from not being required to being required, the user will not need to enter a default value (though they still have the option to).
+
+*Other Modules*
+
+If existing records do not have a value for a required custom field, the user will be required to enter/select a value when editing it. The only exception to this is if a user does not have access to view or edit the required custom field, in which case they will still be allowed to edit the other fields that they do have access to.
