@@ -31,4 +31,4 @@ The page for creating and editing custom fields (custom_field_edit.php) will be 
 
 *Other Modules*
 
-If existing records do not have a value for a required custom field, the user will be required to enter/select a value when editing it. The only exception to this is if a user does not have access to view or edit the required custom field, in which case they will still be allowed to edit the other fields that they do have access to.
+If existing records do not have a value for a required custom field, the user will be required to enter/select a value when editing it. The only exception to this is if a user does not have access to view or edit the required custom field, in which case they will still be allowed to edit the other fields that they do have access to. For example, if there is a required asset custom field called 'Condition', and a user belongs to a user role that does not have view or edit permission for that field, the user will be allowed to create and edit assets without getting an error message that 'Condition' is required.
