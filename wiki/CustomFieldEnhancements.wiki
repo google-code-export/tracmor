@@ -3,7 +3,7 @@
 
 = Summary =
 ----
-The purpose of these enhancements is to allow users to check out assets to other users and contacts, as well as set due dates for checking assets back in.
+The purpose of this enhancement is to allow Tracmor administrators to set custom fields to be required without being forced to enter a default value for the custom field.
 
 = Use Case =
 ----
