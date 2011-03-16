@@ -56,9 +56,9 @@
 
 			// Otherwise, you could optionally run with some defaults
 			else {
-				// QApplication::$CountryCode = 'us';
-				// QApplication::$LanguageCode = 'en';
-				// QI18n::Initialize();
+				QApplication::$CountryCode = 'us';
+				QApplication::$LanguageCode = 'en';
+				QI18n::Initialize();
 			}
 		}
 
