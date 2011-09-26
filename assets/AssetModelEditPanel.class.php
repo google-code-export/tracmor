@@ -58,7 +58,7 @@
 			
 			// Create the Image File Control
 			$this->ifcImage_Create();
-			// Create all custom asset model fields
+			// Create all custom model fields
 			$this->customFields_Create();
 			
 			$this->UpdateCustomFields();
@@ -154,7 +154,7 @@
 				$explosion = explode(".", $this->ifcImage->FileName);
 				// Set the file name to ID_asset_model.ext
 				$this->ifcImage->FileName = sprintf('%s%s%s.%s', $this->ifcImage->Prefix, $this->objAssetModel->AssetModelId, $this->ifcImage->Suffix, $explosion[1]);
-				// Set the image path for saving the asset model
+				// Set the image path for saving the model
 				$this->txtImagePath->Text = $this->ifcImage->FileName;
 				// Upload the file to the server
 				$this->ifcImage->ProcessUpload();

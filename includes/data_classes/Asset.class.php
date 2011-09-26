@@ -190,7 +190,7 @@
 		}
 
 		/**
-		 * This returns an auto-generated asset code based on the minimum asset code value in the AdminSettings and the highest asset code in the assets table
+		 * This returns an auto-generated asset tag based on the minimum asset tag value in the AdminSettings and the highest asset tag in the assets table
 		 * It will ignore any values that aren't strict integers
 		 *
 		 * @return integer
@@ -894,7 +894,7 @@
 		}
 
 		/**
-		 * Set the child's parent_asset_code to NULL by Parent Asset Code
+		 * Set the child's parent_asset_code to NULL by Parent Asset Tag
 		 *
 		 * @param string $strAssetCode
 		 */

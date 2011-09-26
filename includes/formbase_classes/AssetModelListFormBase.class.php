@@ -40,10 +40,10 @@
 			// Setup DataGrid Columns
 			$this->colEditLinkColumn = new QDataGridColumn(QApplication::Translate('Edit'), '<?= $_FORM->dtgAssetModel_EditLinkColumn_Render($_ITEM) ?>');
 			$this->colEditLinkColumn->HtmlEntities = false;
-			$this->colAssetModelId = new QDataGridColumn(QApplication::Translate('Asset Model Id'), '<?= $_ITEM->AssetModelId; ?>', array('OrderByClause' => QQ::OrderBy(QQN::AssetModel()->AssetModelId), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AssetModel()->AssetModelId, false)));
+			$this->colAssetModelId = new QDataGridColumn(QApplication::Translate('Model Id'), '<?= $_ITEM->AssetModelId; ?>', array('OrderByClause' => QQ::OrderBy(QQN::AssetModel()->AssetModelId), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AssetModel()->AssetModelId, false)));
 			$this->colCategoryId = new QDataGridColumn(QApplication::Translate('Category Id'), '<?= $_FORM->dtgAssetModel_Category_Render($_ITEM); ?>');
 			$this->colManufacturerId = new QDataGridColumn(QApplication::Translate('Manufacturer Id'), '<?= $_FORM->dtgAssetModel_Manufacturer_Render($_ITEM); ?>');
-			$this->colAssetModelCode = new QDataGridColumn(QApplication::Translate('Asset Model Code'), '<?= QString::Truncate($_ITEM->AssetModelCode, 200); ?>', array('OrderByClause' => QQ::OrderBy(QQN::AssetModel()->AssetModelCode), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AssetModel()->AssetModelCode, false)));
+			$this->colAssetModelCode = new QDataGridColumn(QApplication::Translate('Model Number'), '<?= QString::Truncate($_ITEM->AssetModelCode, 200); ?>', array('OrderByClause' => QQ::OrderBy(QQN::AssetModel()->AssetModelCode), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AssetModel()->AssetModelCode, false)));
 			$this->colShortDescription = new QDataGridColumn(QApplication::Translate('Short Description'), '<?= QString::Truncate($_ITEM->ShortDescription, 200); ?>', array('OrderByClause' => QQ::OrderBy(QQN::AssetModel()->ShortDescription), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AssetModel()->ShortDescription, false)));
 			$this->colLongDescription = new QDataGridColumn(QApplication::Translate('Long Description'), '<?= QString::Truncate($_ITEM->LongDescription, 200); ?>', array('OrderByClause' => QQ::OrderBy(QQN::AssetModel()->LongDescription), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AssetModel()->LongDescription, false)));
 			$this->colImagePath = new QDataGridColumn(QApplication::Translate('Image Path'), '<?= QString::Truncate($_ITEM->ImagePath, 200); ?>', array('OrderByClause' => QQ::OrderBy(QQN::AssetModel()->ImagePath), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AssetModel()->ImagePath, false)));
@@ -51,7 +51,7 @@
 			$this->colCreationDate = new QDataGridColumn(QApplication::Translate('Creation Date'), '<?= $_FORM->dtgAssetModel_CreationDate_Render($_ITEM); ?>', array('OrderByClause' => QQ::OrderBy(QQN::AssetModel()->CreationDate), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AssetModel()->CreationDate, false)));
 			$this->colModifiedBy = new QDataGridColumn(QApplication::Translate('Modified By'), '<?= $_FORM->dtgAssetModel_ModifiedByObject_Render($_ITEM); ?>');
 			$this->colModifiedDate = new QDataGridColumn(QApplication::Translate('Modified Date'), '<?= QString::Truncate($_ITEM->ModifiedDate, 200); ?>', array('OrderByClause' => QQ::OrderBy(QQN::AssetModel()->ModifiedDate), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AssetModel()->ModifiedDate, false)));
-			$this->colAssetModelCustomFieldHelper = new QDataGridColumn(QApplication::Translate('Asset Model Custom Field Helper'), '<?= $_FORM->dtgAssetModel_AssetModelCustomFieldHelper_Render($_ITEM); ?>');
+			$this->colAssetModelCustomFieldHelper = new QDataGridColumn(QApplication::Translate('Model Custom Field Helper'), '<?= $_FORM->dtgAssetModel_AssetModelCustomFieldHelper_Render($_ITEM); ?>');
 
 			// Setup DataGrid
 			$this->dtgAssetModel = new QDataGrid($this);

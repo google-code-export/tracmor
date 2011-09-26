@@ -151,7 +151,7 @@
 			/*
 			$this->chkEntityQtype->AddItem('Assets', 1);
 			$this->chkEntityQtype->AddItem('Inventory', 2);
-			$this->chkEntityQtype->AddItem('Asset Model', 4);
+			$this->chkEntityQtype->AddItem('Model', 4);
 			$this->chkEntityQtype->AddItem('Manufacturer', 5);
 			$this->chkEntityQtype->AddItem('Category', 6);
 			$this->chkEntityQtype->AddItem('Company', 7);
@@ -163,7 +163,7 @@
 			$objEntityQtypeCustomFieldArray = EntityQtypeCustomField::LoadArrayByCustomFieldId($this->objCustomField->CustomFieldId);
 			$objAssetListItem = new QListItem('Assets', 1);
 			$objInventoryListItem = new QListItem('Inventory', 2);
-			$objAssetModelListItem = new QListItem('Asset Model', 4);
+			$objAssetModelListItem = new QListItem('Model', 4);
 			$objManufacturerListItem = new QListItem('Manufacturer', 5);
 			$objCategoryListItem = new QListItem('Category', 6);
 			$objCompanyListItem = new QListItem('Company', 7);
@@ -542,7 +542,7 @@
 
 			try {
 
-				$arrRestrictedFields = array('asset code', 'model', 'category', 'manufacturer', 'location', 'assets', 'name', 'asset model code', 'inventory code', 'quantity', 'company name', 'city', 'state/province', 'country', 'title', 'company', 'email', 'address', 'shipment number', 'ship date', 'ship to company', 'ship to contact', 'ship to address', 'scheduled by', 'status', 'tracking', 'receipt number', 'receive from company', 'receive from contact', 'description', 'account', 'courier', 'account number', 'field name', 'type', 'enabled', 'required', 'role', 'username', 'user role', 'active', 'admin');
+				$arrRestrictedFields = array('asset tag', 'model', 'category', 'manufacturer', 'location', 'assets', 'name', 'model number', 'inventory code', 'quantity', 'company name', 'city', 'state/province', 'country', 'title', 'company', 'email', 'address', 'shipment number', 'ship date', 'ship to company', 'ship to contact', 'ship to address', 'scheduled by', 'status', 'tracking', 'receipt number', 'receive from company', 'receive from contact', 'description', 'account', 'courier', 'account number', 'field name', 'type', 'enabled', 'required', 'role', 'username', 'user role', 'active', 'admin');
 
 				$blnError = false;
 

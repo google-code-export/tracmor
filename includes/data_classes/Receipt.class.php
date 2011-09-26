@@ -401,7 +401,7 @@
 
     /**
      * Load an array of Receipt objects
-		 * by Company, Contact, Receipt Number, Asset Code, InventoryModelCode, or Status
+		 * by Company, Contact, Receipt Number, Asset Tag, InventoryModelCode, or Status
      *
      * @param string $strFromCompany
      * @param string $strFromContact
@@ -498,7 +498,7 @@
 
 		/**
      * Load an array of Receipt objects
-		 * by Company, Contact, Receipt Number, Asset Code, InventoryModelCode, or Status
+		 * by Company, Contact, Receipt Number, Asset Tag, InventoryModelCode, or Status
 		 * using the receipt_custom_field_helper table
      *
      * @param string $strFromCompany

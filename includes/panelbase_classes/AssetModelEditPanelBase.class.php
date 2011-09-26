@@ -96,7 +96,7 @@
 		// Create and Setup lblAssetModelId
 		protected function lblAssetModelId_Create() {
 			$this->lblAssetModelId = new QLabel($this);
-			$this->lblAssetModelId->Name = QApplication::Translate('Asset Model Id');
+			$this->lblAssetModelId->Name = QApplication::Translate('Model Id');
 			if ($this->blnEditMode)
 				$this->lblAssetModelId->Text = $this->objAssetModel->AssetModelId;
 			else
@@ -134,7 +134,7 @@
 		// Create and Setup txtAssetModelCode
 		protected function txtAssetModelCode_Create() {
 			$this->txtAssetModelCode = new QTextBox($this);
-			$this->txtAssetModelCode->Name = QApplication::Translate('Asset Model Code');
+			$this->txtAssetModelCode->Name = QApplication::Translate('Model Number');
 			$this->txtAssetModelCode->Text = $this->objAssetModel->AssetModelCode;
 			$this->txtAssetModelCode->MaxLength = AssetModel::AssetModelCodeMaxLength;
 		}
@@ -213,7 +213,7 @@
 		// Create and Setup lstAssetModelCustomFieldHelper
 		protected function lstAssetModelCustomFieldHelper_Create() {
 			$this->lstAssetModelCustomFieldHelper = new QListBox($this);
-			$this->lstAssetModelCustomFieldHelper->Name = QApplication::Translate('Asset Model Custom Field Helper');
+			$this->lstAssetModelCustomFieldHelper->Name = QApplication::Translate('Model Custom Field Helper');
 			$this->lstAssetModelCustomFieldHelper->AddItem(QApplication::Translate('- Select One -'), null);
 			$objAssetModelCustomFieldHelperArray = AssetModelCustomFieldHelper::LoadAll();
 			if ($objAssetModelCustomFieldHelperArray) foreach ($objAssetModelCustomFieldHelperArray as $objAssetModelCustomFieldHelper) {

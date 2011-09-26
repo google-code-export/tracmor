@@ -1,7 +1,7 @@
 <table cellpadding="0" cellspacing="8" border="0">
 	<thead>
 	<tr>
-		<th><strong>Asset Code</strong></th>
+		<th><strong>Asset Tag</strong></th>
 		<td><strong>Model</strong></th>
 		<th><strong>Location</strong></th>
 	</tr>

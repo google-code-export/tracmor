@@ -443,13 +443,13 @@
           /*if ($strSelectedValue == "location") {
             $blnLocation = true;
           }
-          elseif ($strSelectedValue == "asset code") {
+          elseif ($strSelectedValue == "asset tag") {
             $blnAssetCode = true;
           }
-          elseif ($strSelectedValue == "asset model short description") {
+          elseif ($strSelectedValue == "model short description") {
             $blnAssetModelShortDescription = true;
           }
-          elseif ($strSelectedValue == "asset model code") {
+          elseif ($strSelectedValue == "model number") {
             $blnAssetModelCode = true;
           }
           else*/if ($strSelectedValue == "manufacturer name") {

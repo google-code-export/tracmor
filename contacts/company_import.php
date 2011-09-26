@@ -1123,7 +1123,7 @@
       QApplication::Redirect("./company_list.php");
     }
 
-    // Delete All imported Assets, Asset Models, Manufacturers, Categories and Locations
+    // Delete All imported Assets, Models, Manufacturers, Categories and Locations
     protected function UndoImport() {
       $objDatabase = Company::GetDatabase();
       //$strQuery = "SET FOREIGN_KEY_CHECKS=0;";

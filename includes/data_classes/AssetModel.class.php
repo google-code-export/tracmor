@@ -60,7 +60,7 @@
 			return sprintf('<a href="../assets/asset_list.php?intAssetModelId=%s" class="%s">(%s)</a>', $this->AssetModelId, $cssClass, $this->intAssetCount);
 		}
 
-		// This adds the created by and creation date before saving a new asset model
+		// This adds the created by and creation date before saving a new model
 		public function Save($blnForceInsert = false, $blnForceUpdate = false) {
 			if ((!$this->__blnRestored) || ($blnForceInsert)) {
 				$this->CreatedBy = QApplication::$objUserAccount->UserAccountId;
