@@ -23,6 +23,7 @@
 	require('../includes/prepend.inc.php');		/* if you DO NOT have "includes/" in your include_path */
 	require(__DOCROOT__ . __PHP_ASSETS__ . '/csv/DataSource.php');
 	QApplication::Authenticate();
+	QApplication::Redirect("./");
 
 	class AdminLabelsForm extends QForm {
 		// Header Menu
@@ -140,7 +141,7 @@
 			  $this->arrAssetCustomField[$objCustomField->CustomFieldId] = $objCustomField;
 			}
 			$this->arrAssetModelCustomField = array();
-			// Load Asset Model Custom Field
+			// Load Model Custom Field
 			foreach (CustomField::LoadArrayByActiveFlagEntity(1, 4) as $objCustomField) {
 			  $this->arrAssetModelCustomField[$objCustomField->CustomFieldId] = $objCustomField;
 			}
@@ -484,20 +485,20 @@
         $blnAssetModelShortDescription = false;
         $blnCategory = false;
         $blnManufacturer = false;
-        // Checking errors (Location, Asset Code, Model Short Description, Model Code, Category and Manufacturer must be selected)
+        // Checking errors (Location, Asset Tag, Model Short Description, Model Code, Category and Manufacturer must be selected)
         for ($i=0; $i < count($this->lstMapHeaderArray)-1; $i++) {
           $lstMapHeader = $this->lstMapHeaderArray[$i];
           $strSelectedValue = strtolower($lstMapHeader->SelectedValue);
           if ($strSelectedValue == "location") {
             $blnLocation = true;
           }
-          elseif ($strSelectedValue == "asset code") {
+          elseif ($strSelectedValue == "asset tag") {
             $blnAssetCode = true;
           }
-          elseif ($strSelectedValue == "asset model short description") {
+          elseif ($strSelectedValue == "model short description") {
             $blnAssetModelShortDescription = true;
           }
-          elseif ($strSelectedValue == "asset model code") {
+          elseif ($strSelectedValue == "model number") {
             $blnAssetModelCode = true;
           }
           elseif ($strSelectedValue == "category") {
@@ -663,7 +664,7 @@
           $this->dtgManufacturer->ShowHeader = false;
           $this->dtgManufacturer->AddColumn(new QDataGridColumnExt('Manufacturer', '<?= $_ITEM ?>', 'CssClass="dtg_column"', 'HtmlEntities="false"'));
 
-          // New asset models
+          // New models
           $this->dtgAssetModel = new QDataGrid($this);
           $this->dtgAssetModel->Name = 'asset_model_list';
       		$this->dtgAssetModel->CellPadding = 5;
@@ -673,7 +674,7 @@
           $this->dtgAssetModel->ShowColumnToggle = false;
           $this->dtgAssetModel->ShowExportCsv = false;
           $this->dtgAssetModel->ShowHeader = false;
-          $this->dtgAssetModel->AddColumn(new QDataGridColumnExt('Asset Model', '<?= $_ITEM ?>', 'CssClass="dtg_column"', 'HtmlEntities="false"'));
+          $this->dtgAssetModel->AddColumn(new QDataGridColumnExt('Model', '<?= $_ITEM ?>', 'CssClass="dtg_column"', 'HtmlEntities="false"'));
 
           // New assets
           $this->dtgAsset = new QDataGrid($this);
@@ -685,7 +686,7 @@
           $this->dtgAsset->ShowColumnToggle = false;
           $this->dtgAsset->ShowExportCsv = false;
           $this->dtgAsset->ShowHeader = false;
-          $this->dtgAsset->AddColumn(new QDataGridColumnExt('Asset Code', '<?= $_ITEM ?>', 'CssClass="dtg_column"', 'HtmlEntities="false"'));
+          $this->dtgAsset->AddColumn(new QDataGridColumnExt('Asset Tag', '<?= $_ITEM ?>', 'CssClass="dtg_column"', 'HtmlEntities="false"'));
 
           // Updated assets
           $this->dtgUpdatedAsset = new QDataGrid($this);
@@ -697,7 +698,7 @@
           $this->dtgUpdatedAsset->ShowColumnToggle = false;
           $this->dtgUpdatedAsset->ShowExportCsv = false;
           $this->dtgUpdatedAsset->ShowHeader = false;
-          $this->dtgUpdatedAsset->AddColumn(new QDataGridColumnExt('Asset Code', '<?= $_ITEM ?>', 'CssClass="dtg_column"', 'HtmlEntities="false"'));
+          $this->dtgUpdatedAsset->AddColumn(new QDataGridColumnExt('Asset Tag', '<?= $_ITEM ?>', 'CssClass="dtg_column"', 'HtmlEntities="false"'));
 
           // Create the label for successful import
           $this->lblImportSuccess = new QLabel($this);
@@ -729,7 +730,7 @@
     			$this->btnReturnToAssets->AddAction(new QEnterKeyEvent(), new QTerminateAction());
         }
         else {
-          $this->btnNext->Warning = "You must select all required fields (Asset Code, Asset Model Code, Asset Model Short Description, Location, Category and Manufacturer).";
+          $this->btnNext->Warning = "You must select all required fields (Asset Tag, Model Number, Model Short Description, Location, Category and Manufacturer).";
           $blnError = true;
         }
 		  }
@@ -778,7 +779,7 @@
             }
             $this->btnNext->Warning = "Manufacturers have been imported. Please wait...";
           }
-          // Asset Model
+          // Model
           elseif ($this->intImportStep == 4) {
             $intCategoryArray = array();
             // Load all categories with keys=category_id
@@ -797,16 +798,16 @@
             $arrAssetModelCustomField = array();
             // Setup keys
             foreach ($this->arrTracmorField as $key => $value) {
-              if ($value == 'asset model short description') {
+              if ($value == 'model short description') {
                 $intModelShortDescriptionKey = $key;
               }
-              elseif ($value == 'asset model long description') {
+              elseif ($value == 'model long description') {
                 $intModelLongDescriptionKey = $key;
               }
-              elseif ($value == 'asset model code') {
+              elseif ($value == 'model number') {
                 $intModelCodeKey = $key;
               }
-              elseif ($value == 'asset code') {
+              elseif ($value == 'asset tag') {
                 $intAssetCode = $key;
               }
               elseif (substr($value, 0, 6) == 'model_') {
@@ -817,11 +818,11 @@
               }
             }
             $strAssetModelArray = array();
-            // Load all asset models
+            // Load all models
             foreach (AssetModel::LoadAll() as $objAssetModel) {
               $strAssetModelArray[] = strtolower(sprintf("%s_%s_%s_%s", $objAssetModel->AssetModelCode, $objAssetModel->ShortDescription, $objAssetModel->CategoryId, $objAssetModel->ManufacturerId));
             }
-            $this->btnNext->Warning = sprintf("Please wait... Asset Model import complete: %s%s", ceil(($this->intCurrentFile+1)*200/$this->intTotalCount*100), "%");
+            $this->btnNext->Warning = sprintf("Please wait... Model import complete: %s%s", ceil(($this->intCurrentFile+1)*200/$this->intTotalCount*100), "%");
           }
           // Asset
           elseif ($this->intImportStep == 5) {
@@ -839,7 +840,7 @@
             }
             if ($this->intCurrentFile == 0) {
               $this->intAssetModelArray = array();
-              // Load all asset models with keys=asset_model_id
+              // Load all models with keys=asset_model_id
               foreach (AssetModel::LoadAll() as $objAssetModel) {
                 //$intAssetModelArray["'" . strtolower($objAssetModel->ShortDescription) . "'"] = $objAssetModel->AssetModelId;
                 $this->intAssetModelArray[$objAssetModel->AssetModelId] = strtolower(sprintf("%s_%s_%s_%s", $objAssetModel->AssetModelCode, $objAssetModel->ShortDescription, $objAssetModel->CategoryId, $objAssetModel->ManufacturerId));
@@ -849,13 +850,13 @@
             $arrAssetCustomField = array();
             // Setup keys
             foreach ($this->arrTracmorField as $key => $value) {
-              if ($value == 'asset model short description') {
+              if ($value == 'model short description') {
                 $intModelShortDescriptionKey = $key;
               }
-              elseif ($value == 'asset model code') {
+              elseif ($value == 'model number') {
                 $intModelCodeKey = $key;
               }
-              elseif ($value == 'asset code') {
+              elseif ($value == 'asset tag') {
                 $intAssetCode = $key;
               }
               elseif (substr($value, 0, 6) == 'asset_') {
@@ -938,7 +939,7 @@
                 }
               }
             }
-            // Asset Model import
+            // Model import
             elseif ($this->intImportStep == 4) {
               $objNewAssetModelArray = array();
               for ($i=0; $i<$this->FileCsvData->countRows(); $i++) {
@@ -996,7 +997,7 @@
                   }
                   $objNewAssetModel->Save();
 
-                  // Asset Model Custom Field import
+                  // Model Custom Field import
                   foreach ($arrAssetModelCustomField as $objCustomField) {
                     if ($objCustomField->CustomFieldQtypeId != 2) {
                       $objCustomField->CustomFieldSelection = new CustomFieldSelection;
@@ -1499,9 +1500,9 @@
 	    $lstMapHeader = new QListBox($objParentObject);
 	    $lstMapHeader->Name = "lst".$intId;
 	    $strAssetGroup = "Asset";
-	    $strAssetModelGroup = "Asset Model";
+	    $strAssetModelGroup = "Model";
 	    $lstMapHeader->AddItem("- Not Mapped -", null);
-	    $lstMapHeader->AddItem("Asset Code", "Asset Code", ($strName == 'asset code') ? true : false, $strAssetGroup, 'CssClass="redtext"');
+	    $lstMapHeader->AddItem("Asset Tag", "Asset Tag", ($strName == 'asset tag') ? true : false, $strAssetGroup, 'CssClass="redtext"');
 	    foreach ($this->arrAssetCustomField as $objCustomField) {
 	      $lstMapHeader->AddItem($objCustomField->ShortDescription, "asset_".$objCustomField->CustomFieldId,  ($strName == strtolower($objCustomField->ShortDescription)) ? true : false, $strAssetGroup);
 	    }
@@ -1510,9 +1511,9 @@
 	    $lstMapHeader->AddItem("Created Date", "Created Date", ($strName == 'created date') ? true : false, $strAssetGroup);
 	    $lstMapHeader->AddItem("Modified By", "Modified By", ($strName == 'modified by') ? true : false, $strAssetGroup);
 	    $lstMapHeader->AddItem("Modified Date", "Modified Date", ($strName == 'modified date') ? true : false, $strAssetGroup);
-	    $lstMapHeader->AddItem("Asset Model Code", "Asset Model Code", ($strName == 'asset model code') ? true : false, $strAssetModelGroup, 'CssClass="redtext"');
-	    $lstMapHeader->AddItem("Asset Model Short Description", "Asset Model Short Description", ($strName == 'asset model short description') ? true : false, $strAssetModelGroup, 'CssClass="redtext"');
-	    $lstMapHeader->AddItem("Asset Model Long Description", "Asset Model Long Description", ($strName == 'asset model long description') ? true : false, $strAssetModelGroup);
+	    $lstMapHeader->AddItem("Model Number", "Model Number", ($strName == 'model number') ? true : false, $strAssetModelGroup, 'CssClass="redtext"');
+	    $lstMapHeader->AddItem("Model Short Description", "Model Short Description", ($strName == 'model short description') ? true : false, $strAssetModelGroup, 'CssClass="redtext"');
+	    $lstMapHeader->AddItem("Model Long Description", "Model Long Description", ($strName == 'model long description') ? true : false, $strAssetModelGroup);
 	    foreach ($this->arrAssetModelCustomField as $objCustomField) {
 	      $lstMapHeader->AddItem($objCustomField->ShortDescription, "model_".$objCustomField->CustomFieldId, ($strName == strtolower($objCustomField->ShortDescription)) ? true : false, $strAssetModelGroup);
 	    }
@@ -1590,7 +1591,7 @@
             $lstDefault->Display = true;
             $dtpDefault->Display = false;
           }
-          elseif ($objControl->SelectedValue == "Asset Code") {
+          elseif ($objControl->SelectedValue == "Asset Tag") {
           	$txtDefault->Display = false;
           	$lstDefault->Display = false;
           	$dtpDefault->Display = false;
@@ -1681,7 +1682,7 @@
       QApplication::Redirect("../assets/asset_list.php");
     }
 
-    // Delete All imported Assets, Asset Models, Manufacturers, Categories and Locations
+    // Delete All imported Assets, Models, Manufacturers, Categories and Locations
     protected function UndoImport() {
       $objDatabase = Asset::GetDatabase();
       //$strQuery = "SET FOREIGN_KEY_CHECKS=0;";

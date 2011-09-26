@@ -513,7 +513,7 @@
 
     /**
      * Load an array of Shipment objects
-		 * by To Company, To Contact, From Company, From Contact, Shipment Number, Asset Code, Inventory Code, Tracking Number, or Status
+		 * by To Company, To Contact, From Company, From Contact, Shipment Number, Asset Tag, Inventory Code, Tracking Number, or Status
      *
      * @param string $strToCompany
      * @param string $strToContact
@@ -616,7 +616,7 @@
 		}
 		/**
      * Load an array of Shipment objects
-		 * by To Company, To Contact, From Company, From Contact, Shipment Number, Asset Code, Inventory Code, Tracking Number, or Status
+		 * by To Company, To Contact, From Company, From Contact, Shipment Number, Asset Tag, Inventory Code, Tracking Number, or Status
 		 * using the shipment_custom_field_helper table
      *
      * @param string $strToCompany

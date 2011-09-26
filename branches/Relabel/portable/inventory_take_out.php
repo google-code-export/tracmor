@@ -14,7 +14,7 @@ $strJavaScriptCode = "";
 
 if ($_POST && $_POST['method'] == 'complete_transaction') {
 	/*
-	Run error checking on the array of asset codes and the destination location
+	Run error checking on the array of asset tags and the destination location
 	If there are no errors, then you will add the transaction to the database.
 		That will include an entry in the Transaction and Asset Transaction table.
 		You will also have to change the asset.location_id to the destination location

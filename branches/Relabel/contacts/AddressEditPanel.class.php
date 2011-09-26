@@ -43,7 +43,7 @@
 				throw $objExc;
 			}
 			
-			// Create all custom asset model fields
+			// Create all custom model fields
 			$this->customFields_Create();
 			
 			

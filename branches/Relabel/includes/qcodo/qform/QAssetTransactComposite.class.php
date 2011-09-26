@@ -144,10 +144,10 @@ class QAssetTransactComposite extends QControl {
 	}
 
 	// I'm pretty sure that this is not necessary
-	// Create the Asset Code label
+	// Create the Asset Tag label
 	protected function lblAssetCode_Create() {
 		$this->lblAssetCode = new QLabel($this);
-		$this->lblAssetCode->Name = 'Asset Code';
+		$this->lblAssetCode->Name = 'Asset Tag';
 		$this->lblAssetCode->Text = $this->objAsset->AssetCode;
 	}
 
@@ -174,11 +174,11 @@ class QAssetTransactComposite extends QControl {
 		$this->lstLocation->CausesValidation = false;
 	}
 
-	// Create the text field to enter new asset codes to add to the transaction
+	// Create the text field to enter new asset tags to add to the transaction
 	// Eventually this field will receive information from the AML
 	protected function txtNewAssetCode_Create() {
 		$this->txtNewAssetCode = new QTextBox($this);
-		$this->txtNewAssetCode->Name = 'Asset Code';
+		$this->txtNewAssetCode->Name = 'Asset Tag';
 		$this->txtNewAssetCode->AddAction(new QEnterKeyEvent(), new QAjaxControlAction($this, 'btnAdd_Click'));
 		$this->txtNewAssetCode->AddAction(new QEnterKeyEvent(), new QTerminateAction());
 		$this->txtNewAssetCode->CausesValidation = false;
@@ -457,12 +457,12 @@ class QAssetTransactComposite extends QControl {
     $this->dtgAssetTransact->Paginator = $objPaginator;
     $this->dtgAssetTransact->ItemsPerPage = 20;
 
-    $this->dtgAssetTransact->AddColumn(new QDataGridColumn('Asset Code', '<?= $_ITEM->__toStringWithLink("bluelink") ?>', array('CssClass' => "dtg_column", 'HtmlEntities' => false)));
+    $this->dtgAssetTransact->AddColumn(new QDataGridColumn('Asset Tag', '<?= $_ITEM->__toStringWithLink("bluelink") ?>', array('CssClass' => "dtg_column", 'HtmlEntities' => false)));
     $this->dtgAssetTransact->AddColumn(new QDataGridColumn('Model', '<?= $_ITEM->AssetModel->__toStringWithLink("bluelink") ?>', array('Width' => 200, 'CssClass' => "dtg_column", 'HtmlEntities' => false)));
     $this->dtgAssetTransact->AddColumn(new QDataGridColumn('Current Location', '<?= $_ITEM->Location->__toString() ?>', array('CssClass' => "dtg_column", 'HtmlEntities' => false)));
     $this->dtgAssetTransact->AddColumn(new QDataGridColumn('Action', '<?= $_FORM->RemoveColumn_Render($_ITEM) ?>', array('CssClass' => "dtg_column", 'HtmlEntities' => false)));
 
-/*    $this->dtgAssetTransact->AddColumn(new QDataGridColumn('Asset Code', '<?= $_ITEM->__toStringWithLink("bluelink") ?>', 'SortByCommand="asset_code ASC"', 'ReverseSortByCommand="asset_code DESC"', 'CssClass="dtg_column"', 'HtmlEntities=false"'));
+/*    $this->dtgAssetTransact->AddColumn(new QDataGridColumn('Asset Tag', '<?= $_ITEM->__toStringWithLink("bluelink") ?>', 'SortByCommand="asset_code ASC"', 'ReverseSortByCommand="asset_code DESC"', 'CssClass="dtg_column"', 'HtmlEntities=false"'));
     $this->dtgAssetTransact->AddColumn(new QDataGridColumn('Model', '<?= $_ITEM->AssetModel->__toStringWithLink("bluelink") ?>', 'Width=200', 'SortByCommand="asset__asset_model_id__short_description ASC"', 'ReverseSortByCommand="asset__asset_model_id__short_description DESC"', 'CssClass="dtg_column"', 'HtmlEntities=false"'));
     $this->dtgAssetTransact->AddColumn(new QDataGridColumn('Current Location', '<?= $_ITEM->Location->__toString() ?>', 'SortByCommand="asset__location_id__short_description ASC"', 'ReverseSortByCommand="asset__location_id__short_description DESC"', 'CssClass=dtg_column', 'HtmlEntities=false"'));
     $this->dtgAssetTransact->AddColumn(new QDataGridColumn('Action', '<?= $_FORM->RemoveColumn_Render($_ITEM) ?>', 'CssClass=dtg_column', 'HtmlEntities=false"'));
@@ -516,7 +516,7 @@ class QAssetTransactComposite extends QControl {
 			  $objNewAsset = Asset::LoadByAssetCode($this->txtNewAssetCode->Text);
 				if (!($objNewAsset instanceof Asset)) {
 					$blnError = true;
-					$this->txtNewAssetCode->Warning = "That asset code does not exist.";
+					$this->txtNewAssetCode->Warning = "That asset tag does not exist.";
 				}
 				elseif ($objNewAsset->LinkedFlag) {
 				  $blnError = true;
@@ -669,7 +669,7 @@ class QAssetTransactComposite extends QControl {
 			}
 		}
 		else {
-			$this->txtNewAssetCode->Warning = "Please enter an asset code.";
+			$this->txtNewAssetCode->Warning = "Please enter an asset tag.";
 		}
 		
 		$this->txtNewAssetCode->Focus();

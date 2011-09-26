@@ -441,7 +441,7 @@
 			// Check if there is an Asset or InventoryModel ID in the query string to automatically add them - they would be coming from AssetEdit or InventoryEdit
 			if (!$this->blnEditMode) {
 				$intAssetId = QApplication::QueryString('intAssetId');
-				// If an Asset was passed in the query string, load the txt in the Asset Code text box and click the add button
+				// If an Asset was passed in the query string, load the txt in the Asset Tag text box and click the add button
 				if (($intAssetId)) {
 					$objAsset = Asset::Load($intAssetId);
 					if ($objAsset) {
@@ -1793,11 +1793,11 @@
 			$this->txtHoldAtLocationCity->TabIndex = 46;
 		}
 
-		// Create the text field to enter new asset codes to add to the transaction
+		// Create the text field to enter new asset tags to add to the transaction
 		// Eventually this field will receive information from the AML
 		protected function txtNewAssetCode_Create() {
 			$this->txtNewAssetCode = new QTextBox($this);
-			$this->txtNewAssetCode->Name = 'Asset Code';
+			$this->txtNewAssetCode->Name = 'Asset Tag';
 			$this->txtNewAssetCode->AddAction(new QEnterKeyEvent(), new QAjaxAction('btnAddAsset_Click'));
 			$this->txtNewAssetCode->AddAction(new QEnterKeyEvent(), new QTerminateAction());
 			$this->txtNewAssetCode->CausesValidation = false;
@@ -1857,7 +1857,7 @@
 
 		protected function txtReceiptAssetCode_Create() {
 			$this->txtReceiptAssetCode = new QTextBox($this->dlgExchange);
-			$this->txtReceiptAssetCode->Name = 'Asset Code';
+			$this->txtReceiptAssetCode->Name = 'Asset Tag';
 			//$this->txtReceiptAssetCode->Display = false;
 		}
 
@@ -1900,7 +1900,7 @@
 	    $this->dtgAssetTransact->Paginator = $objPaginator;
 	    $this->dtgAssetTransact->ItemsPerPage = 20;
 
-    	$this->dtgAssetTransact->AddColumn(new QDataGridColumn('Asset Code', '<?= $_ITEM->Asset->__toStringWithLink("bluelink") ?> <?= $_ITEM->ToStringHovertips($_CONTROL) ?>', array('CssClass' => "dtg_column", 'HtmlEntities' => false)));
+    	$this->dtgAssetTransact->AddColumn(new QDataGridColumn('Asset Tag', '<?= $_ITEM->Asset->__toStringWithLink("bluelink") ?> <?= $_ITEM->ToStringHovertips($_CONTROL) ?>', array('CssClass' => "dtg_column", 'HtmlEntities' => false)));
 	    $this->dtgAssetTransact->AddColumn(new QDataGridColumn('Model', '<?= $_ITEM->Asset->AssetModel->__toStringWithLink("bluelink") ?>', array('Width' => "200", 'CssClass' => "dtg_column", 'HtmlEntities' => false)));
 	    $this->dtgAssetTransact->AddColumn(new QDataGridColumn('Location', '<?= $_ITEM->SourceLocation->__toString() ?>', array('CssClass' => "dtg_column")));
 
@@ -2780,7 +2780,7 @@
 					$objNewAsset = Asset::LoadByAssetCode($this->txtNewAssetCode->Text);
 					if (!($objNewAsset instanceof Asset)) {
 						$blnError = true;
-						$this->txtNewAssetCode->Warning = "That asset code does not exist.";
+						$this->txtNewAssetCode->Warning = "That asset tag does not exist.";
 					}
 					// Cannot ship any linked assets
 					elseif ($objNewAsset->LinkedFlag) {
@@ -2865,7 +2865,7 @@
 					}
 /*					elseif ($this->lblAdvanced->Text == 'Hide Advanced' && $this->chkScheduleReceipt->Checked && $this->rblAssetType->SelectedValue == 'new' && !$this->chkAutoGenerateAssetCode->Checked && $this->txtReceiptAssetCode->Text == '') {
 						$blnError = true;
-						$this->txtReceiptAssetCode->Warning = "You must provide an asset code for the new asset.";
+						$this->txtReceiptAssetCode->Warning = "You must provide an asset tag for the new asset.";
 					}*/
 						// Create a new, but incomplete AssetTransaction
 					if (!$blnError) {
@@ -2886,7 +2886,7 @@
 								$objReceiptAsset->AssetModelId = $objNewAsset->AssetModelId;
 								// Set Location to TBR
 								$objReceiptAsset->LocationId = 5;
-								// Set the asset code to empty so that we'll know to auto generate later
+								// Set the asset tag to empty so that we'll know to auto generate later
 								if ($this->chkAutoGenerateAssetCode->Checked) {
 									$strAssetCode = '';
 								}
@@ -2916,7 +2916,7 @@
 				}
 			}
 			else {
-				$this->txtNewAssetCode->Warning = 'Please enter an asset code.';
+				$this->txtNewAssetCode->Warning = 'Please enter an asset tag.';
 				$blnError = true;
 			}
 			
@@ -4055,7 +4055,7 @@
 				$objAsset = Asset::LoadByAssetCode($this->txtReceiptAssetCode->Text);
 				if ($objAsset) {
 					$blnError = true;
-					$this->txtReceiptAssetCode->Warning = 'That asset code is already in use. Please input another.';
+					$this->txtReceiptAssetCode->Warning = 'That asset tag is already in use. Please input another.';
 				}
 				else {
 					$strAssetCode = $this->txtReceiptAssetCode->Text;
@@ -4066,7 +4066,7 @@
 					foreach ($this->objAssetTransactionArray as $objAssetTransaction) {
 						if ($objAssetTransaction->NewAsset instanceof Asset && $objAssetTransaction->NewAsset->AssetCode == $strAssetCode) {
 							$blnError = true;
-							$this->txtReceiptAssetCode->Warning = 'That asset code is already in use. Please input another.';
+							$this->txtReceiptAssetCode->Warning = 'That asset tag is already in use. Please input another.';
 						}
 						if (!$blnError) {
 							if ($objAssetTransaction->Asset->TempId == $intTempId) {
@@ -4079,7 +4079,7 @@
 								$objReceiptAsset->AssetModelId = $objAssetTransaction->Asset->AssetModelId;
 								// Set Location to TBR
 								$objReceiptAsset->LocationId = 5;
-								// Set the asset code to empty so that we'll know to auto generate later
+								// Set the asset tag to empty so that we'll know to auto generate later
 								/*if ($this->chkAutoGenerateAssetCode->Checked) {
 									$strAssetCode = '';
 									$this->txtReceiptAssetCode->Text = '';

@@ -239,7 +239,7 @@
 			// Check if there is an Asset or InventoryModel ID in the query string to automatically add them - they would be coming from AssetEdit or InventoryEdit
 			if (!$this->blnEditMode) {
 				$intAssetId = QApplication::QueryString('intAssetId');
-				// If an Asset was passed in the query string, load the txt in the Asset Code text box and click the add button
+				// If an Asset was passed in the query string, load the txt in the Asset Tag text box and click the add button
 				if (($intAssetId)) {
 					$objAsset = Asset::Load($intAssetId);
 					if ($objAsset) {
@@ -652,11 +652,11 @@
 
 		}
 
-		// Create the text field to enter new asset codes to add to the transaction
+		// Create the text field to enter new asset tags to add to the transaction
 		// Eventually this field will receive information from the AML
 		protected function txtNewAssetCode_Create() {
 			$this->txtNewAssetCode = new QTextBox($this);
-			$this->txtNewAssetCode->Name = 'Asset Code:';
+			$this->txtNewAssetCode->Name = 'Asset Tag:';
 			$this->txtNewAssetCode->AddAction(new QEnterKeyEvent(), new QAjaxAction('btnAddAsset_Click'));
 			$this->txtNewAssetCode->AddAction(new QEnterKeyEvent(), new QTerminateAction());
 			$this->txtNewAssetCode->CausesValidation = false;
@@ -691,15 +691,15 @@
 			$this->rblAssetType->AddAction(new QChangeEvent(), new QAjaxAction('rblAssetType_Change'));
 		}
 
-		// Create the Asset Model List for creating new assets
+		// Create the Model List for creating new assets
 		protected function lstAssetModel_Create() {
 			$this->lstAssetModel = new QListBox($this);
-			$this->lstAssetModel->Name = 'Asset Model';
+			$this->lstAssetModel->Name = 'Model';
 			$this->lstAssetModel->AddItem('- Select One -', null, true);
 			$this->lstAssetModel->Display = false;
 		}
 
-		// Create the Auto Generate Asset Code Checkbox
+		// Create the Auto Generate Asset Tag Checkbox
 		protected function chkAutoGenerateAssetCode_Create() {
 			$this->chkAutoGenerateAssetCode = new QCheckBox($this);
 			$this->chkAutoGenerateAssetCode->Name = 'Auto Generate';
@@ -869,7 +869,7 @@
 	    $this->dtgAssetTransact->Paginator = $objPaginator;
 	    $this->dtgAssetTransact->ItemsPerPage = 20;
 
-    	$this->dtgAssetTransact->AddColumn(new QDataGridColumn('Asset Code', '<?= $_ITEM->Asset->__toStringWithLink("bluelink") ?>', array('OrderByClause' => QQ::OrderBy(QQN::AssetTransaction()->Asset->AssetCode), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AssetTransaction()->Asset->AssetCode, false), 'CssClass' => "dtg_column", 'HtmlEntities' => false)));
+    	$this->dtgAssetTransact->AddColumn(new QDataGridColumn('Asset Tag', '<?= $_ITEM->Asset->__toStringWithLink("bluelink") ?>', array('OrderByClause' => QQ::OrderBy(QQN::AssetTransaction()->Asset->AssetCode), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AssetTransaction()->Asset->AssetCode, false), 'CssClass' => "dtg_column", 'HtmlEntities' => false)));
 	    $this->dtgAssetTransact->AddColumn(new QDataGridColumn('Model', '<?= $_ITEM->Asset->AssetModel->__toStringWithLink("bluelink") ?>', array('Width' => "200", 'OrderByClause' => QQ::OrderBy(QQN::AssetTransaction()->Asset->AssetModel->ShortDescription), 'ReverseOrderByClause' => QQ::OrderBy(QQN::AssetTransaction()->Asset->AssetModel->ShortDescription, false), 'CssClass' => "dtg_column", 'HtmlEntities' => false)));
 	    $this->dtgAssetTransact->AddColumn(new QDataGridColumn('Status', '<?= $_ITEM->__toStringStatus() ?>', array('CssClass' => "dtg_column", 'HtmlEntities' => false)));
 
@@ -1322,9 +1322,9 @@
 					$objListItem = new QListItem($objAssetModel->__toString(), $objAssetModel->AssetModelId);
 					$this->lstAssetModel->AddItem($objListItem);
 				}
-				// Display the list of possible asset models
+				// Display the list of possible models
 				$this->lstAssetModel->Display = true;
-				// Display the Auto Generate Asset Code checkbox if a minimum value exists
+				// Display the Auto Generate Asset Tag checkbox if a minimum value exists
 				if (QApplication::$TracmorSettings->MinAssetCode) {
 					$this->chkAutoGenerateAssetCode->Display = true;
 				}
@@ -1345,7 +1345,7 @@
 					$this->txtNewAssetCode->Warning = "Your asset limit has been reached.";
 				}
 
-				// Assign an empty string to the asset code for now (NULL won't work to render properly in the datagrid
+				// Assign an empty string to the asset tag for now (NULL won't work to render properly in the datagrid
 				if ($this->chkAutoGenerateAssetCode->Checked == true) {
 					$strAssetCode = '';
 				}
@@ -1353,17 +1353,17 @@
 					$strAssetCode = $this->txtNewAssetCode->Text;
 					if (!$strAssetCode) {
 						$blnError = true;
-						$this->txtNewAssetCode->Warning = 'You must enter an asset code.';
+						$this->txtNewAssetCode->Warning = 'You must enter an asset tag.';
 					}
 				}
-				// Generate an error if that asset code already exists
+				// Generate an error if that asset tag already exists
 				if ($objDuplicate = Asset::LoadByAssetCode($strAssetCode)) {
 					$blnError = true;
-					$this->txtNewAssetCode->Warning = 'That asset code already exists. Choose another.';
+					$this->txtNewAssetCode->Warning = 'That asset tag already exists. Choose another.';
 				}
 				elseif (!$this->lstAssetModel->SelectedValue) {
 				  $blnError = true;
-					$this->txtNewAssetCode->Warning = 'You must select one asset model.';
+					$this->txtNewAssetCode->Warning = 'You must select one model.';
 				}
 				if (!$blnError) {
 					$objNewAsset = new Asset();
@@ -1411,7 +1411,7 @@
 						$objNewAsset = Asset::LoadByAssetCode($this->txtNewAssetCode->Text);
 						if (!($objNewAsset instanceof Asset)) {
 							$blnError = true;
-							$this->txtNewAssetCode->Warning = "That asset code does not exist.";
+							$this->txtNewAssetCode->Warning = "That asset tag does not exist.";
 						}
 						elseif ($objNewAsset->LinkedFlag) {
 						  $blnError = true;
@@ -1729,7 +1729,7 @@
 							if ($lstLocationAssetReceived && $lstLocationAssetReceived->SelectedValue) {
 							  if ($objAssetTransaction->Asset->LinkedFlag) {
 							    $blnError = true;
-								  $this->dtgAssetTransact->Warning .= sprintf("Asset Code %s is locked to a parent asset.<br />",$objAssetTransaction->Asset->AssetCode);
+								  $this->dtgAssetTransact->Warning .= sprintf("Asset Tag %s is locked to a parent asset.<br />",$objAssetTransaction->Asset->AssetCode);
 							  }
 							  else {
   								// Set the DestinationLocation of the AssetTransaction
@@ -2085,7 +2085,7 @@
 										$objNewAsset->AssetModelId = $objAssetTransaction->Asset->AssetModelId;
 										$objNewAsset->TempId = $objAssetTransaction->Asset->TempId;
 										$objNewAsset->LocationId = $objAssetTransaction->Asset->LocationId;
-										// If the asset was selected for autogeneration, it will be blank, so create the asset code here (right before save)
+										// If the asset was selected for autogeneration, it will be blank, so create the asset tag here (right before save)
 										if ($objAssetTransaction->Asset->AssetCode == '') {
 											$objAssetTransaction->Asset->AssetCode = Asset::GenerateAssetCode();
 										}
@@ -2230,7 +2230,7 @@
 										$objNewAsset->AssetModelId = $objAssetTransaction->Asset->AssetModelId;
 										$objNewAsset->TempId = $objAssetTransaction->Asset->TempId;
 										$objNewAsset->LocationId = $objAssetTransaction->Asset->LocationId;
-										// If the asset was selected for autogeneration, it will be blank, so create the asset code here (right before save)
+										// If the asset was selected for autogeneration, it will be blank, so create the asset tag here (right before save)
 										if ($objAssetTransaction->Asset->AssetCode == '') {
 											$objAssetTransaction->Asset->AssetCode = Asset::GenerateAssetCode();
 										}

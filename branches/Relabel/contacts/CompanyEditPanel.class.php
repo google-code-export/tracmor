@@ -62,7 +62,7 @@
 			$this->lstCountry_Create();
 			$this->arrAddressCustomFields_Create();
 			
-			// Create all custom asset model fields
+			// Create all custom model fields
 			$this->customFields_Create();
 			
 			// Set Display logic of the Custom Fields
