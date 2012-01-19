@@ -13,7 +13,7 @@ Amelia is a Tracmor system administrator for Fictional Co., which has 1,000 asse
 ----
 *Custom Field Edit* 
 
-See the functional prototype here - http://tracmor.barefootsolutions.com/asset_model_specific_custom_fields.
+See the functional prototype here - http://tracmorprototype.barefootsolutions.com/asset_model_custom_fields/.
 
 The custom field edit page will be updated with a new interface component. When "Assets" is selected in the "Apply To" multi-select box, the new component will be displayed. When "Assets" is unselected, the new component will disappear.
 
